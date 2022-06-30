@@ -107,5 +107,8 @@
       }
     }
   },
-  "defaultProject": "facturacion-frontend"
+  "defaultProject": "facturacion-frontend",
+  "cli": {
+    "analytics": "3b360700-81f2-492c-ab3c-11324cd708ef"
+  }
 }
