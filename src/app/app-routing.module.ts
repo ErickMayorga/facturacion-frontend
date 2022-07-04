@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import {RutaLoginComponent} from "./rutas/ruta-login/ruta-login.component";
 import {RutaNotFoundComponent} from "./rutas/ruta-not-found/ruta-not-found.component";
+import {RutaHomeComponent} from "./rutas/ruta-home/ruta-home.component";
 
 const routes: Routes = [
   {
@@ -9,14 +10,22 @@ const routes: Routes = [
     component: RutaLoginComponent
   },
   {
+    path: 'home',
+    component: RutaHomeComponent
+  },
+  /*
+  {
     path: '**',
     component: RutaNotFoundComponent
   },
+
+   */
   {
     path: '',
     redirectTo: '/login',
     pathMatch: 'full'
   },
+
 ];
 
 @NgModule({

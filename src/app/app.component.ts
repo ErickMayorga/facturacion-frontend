@@ -9,7 +9,7 @@ import {Router} from "@angular/router";
 export class AppComponent {
   title = 'facturacion-frontend';
   constructor(private readonly router: Router,) {
-    const ruta = ['/login'];
-    this.router.navigate(ruta);
+    //const ruta = ['/login'];
+    //this.router.navigate(ruta);
   }
 }

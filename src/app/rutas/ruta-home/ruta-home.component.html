@@ -1,0 +1,39 @@
+<div class="sidebar">
+  <div class="navigation" [ngClass]="isOpenMenu ? 'active': 'inactive'">
+    <ul>
+      <li>
+        <a>
+          <span class="icon"><i class="small material-icons">account_circle</i></span>
+          <span class="title">ERICK MAYORGA </span>
+        </a>
+      </li>
+      <li *ngFor="let item of itemsSideNav">
+        <a (click)="redirectUser(item.route)">
+          <span class="icon"><i class="small material-icons">{{item.icon}}</i></span>
+          <span class="title">{{item.title}}</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="main" [ngClass]="isOpenMenu ? 'no-expanded': 'expanded'">
+    <div class="topbar d-flex justify-content-between align-items-center">
+      <div class="toggle d-flex justify-content-center align-items-center" (click)="toggleSidenav()">
+        <i class="small material-icons">menu</i>
+      </div>
+      <div class="search">
+        <label>
+          <input type="text" placeholder="Busca un comprobante">
+          <i class="small material-icons">search</i>
+        </label>
+      </div>
+      <div class="toggle d-flex justify-content-center align-items-center">
+        <i class="small material-icons">exit_to_app</i>
+      </div>
+    </div>
+    <div class="content d-flex justify-content-center">
+      Main content!
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>
