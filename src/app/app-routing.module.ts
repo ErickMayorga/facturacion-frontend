@@ -3,6 +3,8 @@ import { RouterModule, Routes } from '@angular/router';
 import {RutaLoginComponent} from "./rutas/ruta-login/ruta-login.component";
 import {RutaNotFoundComponent} from "./rutas/ruta-not-found/ruta-not-found.component";
 import {RutaHomeComponent} from "./rutas/ruta-home/ruta-home.component";
+import {RutaComprobantesComponent} from "./rutas/ruta-comprobantes/ruta-comprobantes.component";
+import {RutaSignupComponent} from "./rutas/ruta-signup/ruta-signup.component";
 
 const routes: Routes = [
   {
@@ -10,8 +12,18 @@ const routes: Routes = [
     component: RutaLoginComponent
   },
   {
-    path: 'home',
-    component: RutaHomeComponent
+    path: 'sign-up',
+    component: RutaSignupComponent
+  },
+  {
+    path: 'usuario/:idUsuario',
+    component: RutaHomeComponent,
+    children: [
+      {
+        path: 'comprobantes',
+        component: RutaComprobantesComponent
+      }
+    ]
   },
   /*
   {

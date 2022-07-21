@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {ItemSideNavInterface} from "../../servicios/interfaces/app/itemSideNav.interface";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-ruta-home',
@@ -13,40 +13,49 @@ export class RutaHomeComponent implements OnInit {
 
   itemsSideNav: ItemSideNavInterface[] = [
     {
-      route: "/emisor",
+      route: "emisor",
       icon: "business",
       title: "Mi información"
     },
     {
-      route: "/comprobantes",
+      route: "comprobantes",
       icon: "library_books",
       title: "Comprobantes"
     },
     {
-      route: "/clientes",
+      route: "clientes",
       icon: "people",
       title: "Clientes"
     },
     {
-      route: "/transportistas",
+      route: "transportistas",
       icon: "local_shipping",
       title: "Transportistas"
     },
     {
-      route: "/productos",
+      route: "productos",
       icon: "business_center",
       title: "Productos"
     },
   ]
 
-  constructor(private readonly router: Router,) { }
+  idUsuario =-1
+
+  constructor(private readonly router: Router,
+              private readonly activatedRoute: ActivatedRoute,) { }
 
   ngOnInit(): void {
-
+    const parametroRuta$ = this.activatedRoute.params;
+    parametroRuta$
+      .subscribe({
+        next:(parametrosRuta) => {
+          this.idUsuario = parametrosRuta['idUsuario'];
+        }
+      })
   }
 
   redirectUser(route: string) {
-    const ruta = [route];
+    const ruta = ['usuario',this.idUsuario, route];
     this.router.navigate(ruta);
   }
 

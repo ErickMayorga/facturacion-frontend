@@ -14,6 +14,9 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 import {MatDividerModule} from "@angular/material/divider";
 import {MatDialogModule} from "@angular/material/dialog";
+import { RutaComprobantesComponent } from './rutas/ruta-comprobantes/ruta-comprobantes.component';
+import { RutaSignupComponent } from './rutas/ruta-signup/ruta-signup.component';
+import { BotonComprobanteComponent } from './componentes/boton-comprobante/boton-comprobante.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +25,9 @@ import {MatDialogModule} from "@angular/material/dialog";
     RutaNotFoundComponent,
     InputGenericComponent,
     RutaHomeComponent,
+    RutaComprobantesComponent,
+    RutaSignupComponent,
+    BotonComprobanteComponent,
   ],
   imports: [
     BrowserModule,

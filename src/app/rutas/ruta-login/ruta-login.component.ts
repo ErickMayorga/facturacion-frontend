@@ -19,7 +19,14 @@ export class RutaLoginComponent implements OnInit {
   }
 
   ingresarUsuario() {
-    const ruta = ['/home'];
-    this.router.navigate(ruta);
+    let idUsuario = this.verificarUsuario()
+    if(idUsuario) {
+      const ruta = ['/usuario',idUsuario];
+      this.router.navigate(ruta);
+    }
+  }
+
+  verificarUsuario(){
+    return 1;
   }
 }

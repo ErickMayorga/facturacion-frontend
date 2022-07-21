@@ -1,0 +1,8 @@
+<div class="container">
+  <div class="row d-flex justify-content-center">
+    <div *ngFor="let comprobante of comprobantes" class="col-md-3" style="margin: 20px">
+      <app-boton-comprobante [botonComprobante]="comprobante"></app-boton-comprobante>
+    </div>
+  </div>
+</div>
+
