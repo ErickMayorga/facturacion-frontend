@@ -19,7 +19,12 @@ import {MatInputModule} from "@angular/material/input";
 import {ErrorStateMatcher, ShowOnDirtyErrorStateMatcher} from "@angular/material/core";
 import { ModalDireccionComponent } from './componentes/modal-direccion/modal-direccion.component';
 import {MatIconModule} from "@angular/material/icon";
-import { InputDireccionComponent } from './componentes/input-direccion/input-direccion.component';
+import { RutaFacturasComponent } from './rutas/ruta-facturas/ruta-facturas.component';
+import { RutaGuiasDeRemisionComponent } from './rutas/ruta-guias-de-remision/ruta-guias-de-remision.component';
+import { RutaNotasDeDebitoComponent } from './rutas/ruta-notas-de-debito/ruta-notas-de-debito.component';
+import { RutaNotasDeCreditoComponent } from './rutas/ruta-notas-de-credito/ruta-notas-de-credito.component';
+import { RutaRetencionesComponent } from './rutas/ruta-retenciones/ruta-retenciones.component';
+import { RutaEmpresaComponent } from './rutas/ruta-empresa/ruta-empresa.component';
 
 
 @NgModule({
@@ -33,7 +38,12 @@ import { InputDireccionComponent } from './componentes/input-direccion/input-dir
     RutaSignupComponent,
     BotonComprobanteComponent,
     ModalDireccionComponent,
-    InputDireccionComponent,
+    RutaFacturasComponent,
+    RutaGuiasDeRemisionComponent,
+    RutaNotasDeDebitoComponent,
+    RutaNotasDeCreditoComponent,
+    RutaRetencionesComponent,
+    RutaEmpresaComponent,
   ],
   imports: [
     BrowserModule,

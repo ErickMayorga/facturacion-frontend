@@ -1,0 +1,21 @@
+<div class="d-flex flex-row">
+  <table class="table">
+    <thead class="table-dark">
+    <tr>
+      <th scope="col" *ngFor="let thead of theads">
+        {{thead}}
+      </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let factura of facturas">
+      <td *ngFor="let action of actions">
+        <div class="col-md-12">
+          <mat-icon class="col-md-4" (click)="realizarAccion(action.name)">{{action.icon}}</mat-icon>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+

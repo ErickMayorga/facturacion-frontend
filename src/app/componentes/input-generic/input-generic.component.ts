@@ -13,8 +13,9 @@ export class InputGenericComponent implements OnInit {
   @Input() title: string = ''
   @Input() nameField: string = ''
   @Input() helpText: string = ''
-  @Input() requiredMessage: string = ''
-  @Input() lengthMessage: string = ''
+  @Input() requiredMessage?: string = ''
+  @Input() lengthMessage?: string = ''
+  @Input() options?: string[] = []
 
   constructor() { }
 

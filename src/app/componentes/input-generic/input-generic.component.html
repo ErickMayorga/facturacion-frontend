@@ -1,9 +1,41 @@
-<div [formGroup]="formGroup" class="input-field">
-  <input id="{{nameField}}" type="{{type}}" class="validate" formControlName="{{nameField}}">
-  <label for="{{nameField}}">{{title}}</label>
-  <!--
-  <span class="helper-text">{{helpText}}</span>
-  -->
+<!-- CHECKBOX -->
+<div *ngIf="type === 'checkbox'">
+  <div [formGroup]="formGroup" class="input-field">
+    <p>
+      <label>
+        <input type="checkbox" class="filled-in" checked="checked" formControlName="{{nameField}}"/>
+        <span>{{title}}</span>
+      </label>
+    </p>
+    <div *ngIf="formGroup.get(nameField)">
+      <span *ngIf="formGroup.get(nameField)?.valid" class="helper-text">{{helpText}}</span>
+      <span *ngIf="
+             formGroup.get(nameField)?.invalid &&
+             formGroup.get(nameField)?.touched &&
+             formGroup.get(nameField)?.dirty &&
+             !(formGroup.get(nameField)?.hasError('minlength') ||
+            formGroup.get(nameField)?.hasError('maxlength'))"
+            class="helper-text" style="color: var(--error)">
+      {{requiredMessage}}
+      </span>
+        <span *ngIf="formGroup.get(nameField)?.hasError('minlength') ||
+            formGroup.get(nameField)?.hasError('maxlength')"
+              class="helper-text" style="color: var(--error)">
+        {{lengthMessage}}
+      </span>
+    </div>
+  </div>
+</div>
+
+<!-- SELECT -->
+<div *ngIf="type === 'select'">
+  <div class="input-field col s12">
+    <label>{{title}}</label><br><br>
+    <select class="form-select" formControlName="{{nameField}}">
+      <option value="" disabled selected>{{helpText}}</option>
+      <option *ngFor="let option of options" value="{{option}}">{{option}}</option>
+    </select>
+  </div>
   <div *ngIf="formGroup.get(nameField)">
     <span *ngIf="formGroup.get(nameField)?.valid" class="helper-text">{{helpText}}</span>
     <span *ngIf="
@@ -12,30 +44,63 @@
              formGroup.get(nameField)?.dirty &&
              !(formGroup.get(nameField)?.hasError('minlength') ||
             formGroup.get(nameField)?.hasError('maxlength'))"
-             class="helper-text" style="color: var(--error)">
-      {{requiredMessage}}
-    </span>
-    <span *ngIf="formGroup.get(nameField)?.hasError('minlength') ||
-          formGroup.get(nameField)?.hasError('maxlength')"
           class="helper-text" style="color: var(--error)">
-      {{lengthMessage}}
-    </span>
+      {{requiredMessage}}
+      </span>
+    <span *ngIf="formGroup.get(nameField)?.hasError('minlength') ||
+            formGroup.get(nameField)?.hasError('maxlength')"
+          class="helper-text" style="color: var(--error)">
+        {{lengthMessage}}
+      </span>
   </div>
-  <!--
-  <div *ngIf="formGroup.get(nameField)">
-    <div class="alert alert-warning" role="alert" *ngIf="
+</div>
+
+<!-- TEXT, NUMBER, ETC -->
+<div *ngIf="type != 'checkbox' && type != 'select'">
+  <div [formGroup]="formGroup" class="input-field">
+    <input id="{{nameField}}" type="{{type}}" class="validate" formControlName="{{nameField}}">
+    <label for="{{nameField}}">{{title}}</label>
+    <!--
+    <span class="helper-text">{{helpText}}</span>
+    -->
+    <div *ngIf="formGroup.get(nameField)">
+      <span *ngIf="formGroup.get(nameField)?.valid ||
+      !formGroup.get(nameField)?.touched"
+            class="helper-text">
+        {{helpText}}
+      </span>
+      <span *ngIf="
              formGroup.get(nameField)?.invalid &&
              formGroup.get(nameField)?.touched &&
-             formGroup.get(nameField)?.dirty
-          ">
-        <span *ngIf="formGroup.get(nameField)?.hasError('required')">
-          {{requiredMessage}}
-        </span>
-      <span *ngIf="formGroup.get(nameField)?.hasError('minlength') || formGroup.get(nameField)?.hasError('maxlength')">
-          {{lengthMessage}}
-        </span>
+             formGroup.get(nameField)?.dirty &&
+             !(formGroup.get(nameField)?.hasError('minlength') ||
+            formGroup.get(nameField)?.hasError('maxlength'))"
+            class="helper-text" style="color: var(--error)">
+      {{requiredMessage}}
+    </span>
+      <span *ngIf="formGroup.get(nameField)?.hasError('minlength') ||
+          formGroup.get(nameField)?.hasError('maxlength')"
+            class="helper-text" style="color: var(--error)">
+      {{lengthMessage}}
+    </span>
     </div>
+    <!--
+    <div *ngIf="formGroup.get(nameField)">
+      <div class="alert alert-warning" role="alert" *ngIf="
+               formGroup.get(nameField)?.invalid &&
+               formGroup.get(nameField)?.touched &&
+               formGroup.get(nameField)?.dirty
+            ">
+          <span *ngIf="formGroup.get(nameField)?.hasError('required')">
+            {{requiredMessage}}
+          </span>
+        <span *ngIf="formGroup.get(nameField)?.hasError('minlength') || formGroup.get(nameField)?.hasError('maxlength')">
+            {{lengthMessage}}
+          </span>
+      </div>
+    </div>
+    -->
   </div>
-  -->
 </div>
+
 

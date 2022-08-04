@@ -1,0 +1,73 @@
+<div class="col-md-12">
+  <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Mi información</p>
+  <form class="mx-1 mx-md-4">
+    <div class="d-flex flex-wrap align-items-center mb-4">
+      <!-- RUC -->
+      <div class="col-md-12 form-outline flex-fill mb-0">
+        <app-input-generic
+          [title]="fields[0].title"
+          [nameField]="fields[0].nameField"
+          [type]="fields[0].type"
+          [helpText]="fields[0].helpText"
+          [requiredMessage]="fields[0].requiredMessage"
+          [lengthMessage]="fields[0].lengthMessage"
+          [options]="fields[0].options"
+          [formGroup]="formGroupEmpresa"
+        ></app-input-generic>
+      </div>
+
+      <!-- MIDDLE FIELDS  -->
+      <div class="col-md-5 form-outline flex-fill mb-0" *ngFor="let field of fields.slice(1,fields.length-1)">
+        <div *ngIf="!field.nameField.includes('direccion')">
+          <app-input-generic
+            [title]="field.title"
+            [nameField]="field.nameField"
+            [type]="field.type"
+            [helpText]="field.helpText"
+            [requiredMessage]="field.requiredMessage"
+            [lengthMessage]="field.lengthMessage"
+            [options]="field.options"
+            [formGroup]="formGroupEmpresa"
+          ></app-input-generic>
+        </div>
+        <div *ngIf="field.nameField.includes('direccion')">
+          <div class="d-flex flex-row align-items-center">
+            <app-input-generic class="col-md-9"
+                               [title]="field.title"
+                               [nameField]="field.nameField"
+                               [type]="field.type"
+                               [helpText]="field.helpText"
+                               [requiredMessage]="field.requiredMessage"
+                               [lengthMessage]="field.lengthMessage"
+                               [formGroup]="formGroupEmpresa"
+            ></app-input-generic>
+            <div class="col-md-3">
+              <button type="button" class="btn btn-primary" (click)="guardarDireccion(field.nameField)">
+                <i class="small material-icons">place</i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AMBIENTE -->
+      <div class="col-md-12 form-outline flex-fill mb-0">
+        <app-input-generic
+          [title]="fields[fields.length-1].title"
+          [nameField]="fields[fields.length-1].nameField"
+          [type]="fields[fields.length-1].type"
+          [helpText]="fields[fields.length-1].helpText"
+          [requiredMessage]="fields[fields.length-1].requiredMessage"
+          [lengthMessage]="fields[fields.length-1].lengthMessage"
+          [options]="fields[fields.length-1].options"
+          [formGroup]="formGroupEmpresa"
+        ></app-input-generic>
+      </div>
+    </div>
+    <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+      <button type="button" [disabled]="formGroupEmpresa.invalid" class="btn btn-primary btn-lg" (click)="guardarInformacion()">Guardar</button>
+    </div>
+  </form>
+</div>
+
+

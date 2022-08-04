@@ -14,27 +14,32 @@ export class RutaComprobantesComponent implements OnInit {
     {
       color: '#5484DE',
       icon: 'description',
-      tittle: 'FACTURAS'
+      tittle: 'FACTURAS',
+      path: 'facturas'
     },
     {
       color: '#806CAC',
       icon: 'local_shipping',
-      tittle: 'GUÍAS DE REMISIÓN'
+      tittle: 'GUÍAS DE REMISIÓN',
+      path: 'guias_de_remision'
     },
     {
       color: '#D83444',
       icon: 'card_giftcard',
-      tittle: 'NOTAS DE DÉBITO'
+      tittle: 'NOTAS DE DÉBITO',
+      path: 'notas_de_debito'
     },
     {
       color: '#607C2C',
       icon: 'card_membership',
-      tittle: 'NOTAS DE CRÉDITO'
+      tittle: 'NOTAS DE CRÉDITO',
+      path: 'notas_de_credito'
     },
     {
       color: '#986C14',
       icon: 'money_off',
-      tittle: 'COMPROBANTES DE RETENCIÓN'
+      tittle: 'COMPROBANTES DE RETENCIÓN',
+      path: 'retenciones'
     },
   ];
 
@@ -48,14 +53,14 @@ export class RutaComprobantesComponent implements OnInit {
       .subscribe({
         next:(parametrosRuta) => {
           //console.log(parametrosRuta)
-          this.idUsuario = parametrosRuta['idUsuario'];
-          this.buscarUsuario(this.idUsuario)
+          this.idUsuario = Number.parseInt(parametrosRuta['idUsuario']);
         }
       })
   }
 
-  buscarUsuario(id:number){
-
+  mostrarListaComprobantes(path: string){
+    const ruta = ['usuario',this.idUsuario, 'comprobantes', path];
+    this.router.navigate(ruta);
   }
 
 }

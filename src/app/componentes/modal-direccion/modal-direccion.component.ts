@@ -16,11 +16,17 @@ export class ModalDireccionComponent implements OnInit {
     parroquia: '',
     descripcion_exacta: ''
   } as DireccionCreateInterface
+
   formGroupDireccion = new FormGroup({});
 
+public dialogRefs = []
   constructor( @Inject(MAT_DIALOG_DATA) public data: any,
-               public dialogRef: MatDialogRef<RutaSignupComponent>,
+               public dialogRef: MatDialogRef<ModalDireccionComponent>,
                private readonly formBuilder: FormBuilder,) {
+    this.dialogRefs = [
+
+    ]
+
     this.formGroupDireccion =this.formBuilder.group(
       {
         canton: ['', Validators.required],

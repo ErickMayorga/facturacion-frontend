@@ -15,7 +15,7 @@ export class RutaHomeComponent implements OnInit {
 
   itemsSideNav: ItemSideNavInterface[] = [
     {
-      route: "emisor",
+      route: "empresa",
       icon: "business",
       title: "Mi información"
     },
