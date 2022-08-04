@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {ItemSideNavInterface} from "../../servicios/interfaces/app/itemSideNav.interface";
+import {ItemSideNavInterface} from "../../servicios/interfaces/itemSideNav.interface";
 import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({

@@ -1,1 +1,75 @@
-<p>ruta-signup works!</p>
+<section class="main" style="background-color: #eee;">
+  <div class="container col-md-12 d-flex justify-content-center align-items-center">
+    <div class="card text-black" style="border-radius: 25px;">
+      <div class="card-body p-md-5">
+        <div class="col-md-12 d-flex justify-content-center">
+          <div class=" col-md-4 d-flex justify-content-center align-items-center">
+            <img src="https://www.uniminutoradio.com.co/wp-content/uploads/2020/10/Factura-electronica.jpg"
+                 class="img-fluid" alt="Sample image">
+          </div>
+          <div class="col-md-8">
+            <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Bienvenido</p>
+            <form class="mx-1 mx-md-4">
+              <div class="d-flex flex-wrap align-items-center mb-4">
+                <div class="col-md-5 form-outline flex-fill mb-0" *ngFor="let field of fields">
+                  <div *ngIf="field.nameField === 'passwordConfirmacion'">
+                    <app-input-generic
+                      [title]="field.title"
+                      [nameField]="field.nameField"
+                      [type]="field.type"
+                      [helpText]="field.helpText"
+                      [requiredMessage]="field.requiredMessage"
+                      [lengthMessage]="field.lengthMessage"
+                      [formGroup]="formGroupUsuario"
+                      [passwordCheck]="passwordCheck"
+                    ></app-input-generic>
+                  </div>
+                  <div *ngIf="field.nameField != 'passwordConfirmacion' && field.nameField != 'direccion'">
+                    <app-input-generic
+                      [title]="field.title"
+                      [nameField]="field.nameField"
+                      [type]="field.type"
+                      [helpText]="field.helpText"
+                      [requiredMessage]="field.requiredMessage"
+                      [lengthMessage]="field.lengthMessage"
+                      [formGroup]="formGroupUsuario"
+                    ></app-input-generic>
+                  </div>
+                  <div *ngIf="field.nameField === 'direccion'">
+                    <div class="d-flex flex-row align-items-center">
+                      <app-input-generic class="col-md-9"
+                        [title]="field.title"
+                        [nameField]="field.nameField"
+                        [type]="field.type"
+                        [helpText]="field.helpText"
+                        [requiredMessage]="field.requiredMessage"
+                        [lengthMessage]="field.lengthMessage"
+                        [formGroup]="formGroupUsuario"
+                      ></app-input-generic>
+                      <div class="col-md-3">
+                        <button type="button" class="btn btn-primary" (click)="guardarDireccion()">
+                          <i class="small material-icons">place</i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-check d-flex justify-content-center mb-5">
+                <input class="form-check-input me-2" type="checkbox" value="" id="form2Example3c" />
+                <label class="form-check-label">
+                  Estoy de acuerdo con todos los <a href="#!">Términos y condiciones</a>
+                </label>
+              </div>
+
+              <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+                <button type="button" class="btn btn-primary btn-lg" (click)="registrarUsuario()">Registrarme</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

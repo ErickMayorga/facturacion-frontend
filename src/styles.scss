@@ -1,5 +1,6 @@
 /* Importing fonts from Google */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
 
 * {
   margin: 0;
@@ -18,3 +19,6 @@
   --sideWidth: 300px;
   --contractedWidth: 80px;
 }
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

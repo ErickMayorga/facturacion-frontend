@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
-import {BotonComprobanteInterface} from "../../servicios/interfaces/app/botonComprobante.interface";
+import {BotonComprobanteInterface} from "../../servicios/interfaces/botonComprobante.interface";
 
 @Component({
   selector: 'app-ruta-comprobantes',

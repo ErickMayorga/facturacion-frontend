@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {BotonComprobanteInterface} from "../../servicios/interfaces/app/botonComprobante.interface";
+import {BotonComprobanteInterface} from "../../servicios/interfaces/botonComprobante.interface";
 
 @Component({
   selector: 'app-boton-comprobante',

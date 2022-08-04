@@ -1,8 +1,43 @@
-<form class="p-3 mt-3">
-  <div class="mt-4 title">
-    Facturación
+<div [formGroup]="formGroup" class="input-field">
+  <input id="{{nameField}}" type="{{type}}" class="validate" formControlName="{{nameField}}">
+  <label for="{{nameField}}">{{title}}</label>
+  <!--
+  <span class="helper-text">{{helpText}}</span>
+  -->
+  <div *ngIf="formGroup.get(nameField)">
+    <span *ngIf="formGroup.get(nameField)?.valid" class="helper-text">{{helpText}}</span>
+    <span *ngIf="
+             formGroup.get(nameField)?.invalid &&
+             formGroup.get(nameField)?.touched &&
+             formGroup.get(nameField)?.dirty"
+             class="helper-text" style="color: #f44434">
+      {{requiredMessage}}
+    </span>
+    <span *ngIf="formGroup.get(nameField)?.hasError('minlength') ||
+          formGroup.get(nameField)?.hasError('maxlength')"
+          class="helper-text" style="color: #f44434">
+      {{lengthMessage}}
+    </span>
+    <span *ngIf="!passwordCheck"
+          class="helper-text" style="color: #f44434">
+      La contraseña no coincide
+    </span>
   </div>
-  <div class="form-field d-flex align-items-center">
-    <input type="text" id="numero_identificación" placeholder="Cédula/RUC">
+  <!--
+  <div *ngIf="formGroup.get(nameField)">
+    <div class="alert alert-warning" role="alert" *ngIf="
+             formGroup.get(nameField)?.invalid &&
+             formGroup.get(nameField)?.touched &&
+             formGroup.get(nameField)?.dirty
+          ">
+        <span *ngIf="formGroup.get(nameField)?.hasError('required')">
+          {{requiredMessage}}
+        </span>
+      <span *ngIf="formGroup.get(nameField)?.hasError('minlength') || formGroup.get(nameField)?.hasError('maxlength')">
+          {{lengthMessage}}
+        </span>
+    </div>
   </div>
-</form>
+  -->
+</div>
+

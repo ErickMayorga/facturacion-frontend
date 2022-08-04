@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {Router} from "@angular/router";
-import {UsuarioInterface} from "../../servicios/interfaces/model/usuario.interface";
+import {UsuarioInterface} from "../../servicios/http/usuario/usuario.interface";
 
 @Component({
   selector: 'app-ruta-login',

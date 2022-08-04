@@ -1,12 +1,12 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {FormControl, FormGroup} from "@angular/forms";
+import {FormGroup} from "@angular/forms";
 
 @Component({
-  selector: 'app-input-generic',
-  templateUrl: './input-generic.component.html',
-  styleUrls: ['./input-generic.component.scss']
+  selector: 'app-input-direccion',
+  templateUrl: './input-direccion.component.html',
+  styleUrls: ['./input-direccion.component.scss']
 })
-export class InputGenericComponent implements OnInit {
+export class InputDireccionComponent implements OnInit {
 
   @Input() formGroup: FormGroup = new FormGroup({})
   @Input() type: string = 'text'
@@ -22,4 +22,7 @@ export class InputGenericComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  guardarDireccion() {
+
+  }
 }
