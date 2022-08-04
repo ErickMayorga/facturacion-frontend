@@ -9,18 +9,16 @@
     <span *ngIf="
              formGroup.get(nameField)?.invalid &&
              formGroup.get(nameField)?.touched &&
-             formGroup.get(nameField)?.dirty"
-             class="helper-text" style="color: #f44434">
+             formGroup.get(nameField)?.dirty &&
+             !(formGroup.get(nameField)?.hasError('minlength') ||
+            formGroup.get(nameField)?.hasError('maxlength'))"
+             class="helper-text" style="color: var(--error)">
       {{requiredMessage}}
     </span>
     <span *ngIf="formGroup.get(nameField)?.hasError('minlength') ||
           formGroup.get(nameField)?.hasError('maxlength')"
-          class="helper-text" style="color: #f44434">
+          class="helper-text" style="color: var(--error)">
       {{lengthMessage}}
-    </span>
-    <span *ngIf="!passwordCheck"
-          class="helper-text" style="color: #f44434">
-      La contraseña no coincide
     </span>
   </div>
   <!--

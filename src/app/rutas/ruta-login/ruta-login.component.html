@@ -7,16 +7,17 @@
     Facturación
   </div>
 
-  <form class="p-3 mt-3">
+  <form class="p-3 mt-3" [formGroup]="formGroup">
     <div class="form-field d-flex align-items-center">
-      <input type="text" id="numero_identificación" placeholder="Cédula/RUC">
+      <input type="text" id="correo_electronico" placeholder="Correo electrónico" formControlName="correoUsuario">
     </div>
     <div class="form-field d-flex align-items-center">
-      <input type="password"id="pwd" placeholder="Contraseña">
+      <input type="password" id="pwd" placeholder="Contraseña" formControlName="passwordUsuario">
     </div>
   </form>
+  <p *ngIf="!credencialesValidas" style="color: red">El usuario y/o contraseña son incorrectos</p>
   <div class="p-3 mt-3">
-    <button class="btn mt-3" type="button" (click)="ingresarUsuario()">Ingresar</button>
+    <button class="btn mt-3" type="button" (click)="verificarUsuario()">Ingresar</button>
   </div>
 
   <div class="text-center extra-options">

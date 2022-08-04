@@ -15,7 +15,6 @@ export class InputGenericComponent implements OnInit {
   @Input() helpText: string = ''
   @Input() requiredMessage: string = ''
   @Input() lengthMessage: string = ''
-  @Input() passwordCheck: boolean = true
 
   constructor() { }
 

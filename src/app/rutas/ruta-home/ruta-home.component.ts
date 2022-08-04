@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {ItemSideNavInterface} from "../../servicios/interfaces/itemSideNav.interface";
 import {ActivatedRoute, Router} from "@angular/router";
+import {UsuarioService} from "../../servicios/http/usuario/usuario.service";
+import {UsuarioInterface} from "../../servicios/http/usuario/usuario.interface";
 
 @Component({
   selector: 'app-ruta-home',
@@ -40,16 +42,20 @@ export class RutaHomeComponent implements OnInit {
   ]
 
   idUsuario =-1
+  nombreUsuario = '';
 
   constructor(private readonly router: Router,
-              private readonly activatedRoute: ActivatedRoute,) { }
+              private readonly activatedRoute: ActivatedRoute,
+              private readonly usuarioService: UsuarioService) { }
 
   ngOnInit(): void {
     const parametroRuta$ = this.activatedRoute.params;
     parametroRuta$
       .subscribe({
         next:(parametrosRuta) => {
-          this.idUsuario = parametrosRuta['idUsuario'];
+          this.idUsuario = Number.parseInt(parametrosRuta['idUsuario']);
+          console.log(this.idUsuario)
+          this.buscarUsuario()
         }
       })
   }
@@ -65,5 +71,21 @@ export class RutaHomeComponent implements OnInit {
     }else{
       this.isOpenMenu = true;
     }
+  }
+
+  private buscarUsuario() {
+    // Buscar información de usuario
+    this.usuarioService.get(this.idUsuario)
+      .subscribe(
+        {
+          next: (datos) => { // try then
+            const admin = datos as UsuarioInterface
+            this.nombreUsuario = admin.nombres.toUpperCase() + ' ' + admin.apellidos.toUpperCase()
+          },
+          error: (error) => { // catch
+            console.error({error});
+          }
+        }
+      )
   }
 }

@@ -83,28 +83,14 @@ export class RutaSignupComponent implements OnInit {
 
     this.formGroupUsuario =this.formBuilder.group(
       {
-        nombres: ['', [Validators.required, Validators.max(45)]],
-        apellidos: ['', [Validators.required, Validators.max(45)]],
-        correo: ['', [Validators.required, Validators.email, Validators.max(45)]],
+        nombres: ['', [Validators.required, Validators.maxLength(45)]],
+        apellidos: ['', [Validators.required, Validators.maxLength(45)]],
+        correo: ['', [Validators.required, Validators.email, Validators.maxLength(45)]],
         direccion: ['', Validators.required],
-        passwordUsuario: ['', [Validators.required, Validators.min(8), Validators.max(16)]],
-        passwordConfirmacion: ['', [Validators.required, Validators.min(8), Validators.max(16)]],
+        passwordUsuario: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(16)]],
+        passwordConfirmacion: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(16)]],
       }
     )
-
-    /*
-    this.formGroupUsuario =this.formBuilder.group(
-      {
-        nombres: ['', Validators.required],
-        apellidos: ['', Validators.required],
-        correo: ['', Validators.required],
-        direccion: ['', Validators.required],
-        passwordUsuario: ['', Validators.required],
-        passwordConfirmacion: ['', Validators.required],
-      }
-    )
-
-     */
   }
 
   ngOnInit(): void {
@@ -128,7 +114,7 @@ export class RutaSignupComponent implements OnInit {
             next: (data) => {
               const direccionCreada = data as DireccionInterface
               this.idDireccionRegistrada = direccionCreada.id_direccion
-              console.log(direccionCreada)
+              //console.log(direccionCreada)
             },
             error: (error) => {
               console.log(error)
@@ -148,7 +134,7 @@ export class RutaSignupComponent implements OnInit {
                   {
                     next: (data) => {
                       const  usuarioCreado = data as UsuarioInterface
-                      console.log(usuarioCreado)
+                      //console.log(usuarioCreado)
                     },
                     error: (error) => {
                       console.log(error)

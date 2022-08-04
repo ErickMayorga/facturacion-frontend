@@ -12,19 +12,7 @@
             <form class="mx-1 mx-md-4">
               <div class="d-flex flex-wrap align-items-center mb-4">
                 <div class="col-md-5 form-outline flex-fill mb-0" *ngFor="let field of fields">
-                  <div *ngIf="field.nameField === 'passwordConfirmacion'">
-                    <app-input-generic
-                      [title]="field.title"
-                      [nameField]="field.nameField"
-                      [type]="field.type"
-                      [helpText]="field.helpText"
-                      [requiredMessage]="field.requiredMessage"
-                      [lengthMessage]="field.lengthMessage"
-                      [formGroup]="formGroupUsuario"
-                      [passwordCheck]="passwordCheck"
-                    ></app-input-generic>
-                  </div>
-                  <div *ngIf="field.nameField != 'passwordConfirmacion' && field.nameField != 'direccion'">
+                  <div *ngIf="field.nameField != 'direccion'">
                     <app-input-generic
                       [title]="field.title"
                       [nameField]="field.nameField"
@@ -55,7 +43,7 @@
                   </div>
                 </div>
               </div>
-
+              <p *ngIf="!passwordCheck" style="color: var(--error)">Las contraseñas no coinciden</p>
               <div class="form-check d-flex justify-content-center mb-5">
                 <input class="form-check-input me-2" type="checkbox" value="" id="form2Example3c" />
                 <label class="form-check-label">
