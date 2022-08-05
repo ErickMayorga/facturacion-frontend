@@ -54,7 +54,7 @@ export class RutaHomeComponent implements OnInit {
       .subscribe({
         next:(parametrosRuta) => {
           this.idUsuario = Number.parseInt(parametrosRuta['idUsuario']);
-          console.log(this.idUsuario)
+          //console.log(this.idUsuario)
           this.buscarUsuario()
         }
       })

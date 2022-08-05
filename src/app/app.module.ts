@@ -25,6 +25,7 @@ import { RutaNotasDeDebitoComponent } from './rutas/ruta-notas-de-debito/ruta-no
 import { RutaNotasDeCreditoComponent } from './rutas/ruta-notas-de-credito/ruta-notas-de-credito.component';
 import { RutaRetencionesComponent } from './rutas/ruta-retenciones/ruta-retenciones.component';
 import { RutaEmpresaComponent } from './rutas/ruta-empresa/ruta-empresa.component';
+import { MatSnackBarModule} from "@angular/material/snack-bar";
 
 
 @NgModule({
@@ -55,7 +56,8 @@ import { RutaEmpresaComponent } from './rutas/ruta-empresa/ruta-empresa.componen
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
-    MatIconModule
+    MatIconModule,
+    MatSnackBarModule
   ],
   providers: [
     {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher}

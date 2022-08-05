@@ -29,29 +29,29 @@
 
 <!-- SELECT -->
 <div *ngIf="type === 'select'">
-  <div class="input-field col s12">
+  <div [formGroup]="formGroup" class="input-field col s12">
     <label>{{title}}</label><br><br>
     <select class="form-select" formControlName="{{nameField}}">
       <option value="" disabled selected>{{helpText}}</option>
       <option *ngFor="let option of options" value="{{option}}">{{option}}</option>
     </select>
-  </div>
-  <div *ngIf="formGroup.get(nameField)">
-    <span *ngIf="formGroup.get(nameField)?.valid" class="helper-text">{{helpText}}</span>
-    <span *ngIf="
-             formGroup.get(nameField)?.invalid &&
-             formGroup.get(nameField)?.touched &&
-             formGroup.get(nameField)?.dirty &&
-             !(formGroup.get(nameField)?.hasError('minlength') ||
-            formGroup.get(nameField)?.hasError('maxlength'))"
-          class="helper-text" style="color: var(--error)">
-      {{requiredMessage}}
-      </span>
-    <span *ngIf="formGroup.get(nameField)?.hasError('minlength') ||
-            formGroup.get(nameField)?.hasError('maxlength')"
-          class="helper-text" style="color: var(--error)">
-        {{lengthMessage}}
-      </span>
+    <div *ngIf="formGroup.get(nameField)">
+      <span *ngIf="formGroup.get(nameField)?.valid" class="helper-text">{{helpText}}</span>
+      <span *ngIf="
+               formGroup.get(nameField)?.invalid &&
+               formGroup.get(nameField)?.touched &&
+               formGroup.get(nameField)?.dirty &&
+               !(formGroup.get(nameField)?.hasError('minlength') ||
+              formGroup.get(nameField)?.hasError('maxlength'))"
+            class="helper-text" style="color: var(--error)">
+        {{requiredMessage}}
+        </span>
+      <span *ngIf="formGroup.get(nameField)?.hasError('minlength') ||
+              formGroup.get(nameField)?.hasError('maxlength')"
+            class="helper-text" style="color: var(--error)">
+          {{lengthMessage}}
+        </span>
+    </div>
   </div>
 </div>
 
