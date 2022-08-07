@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {InputGenericInterface} from "../../servicios/interfaces/input-generic.interface";
 import {ActivatedRoute, Router} from "@angular/router";
 import {EmpresaService} from "../../servicios/http/empresa/empresa.service";
 import {ModalDireccionComponent} from "../../componentes/modal-direccion/modal-direccion.component";
@@ -11,6 +10,7 @@ import {DireccionInterface} from "../../servicios/http/direccion/direccion.inter
 import {EmpresaCreateInterface} from "../../servicios/http/empresa/empresa-create.interface";
 import {EmpresaInterface} from "../../servicios/http/empresa/empresa.interface";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {empresaForm} from "./empresa-form";
 
 @Component({
   selector: 'app-ruta-empresa',
@@ -20,85 +20,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 export class RutaEmpresaComponent implements OnInit {
 
   formGroupEmpresa = new FormGroup({});
-  fields: InputGenericInterface[] = [
-    {
-      title: 'RUC',
-      nameField: 'ruc',
-      type: 'text',
-      helpText: 'Ingrese su número de RUC',
-      requiredMessage: 'El RUC es requerido',
-      lengthMessage: 'El RUC debe tener exactamente 13 caracteres'
-    },
-    {
-      title: 'Razón Social',
-      nameField: 'razon_social',
-      type: 'text',
-      helpText: 'Ingrese sus nombres o razón social',
-      requiredMessage: 'La razón social es requerida',
-      lengthMessage: 'La razón social debe tener máximo 100 caracteres'
-    },
-    {
-      title: 'Nombre Comercial',
-      nameField: 'nombre_comercial',
-      type: 'text',
-      helpText: 'Ingrese el nombre comercial de su empresa',
-      lengthMessage: 'La razón social debe tener máximo 45 caracteres'
-    },
-    {
-      title: 'Dirección Matriz',
-      nameField: 'direccion_matriz',
-      type: 'text',
-      helpText: 'Ingrese la dirección de la matriz',
-      requiredMessage: 'La dirección matriz es requerida',
-    },
-    {
-      title: 'Dirección Establecimiento',
-      nameField: 'direccion_establecimiento',
-      type: 'text',
-      helpText: 'Ingrese la dirección de su establecimiento',
-      requiredMessage: 'La dirección establecimiento es requerida',
-    },
-    {
-      title: 'Código de establecimiento',
-      nameField: 'codigo_establecimiento',
-      type: 'text',
-      helpText: 'Ingrese un código para su establecimiento',
-      requiredMessage: 'El código de establecimiento es requerido',
-      lengthMessage: 'El código debe tener máximo 10 caracteres'
-    },
-    {
-      title: 'Código del Punto de Emisión',
-      nameField: 'codigo_punto_emision',
-      type: 'text',
-      helpText: 'Ingrese un código para su punto de emisión',
-      requiredMessage: 'El código del punto de emisión es requerido',
-      lengthMessage: 'El código debe tener máximo 10 caracteres'
-    },
-    {
-      title: 'Contribuyente especial',
-      nameField: 'contribuyente_especial',
-      type: 'number',
-      helpText: 'Ingrese su número de contribuyente especial',
-      requiredMessage: 'El número de contribuyente es requerido',
-      lengthMessage: 'El número de contribuyente debe ser mayor a 0'
-    },
-    {
-      title: 'Obligado a llevar contabilidad',
-      nameField: 'obligado_contabilidad',
-      type: 'checkbox',
-      helpText: 'Indique si está obligado a llevar contabilidad',
-      requiredMessage: 'Este campo es requerido',
-    },
-    {
-      title: 'Tipo de ambiente',
-      nameField: 'ambiente',
-      type: 'select',
-      helpText: 'Seleccione un ambiente',
-      requiredMessage: 'Este campo es requerido',
-      options: ['Producción', 'Pruebas']
-    },
-
-  ];
+  fields = empresaForm
 
   idUsuario: number = -1;
   direccionMatrizRegistro: DireccionCreateInterface = {} as DireccionCreateInterface;
@@ -109,10 +31,6 @@ export class RutaEmpresaComponent implements OnInit {
   idDireccionEstablecimiento = -1
   empresaRegistrada: EmpresaInterface = {} as EmpresaInterface ;
   tieneEmpresa = false
-  cambioDireccionMatriz = false
-  cambioDireccionEstablecimiento = false
-
-  durationInSeconds = 5;
 
   constructor(private readonly router: Router,
               private readonly activatedRoute: ActivatedRoute,
@@ -126,8 +44,8 @@ export class RutaEmpresaComponent implements OnInit {
         ruc: ['', [Validators.required, Validators.maxLength(13)]],
         razon_social: ['', [Validators.required, Validators.maxLength(100)]],
         nombre_comercial: ['', [Validators.maxLength(45)]],
-        direccion_matriz: ['', Validators.required],
-        direccion_establecimiento: ['', Validators.required],
+        direccion_matriz: [{value: '', disable: true}, Validators.required],
+        direccion_establecimiento: [{value: '', disable: true}, Validators.required],
         codigo_establecimiento: ['', [Validators.required, Validators.maxLength(10)]],
         codigo_punto_emision: ['', [Validators.required, Validators.maxLength(10)]],
         contribuyente_especial: ['', Validators.required],
@@ -145,28 +63,20 @@ export class RutaEmpresaComponent implements OnInit {
         next:(parametrosRuta) => {
           //console.log(parametrosRuta)
           this.idUsuario = Number.parseInt(parametrosRuta['idUsuario']);
-          this.buscarEmpresa(this.idUsuario)
+          this.buscarEmpresa()
         }
       })
   }
 
-  guardarInformacion() {
-    if(this.tieneEmpresa){
-      this.actualizarInformacion()
-    }else{
-      this.registrarInformación()
-    }
+  // Carga inicial de empresa registrada (si existe)
 
-  }
-
-  private buscarEmpresa(idUsuario: number) {
+  private buscarEmpresa() {
     this.empresaService.getAll({})
       .subscribe(
         {
           next: (datos) => { // try then
             const empresas = datos as EmpresaInterface[]
-            //console.log(usuarios)
-            // Verificar correo y password
+            // Verificar si el usuario tiene empresa
             for(let empresa of empresas){
               if(empresa.id_usuario === this.idUsuario){
                 this.tieneEmpresa = true
@@ -174,7 +84,6 @@ export class RutaEmpresaComponent implements OnInit {
                 return
               }
             }
-            //console.log('El correo y/o password no coinciden')
             this.tieneEmpresa = false
           },
           error: (error) => { // catch
@@ -189,20 +98,73 @@ export class RutaEmpresaComponent implements OnInit {
       )
   }
 
-  guardarDireccion(name: string) {
+  private cargarInformacion() {
+    this.direccionService.get(this.empresaRegistrada.id_direccion_matriz)
+      .subscribe(
+        {
+          next: (datos) => { // try then
+            const direccion = datos as DireccionInterface
+            this.direccionMatrizActual = direccion
+          },
+          error: (error) => { // catch
+            console.error({error});
+          },
+          complete: () => {
+            this.direccionService.get(this.empresaRegistrada.id_direccion_establecimiento)
+              .subscribe(
+                {
+                  next: (datos) => { // try then
+                    const direccion = datos as DireccionInterface
+                    this.direccionEstablecimientoActual= direccion
+                  },
+                  error: (error) => { // catch
+                    console.error({error});
+                  },
+                  complete: () => {
+                    this.formGroupEmpresa.patchValue({
+                      ruc: this.empresaRegistrada.ruc,
+                      razon_social: this.empresaRegistrada.nombres_razon_social,
+                      nombre_comercial: this.empresaRegistrada.nombre_comercial,
+                      direccion_matriz: this.direccionService.getStringDireccion(this.direccionMatrizActual),
+                      direccion_establecimiento: this.direccionService.getStringDireccion(this.direccionEstablecimientoActual),
+                      codigo_establecimiento: this.empresaRegistrada.codigo_establecimiento,
+                      codigo_punto_emision: this.empresaRegistrada.codigo_punto_emision,
+                      contribuyente_especial: this.empresaRegistrada.num_contribuyente_especial,
+                      obligado_contabilidad: this.empresaRegistrada.obligado_contabilidad,
+                      ambiente: this.empresaRegistrada.ambiente
+                    });
+                  }
+                }
+              )
+          }
+        }
+      )
+  }
+
+  // Guardado general de información y direcciones
+
+  guardarInformacion() {
     if(this.tieneEmpresa){
-      this.guardarDireccionActualizar(name)
+      this.actualizarInformacion()
     }else{
-      this.guardarDireccionRegistro(name)
+      this.registrarInformacion()
     }
   }
 
-  private guardarDireccionRegistro(name: string){
+  guardarDireccion(name: string){
+    let direccionObject = null
+    if(name === 'direccion_matriz'){
+      direccionObject = this.direccionMatrizActual
+    }else{
+      direccionObject = this.direccionEstablecimientoActual
+    }
     const referenciaDialogo = this.dialog.open(
       ModalDireccionComponent,
       {
         disableClose: false,
-        data: {}
+        data: {
+          direccionActual: direccionObject,
+        }
       }
     )
     const despuesCerrado$ = referenciaDialogo.afterClosed()
@@ -210,15 +172,24 @@ export class RutaEmpresaComponent implements OnInit {
       .subscribe(
         (datos) => {
           if(datos!=undefined){
+            const direccion = datos['direccion']
             if(name === 'direccion_matriz'){
-              this.direccionMatrizRegistro = datos['direccion']
+              if(!this.tieneEmpresa){
+                this.direccionMatrizRegistro = direccion as DireccionCreateInterface
+              }else{
+                this.direccionMatrizActual = direccion as DireccionInterface
+              }
               this.formGroupEmpresa.patchValue({
-                direccion_matriz: this.direccionService.getStringDireccion(this.direccionMatrizRegistro),
+                direccion_matriz: this.direccionService.getStringDireccion(direccion),
               });
             }else if(name === 'direccion_establecimiento'){
-              this.direccionEstablecimientoRegistro = datos['direccion']
+              if(!this.tieneEmpresa){
+                this.direccionEstablecimientoRegistro = direccion as DireccionCreateInterface
+              }else {
+                this.direccionEstablecimientoActual = direccion as DireccionInterface
+              }
               this.formGroupEmpresa.patchValue({
-                direccion_establecimiento: this.direccionService.getStringDireccion(this.direccionEstablecimientoRegistro),
+                direccion_establecimiento: this.direccionService.getStringDireccion(direccion),
               });
             }
           }
@@ -226,42 +197,37 @@ export class RutaEmpresaComponent implements OnInit {
       )
   }
 
-  private guardarDireccionActualizar(name: string){
-    const referenciaDialogo = this.dialog.open(
-      ModalDireccionComponent,
-      {
-        disableClose: false,
-        data: {}
-      }
-    )
-    const despuesCerrado$ = referenciaDialogo.afterClosed()
-    despuesCerrado$
+  // Registro de nueva información
+
+  private registrarInformacion(){
+    this.direccionService.create(this.direccionMatrizRegistro)
       .subscribe(
-        (datos) => {
-          if(datos!=undefined){
-            if(name === 'direccion_matriz'){
-              const direccionNueva = datos['direccion'] as DireccionInterface
-              if(this.direccionMatrizActual.canton !== direccionNueva.canton ||
-              this.direccionMatrizActual.parroquia !== direccionNueva.parroquia ||
-              this.direccionMatrizActual.descripcion_exacta !== direccionNueva.descripcion_exacta){
-                this.cambioDireccionMatriz = true
-              }
-              this.direccionMatrizActual = direccionNueva
-              this.formGroupEmpresa.patchValue({
-                direccion_matriz: this.direccionService.getStringDireccion(this.direccionMatrizRegistro),
-              });
-            }else if(name === 'direccion_establecimiento'){
-              const direccionNueva = datos['direccion'] as DireccionInterface
-              if(this.direccionEstablecimientoActual.canton !== direccionNueva.canton ||
-                this.direccionEstablecimientoActual.parroquia !== direccionNueva.parroquia ||
-                this.direccionEstablecimientoActual.descripcion_exacta !== direccionNueva.descripcion_exacta){
-                this.cambioDireccionEstablecimiento = true
-              }
-              this.direccionEstablecimientoActual = direccionNueva
-              this.formGroupEmpresa.patchValue({
-                direccion_establecimiento: this.direccionService.getStringDireccion(this.direccionEstablecimientoRegistro),
-              });
-            }
+        {
+          next: (data) => {
+            const direccionCreada = data as DireccionInterface
+            this.idDireccionMatriz = direccionCreada.id_direccion
+            //console.log(direccionCreada)
+          },
+          error: (error) => {
+            console.log(error)
+          },
+          complete: () => {
+            this.direccionService.create(this.direccionEstablecimientoRegistro)
+              .subscribe(
+                {
+                  next: (data) => {
+                    const direccionCreada = data as DireccionInterface
+                    this.idDireccionEstablecimiento = direccionCreada.id_direccion
+                    //console.log(direccionCreada)
+                  },
+                  error: (error) => {
+                    console.log(error)
+                  },
+                  complete: () => {
+                    this.registrarEmpresa()
+                  }
+                }
+              )
           }
         }
       )
@@ -307,171 +273,12 @@ export class RutaEmpresaComponent implements OnInit {
       )
   }
 
-  private registrarInformación(){
-    this.direccionService.create(this.direccionMatrizRegistro)
-      .subscribe(
-        {
-          next: (data) => {
-            const direccionCreada = data as DireccionInterface
-            this.idDireccionMatriz = direccionCreada.id_direccion
-            //console.log(direccionCreada)
-          },
-          error: (error) => {
-            console.log(error)
-          },
-          complete: () => {
-            this.direccionService.create(this.direccionEstablecimientoRegistro)
-              .subscribe(
-                {
-                  next: (data) => {
-                    const direccionCreada = data as DireccionInterface
-                    this.idDireccionEstablecimiento = direccionCreada.id_direccion
-                    //console.log(direccionCreada)
-                  },
-                  error: (error) => {
-                    console.log(error)
-                  },
-                  complete: () => {
-                    this.registrarEmpresa()
-                  }
-                }
-              )
-          }
-        }
-      )
-  }
-
+  // Actualizar información existente
   private actualizarInformacion() {
-    //console.log('Requiere actualización')
-    //console.log(this.cambioDireccionMatriz + ' ' + this.cambioDireccionEstablecimiento)
-    if(this.cambioDireccionMatriz || this.cambioDireccionEstablecimiento){
-      this.registrarDireccionesActualizar()
-    }else{
-      this.idDireccionMatriz = this.direccionMatrizActual.id_direccion
-      this.idDireccionEstablecimiento = this.direccionEstablecimientoActual.id_direccion
-      this.actualizarEmpresa()
-    }
-
-  }
-
-  private cargarInformacion() {
-    this.direccionService.get(this.empresaRegistrada.id_direccion_matriz)
-      .subscribe(
-        {
-          next: (datos) => { // try then
-            const direccion = datos as DireccionInterface
-            this.direccionMatrizActual = direccion
-          },
-          error: (error) => { // catch
-            console.error({error});
-          },
-          complete: () => {
-            this.direccionService.get(this.empresaRegistrada.id_direccion_establecimiento)
-              .subscribe(
-                {
-                  next: (datos) => { // try then
-                    const direccion = datos as DireccionInterface
-                    this.direccionEstablecimientoActual= direccion
-                  },
-                  error: (error) => { // catch
-                    console.error({error});
-                  },
-                  complete: () => {
-                    this.formGroupEmpresa.patchValue({
-                      ruc: this.empresaRegistrada.ruc,
-                      razon_social: this.empresaRegistrada.nombres_razon_social,
-                      nombre_comercial: this.empresaRegistrada.nombre_comercial,
-                      direccion_matriz: this.direccionService.getStringDireccion(this.direccionMatrizActual),
-                      direccion_establecimiento: this.direccionService.getStringDireccion(this.direccionEstablecimientoActual),
-                      codigo_establecimiento: this.empresaRegistrada.codigo_establecimiento,
-                      codigo_punto_emision: this.empresaRegistrada.codigo_punto_emision,
-                      contribuyente_especial: this.empresaRegistrada.num_contribuyente_especial,
-                      obligado_contabilidad: this.empresaRegistrada.obligado_contabilidad,
-                      ambiente: this.empresaRegistrada.ambiente
-                    });
-                    this.actualizarCampos()
-                  }
-                }
-              )
-          }
-        }
-      )
-  }
-
-  private registrarDireccionesActualizar() {
-    console.log('Registrar direcciones actualizar')
-    if(this.cambioDireccionMatriz && this.cambioDireccionEstablecimiento){
-      this.direccionService.create(this.direccionMatrizActual)
-        .subscribe(
-          {
-            next: (data) => {
-              const direccionCreada = data as DireccionInterface
-              this.direccionMatrizActual = direccionCreada
-              this.idDireccionMatriz = direccionCreada.id_direccion
-              //console.log(direccionCreada)
-            },
-            error: (error) => {
-              console.log(error)
-            },
-            complete: () => {
-              this.direccionService.create(this.direccionEstablecimientoActual)
-                .subscribe(
-                  {
-                    next: (data) => {
-                      const direccionCreada = data as DireccionInterface
-                      this.direccionEstablecimientoActual = direccionCreada
-                      this.idDireccionEstablecimiento = direccionCreada.id_direccion
-                      //console.log(direccionCreada)
-                    },
-                    error: (error) => {
-                      console.log(error)
-                    },
-                    complete: () => {
-                      this.actualizarEmpresa()
-                    }
-                  }
-                )
-            }
-          }
-        )
-    } else if(this.cambioDireccionMatriz && !this.cambioDireccionEstablecimiento){
-      this.direccionService.create(this.direccionMatrizActual)
-        .subscribe(
-          {
-            next: (data) => {
-              const direccionCreada = data as DireccionInterface
-              this.direccionMatrizActual = direccionCreada
-              this.idDireccionMatriz = direccionCreada.id_direccion
-              //console.log(direccionCreada)
-            },
-            error: (error) => {
-              console.log(error)
-            },
-            complete: () => {
-              this.actualizarEmpresa()
-            }
-          }
-        )
-    } else if(!this.cambioDireccionMatriz && this.cambioDireccionEstablecimiento){
-      this.direccionService.create(this.direccionEstablecimientoActual)
-        .subscribe(
-          {
-            next: (data) => {
-              const direccionCreada = data as DireccionInterface
-              this.direccionEstablecimientoActual = direccionCreada
-              this.idDireccionEstablecimiento = direccionCreada.id_direccion
-              //console.log(direccionCreada)
-            },
-            error: (error) => {
-              console.log(error)
-            },
-            complete: () => {
-              this.actualizarEmpresa()
-            }
-          }
-        )
-    }
-
+    this.idDireccionMatriz = this.direccionMatrizActual.id_direccion
+    this.idDireccionEstablecimiento = this.direccionEstablecimientoActual.id_direccion
+    this.actualizarDirecciones()
+    this.actualizarEmpresa()
   }
 
   private actualizarEmpresa() {
@@ -505,11 +312,7 @@ export class RutaEmpresaComponent implements OnInit {
       .subscribe(
         {
           next: (datos) => {
-            //console.log({datos})
-            //const url = ['/productoras']
-            //this.router.navigate(url)
-            this.openSnackBar()
-            //console.log("Actualizado")
+            this._snackBar.open('Se ha actualizado su información con éxito')
           },
           error: (error) => {
             console.error({error})
@@ -518,11 +321,32 @@ export class RutaEmpresaComponent implements OnInit {
       )
   }
 
-  openSnackBar() {
-    this._snackBar.open('Se ha actualizado su información con éxito')
-  }
+  private actualizarDirecciones() {
+    const actualizarMatriz$ = this.direccionService.update(this.idDireccionMatriz, this.direccionMatrizActual)
+    actualizarMatriz$
+      .subscribe(
+        {
+          next: (datos) => {
+            //console.log(datos)
+            //this._snackBar.open('Se ha actualizado su información con éxito')
+          },
+          error: (error) => {
+            console.error({error})
+          }
+        }
+      )
 
-  actualizarCampos(){
-    document.getElementById('ruc')?.click()
+    const actualizarEstablecimiento$ = this.direccionService.update(this.idDireccionEstablecimiento, this.direccionEstablecimientoActual)
+    actualizarEstablecimiento$
+      .subscribe(
+        {
+          next: (datos) => {
+            //this._snackBar.open('Se ha actualizado su información con éxito')
+          },
+          error: (error) => {
+            console.error({error})
+          }
+        }
+      )
   }
 }

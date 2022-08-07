@@ -44,13 +44,15 @@ export class RutaClientesComponent implements OnInit {
   private idUsuario: number = -1;
   private direccionCliente: DireccionCreateInterface = {} as DireccionCreateInterface;
   private nuevoCliente: ClienteCreateInterface = {} as ClienteCreateInterface;
-  private idDireccionRegistrada  = -1;
+  private direccionSeleccionada: DireccionInterface = {} as DireccionInterface;
+  private clienteSeleccionado: ClienteInterface = {} as ClienteInterface;
 
   constructor(private readonly clienteService: ClienteService,
               public dialog: MatDialog,
               private snackBar: MatSnackBar,
               private readonly activatedRoute: ActivatedRoute,
-              private readonly direccionService: DireccionService,) {
+              private readonly direccionService: DireccionService,
+              private _snackBar: MatSnackBar) {
     this.buscarClientes()
   }
 
@@ -66,24 +68,55 @@ export class RutaClientesComponent implements OnInit {
       })
   }
 
+  // Búsqueda y filtro de clientes
+
+  buscarClientes() {
+    this.clienteService.getAll({})
+      .subscribe(
+        {
+          next: (datos) => {
+            this.clientesDB = datos as ClienteInterface[]
+          },
+          error: (error) => {
+            console.log(error)
+          },
+          complete: () => {
+            this.clientesBuscados = this.clientesDB
+          }
+        }
+      )
+  }
+
+  filtrarClientes() {
+    const clientesFiltrados = []
+    for(let cliente of this.clientesDB){
+      if(cliente.nombres_razon_social.includes(this.busqueda) || cliente.numero_identificacion.includes(this.busqueda)){
+        clientesFiltrados.push(cliente)
+      }
+    }
+    this.clientesBuscados = clientesFiltrados
+  }
+
+  // CRUD Clientes
+
   realizarAccion(action: string, id_cliente: number){
     if(action === 'eliminar'){
       this.eliminarProductora(id_cliente)
     }
-
     if(action === 'editar'){
-      
+      this.abrirModalCliente('editar', id_cliente)
     }
-
   }
 
-  registrarCliente(){
+  abrirModalCliente(operacion: 'crear'|'editar', idCliente: number = -1){
     const referenciaDialogo = this.dialog.open(
       ModalClienteComponent,
       {
         disableClose: false,
         data: {
-          usuario: this.idUsuario
+          usuario: this.idUsuario,
+          operacion: operacion,
+          cliente: idCliente
         }
       }
     )
@@ -92,9 +125,18 @@ export class RutaClientesComponent implements OnInit {
       .subscribe(
         (datos) => {
           if(datos!=undefined){
-            this.direccionCliente = datos['direccion'] as DireccionCreateInterface
-            this.nuevoCliente = datos['cliente'] as ClienteCreateInterface
-            this.registrarInformacion()
+            const direccion = datos['direccion']
+            const cliente = datos['cliente']
+            if(operacion === 'crear'){
+              this.direccionCliente = direccion as DireccionCreateInterface
+              this.nuevoCliente = cliente as ClienteCreateInterface
+              this.registrarInformacion()
+            }
+            if(operacion === 'editar'){
+              this.direccionSeleccionada = direccion as DireccionInterface
+              this.clienteSeleccionado = cliente as ClienteInterface
+              this.actualizarInformacion()
+            }
           }
         }
       )
@@ -135,39 +177,36 @@ export class RutaClientesComponent implements OnInit {
       )
   }
 
-  refresh() {
-    window.location.reload();
-  }
-
-  buscarClientes() {
-    this.clienteService.getAll({})
+  actualizarInformacion(){
+    const actualizarCliente$ = this.clienteService.update(this.clienteSeleccionado.id_cliente, this.clienteSeleccionado)
+    actualizarCliente$
       .subscribe(
         {
           next: (datos) => {
-            this.clientesDB = datos as ClienteInterface[]
+            //console.log(datos)
+            this.refresh()
           },
           error: (error) => {
-            console.log(error)
+            console.error({error})
           },
           complete: () => {
-            this.clientesBuscados = this.clientesDB
+            this._snackBar.open('Se ha actualizado el cliente con éxito')
           }
         }
       )
-  }
-
-  filtrarClientes() {
-    const clientesFiltrados = []
-    for(let cliente of this.clientesDB){
-      if(cliente.nombres_razon_social.includes(this.busqueda) || cliente.numero_identificacion.includes(this.busqueda)){
-        clientesFiltrados.push(cliente)
-      }
-    }
-    this.clientesBuscados = clientesFiltrados
-  }
-
-  actualizarCliente(){
-
+    const actualizarDireccion$ = this.direccionService.update(this.direccionSeleccionada.id_direccion, this.direccionSeleccionada)
+    actualizarDireccion$
+      .subscribe(
+        {
+          next: (datos) => {
+            //console.log(datos)
+            //this._snackBar.open('Se ha actualizado su información con éxito')
+          },
+          error: (error) => {
+            console.error({error})
+          }
+        }
+      )
   }
 
   eliminarProductora(idProductora: number){
@@ -175,9 +214,7 @@ export class RutaClientesComponent implements OnInit {
     eliminar$.subscribe(
       {
         next: (datos) => {
-          console.log({datos})
-          //const url = ['/productoras']
-          //this.router.navigate(url)
+          //console.log({datos})
           this.refresh()
         },
         error: (error) => {
@@ -185,5 +222,9 @@ export class RutaClientesComponent implements OnInit {
         }
       }
     )
+  }
+
+  refresh() {
+    window.location.reload();
   }
 }

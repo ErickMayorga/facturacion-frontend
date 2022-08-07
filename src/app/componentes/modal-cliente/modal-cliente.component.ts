@@ -6,6 +6,10 @@ import {InputGenericInterface} from "../../servicios/interfaces/input-generic.in
 import {ClienteCreateInterface} from "../../servicios/http/cliente/cliente-create.interface";
 import {ModalDireccionComponent} from "../modal-direccion/modal-direccion.component";
 import {DireccionService} from "../../servicios/http/direccion/direccion.service";
+import {ClienteService} from "../../servicios/http/cliente/cliente.service";
+import {ClienteInterface} from "../../servicios/http/cliente/cliente.interface";
+import {DireccionInterface} from "../../servicios/http/direccion/direccion.interface";
+import {clienteForm} from "./cliente-form";
 
 @Component({
   selector: 'app-modal-cliente',
@@ -15,68 +19,24 @@ import {DireccionService} from "../../servicios/http/direccion/direccion.service
 export class ModalClienteComponent implements OnInit {
 
   formGroupCliente = new FormGroup({});
-  fields: InputGenericInterface[] = [
-    {
-      title: 'Nombre Completo/Razón Social',
-      nameField: 'razon_social',
-      type: 'text',
-      helpText: 'Ingrese el nombre o razón social',
-      requiredMessage: 'Este campo es requerido',
-      lengthMessage: 'Este campo puede tener máximo 100 caracteres'
-    },
-    {
-      title: 'Tipo de identificación',
-      nameField: 'tipo_identificacion',
-      type: 'select',
-      helpText: 'Seleccione un tipo de identificación',
-      requiredMessage: 'Este campo es requerido',
-      options: ['Cédula', 'RUC']
-    },
-    {
-      title: 'Número de identificación',
-      nameField: 'numero_identificacion',
-      type: 'text',
-      helpText: 'Ingrese el número de identificación',
-      requiredMessage: 'Este campo es requerido',
-      lengthMessage: 'Este campo debe tener 10 o 13 caracteres'
-    },
-    {
-      title: 'Dirección de domicilio',
-      nameField: 'direccion',
-      type: 'text',
-      helpText: 'Ingrese una dirección',
-      requiredMessage: 'Este campo es requerido',
-    },
-    {
-      title: 'Teléfono',
-      nameField: 'telefono',
-      type: 'text',
-      helpText: 'Ingrese un teléfono convencional o celular',
-      requiredMessage: 'Este campo es requerido',
-      lengthMessage: 'Este campo debe máximo 10 caracteres'
-    },
-    {
-      title: 'Correo electrónico',
-      nameField: 'correo',
-      type: 'email',
-      helpText: 'Ingrese un correo electrónico',
-      requiredMessage: 'Este campo es requerido',
-      lengthMessage: 'Este campo debe máximo 45 caracteres'
-    },
-  ]
+  fields = clienteForm
 
-  mostrarDireccion = false
-
-  direccionCliente: DireccionCreateInterface = {} as DireccionCreateInterface;
-  idDireccionCreada = -1
-  private usuarioActual: number = -1;
+  nextDireccion = -1
+  usuarioActual: number = -1;
+  operacion = ''
+  clienteActual: number = -1
+  clienteDB: ClienteInterface = {} as ClienteInterface
+  direccionCliente: DireccionInterface = {} as DireccionInterface;
 
   constructor( @Inject(MAT_DIALOG_DATA) public data: any,
                public dialogRef: MatDialogRef<ModalClienteComponent>,
                private readonly formBuilder: FormBuilder,
                private readonly direccionService: DireccionService,
+               private readonly clienteService: ClienteService,
                public dialog: MatDialog,) {
     this.usuarioActual = this.data.usuario
+    this.operacion = this.data.operacion
+    this.clienteActual = this.data.cliente
     this.formGroupCliente =this.formBuilder.group(
       {
         razon_social: ['', [Validators.required, Validators.maxLength(100)]],
@@ -87,13 +47,97 @@ export class ModalClienteComponent implements OnInit {
         correo: ['', [Validators.required, Validators.maxLength(45)]],
       }
     )
+    this.direccionService.getNextIndex()
+      .subscribe(
+        {
+          next: (index) => {
+            this.nextDireccion = index
+          },
+          error: (error) => {
+            console.error(error)
+          }
+        }
+      )
   }
 
   ngOnInit(): void {
+    if(this.operacion === 'crear'){
+
+    }
+    if(this.operacion === 'editar'){
+      this.buscarCliente()
+    }
   }
 
   cancelar() {
     this.dialogRef.close()
+  }
+
+  // Carga inicial de información del cliente
+  buscarCliente() {
+    this.clienteService.get(this.clienteActual)
+      .subscribe(
+        {
+          next: (datos) => {
+            this.clienteDB = datos as ClienteInterface
+          },
+          error: (err) => {
+            console.error(err)
+          },
+          complete: () => {
+            this.direccionService.get(this.clienteDB.id_direccion)
+              .subscribe(
+                {
+                  next: (datos) => {
+                    this.direccionCliente = datos as DireccionInterface
+                  },
+                  error: (err) => {
+                    console.error(err)
+                  },
+                  complete: () => {
+                    this.cargarInformacion()
+                  }
+                }
+              )
+          }
+        }
+      )
+  }
+
+  cargarInformacion() {
+    this.formGroupCliente.patchValue({
+      razon_social: this.clienteDB.nombres_razon_social,
+      tipo_identificacion: this.clienteDB.tipo_identificacion,
+      numero_identificacion: this.clienteDB.numero_identificacion,
+      direccion: this.direccionService.getStringDireccion(this.direccionCliente),
+      telefono: this.clienteDB.telefono,
+      correo: this.clienteDB.correo_electronico,
+    });
+  }
+
+  abrirModalDireccion(){
+    const referenciaDialogo = this.dialog.open(
+      ModalDireccionComponent,
+      {
+        disableClose: false,
+        data: {
+          direccionActual: this.direccionCliente
+        }
+      }
+    )
+    const despuesCerrado$ = referenciaDialogo.afterClosed()
+    despuesCerrado$
+      .subscribe(
+        (datos) => {
+          if(datos!=undefined){
+            const direccion = datos['direccion']
+            this.direccionCliente = direccion as DireccionInterface
+            this.formGroupCliente.patchValue({
+              direccion: this.direccionService.getStringDireccion(direccion),
+            });
+          }
+        }
+      )
   }
 
   guardarCliente(){
@@ -103,39 +147,34 @@ export class ModalClienteComponent implements OnInit {
     const telefono =  this.formGroupCliente.get('telefono')?.value.trim()
     const correo =  this.formGroupCliente.get('correo')?.value.trim()
 
-    const clienteActual = {
-      id_usuario: this.usuarioActual,
-      nombres_razon_social: razon_social,
-      tipo_identificacion: tipo_identificacion,
-      id_direccion: -1,
-      numero_identificacion: numero_identificacion,
-      telefono: telefono,
-      correo_electronico: correo,
-    } as ClienteCreateInterface
+    let clienteObject: ClienteInterface | ClienteCreateInterface = {} as ClienteCreateInterface
 
-    this.dialogRef.close({cliente: clienteActual, direccion: this.direccionCliente})
+    if(this.operacion === 'crear'){
+      clienteObject = {
+        id_usuario: this.usuarioActual,
+        nombres_razon_social: razon_social,
+        tipo_identificacion: tipo_identificacion,
+        id_direccion: this.nextDireccion,
+        numero_identificacion: numero_identificacion,
+        telefono: telefono,
+        correo_electronico: correo,
+      } as ClienteCreateInterface
+    }
+
+    if(this.operacion === 'editar'){
+      clienteObject = {
+        id_cliente: this.clienteDB.id_cliente,
+        id_usuario: this.usuarioActual,
+        nombres_razon_social: razon_social,
+        tipo_identificacion: tipo_identificacion,
+        id_direccion: this.direccionCliente.id_direccion,
+        numero_identificacion: numero_identificacion,
+        telefono: telefono,
+        correo_electronico: correo,
+      } as ClienteInterface
+    }
+
+
+    this.dialogRef.close({cliente: clienteObject, direccion: this.direccionCliente})
   }
-
-  guardarDireccion(){
-    const referenciaDialogo = this.dialog.open(
-      ModalDireccionComponent,
-      {
-        disableClose: false,
-        data: {}
-      }
-    )
-    const despuesCerrado$ = referenciaDialogo.afterClosed()
-    despuesCerrado$
-      .subscribe(
-        (datos) => {
-          if(datos!=undefined){
-            this.direccionCliente = datos['direccion'] as DireccionCreateInterface
-            this.formGroupCliente.patchValue({
-              direccion: this.direccionService.getStringDireccion(this.direccionCliente),
-            });
-          }
-        }
-      )
-  }
-
 }

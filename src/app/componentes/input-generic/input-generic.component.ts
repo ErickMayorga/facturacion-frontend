@@ -16,6 +16,7 @@ export class InputGenericComponent implements OnInit {
   @Input() requiredMessage?: string = ''
   @Input() lengthMessage?: string = ''
   @Input() options?: string[] = []
+  @Input() disable = true
 
   constructor() { }
 

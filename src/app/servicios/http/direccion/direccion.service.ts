@@ -74,7 +74,17 @@ export class DireccionService {
       )
   }
 
-  getStringDireccion(direccionTemp: DireccionCreateInterface) {
+  getStringDireccion(direccionTemp: DireccionCreateInterface | DireccionInterface) {
     return direccionTemp.canton + ', ' + direccionTemp.parroquia + ', ' + direccionTemp.descripcion_exacta
+  }
+
+  getNextIndex() {
+    return this.httpClient
+      .get(this.url + '/next')
+      .pipe(
+        map(
+          (index) => index as number
+        )
+      );
   }
 }
