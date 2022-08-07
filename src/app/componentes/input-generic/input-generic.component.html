@@ -58,8 +58,8 @@
 <!-- TEXT, NUMBER, ETC -->
 <div *ngIf="type != 'checkbox' && type != 'select'">
   <div [formGroup]="formGroup" class="input-field">
-    <input id="{{nameField}}" type="{{type}}" class="validate" formControlName="{{nameField}}">
-    <label for="{{nameField}}">{{title}}</label>
+    <input id="{{nameField}}" type="{{type}}" class="validate" formControlName="{{nameField}}" [disabled]="nameField.includes('direccion')">
+    <label for="{{nameField}}" class="active">{{title}}</label>
     <!--
     <span class="helper-text">{{helpText}}</span>
     -->
@@ -103,4 +103,8 @@
   </div>
 </div>
 
-
+<script>
+  $(document).ready(function() {
+    M.updateTextFields()
+  });
+</script>

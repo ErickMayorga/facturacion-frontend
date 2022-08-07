@@ -389,6 +389,7 @@ export class RutaEmpresaComponent implements OnInit {
                       obligado_contabilidad: this.empresaRegistrada.obligado_contabilidad,
                       ambiente: this.empresaRegistrada.ambiente
                     });
+                    this.actualizarCampos()
                   }
                 }
               )
@@ -518,12 +519,10 @@ export class RutaEmpresaComponent implements OnInit {
   }
 
   openSnackBar() {
-    /*
-    this._snackBar.openFromComponent(SnackbarComponent, {
-      duration: this.durationInSeconds * 1000,
-    });
-
-     */
     this._snackBar.open('Se ha actualizado su información con éxito')
+  }
+
+  actualizarCampos(){
+    document.getElementById('ruc')?.click()
   }
 }

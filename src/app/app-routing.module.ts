@@ -11,6 +11,7 @@ import {RutaNotasDeDebitoComponent} from "./rutas/ruta-notas-de-debito/ruta-nota
 import {RutaNotasDeCreditoComponent} from "./rutas/ruta-notas-de-credito/ruta-notas-de-credito.component";
 import {RutaRetencionesComponent} from "./rutas/ruta-retenciones/ruta-retenciones.component";
 import {RutaEmpresaComponent} from "./rutas/ruta-empresa/ruta-empresa.component";
+import {RutaClientesComponent} from "./rutas/ruta-clientes/ruta-clientes.component";
 
 const routes: Routes = [
   {
@@ -29,6 +30,11 @@ const routes: Routes = [
       {
         path: 'empresa',
         component: RutaEmpresaComponent
+      },
+      // Clientes
+      {
+        path: 'clientes',
+        component: RutaClientesComponent
       },
       // Comprobantes
       {

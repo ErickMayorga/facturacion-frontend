@@ -1,0 +1,37 @@
+<h1 mat-dialog-title class="d-flex justify-content-center">Nueva dirección</h1>
+<div class="d-flex flex-column justify-content-center form-outline flex-fill mb-0" *ngFor="let field of fields">
+  <div *ngIf="!field.nameField.includes('direccion')">
+    <app-input-generic
+      [title]="field.title"
+      [nameField]="field.nameField"
+      [type]="field.type"
+      [helpText]="field.helpText"
+      [requiredMessage]="field.requiredMessage"
+      [lengthMessage]="field.lengthMessage"
+      [options]="field.options"
+      [formGroup]="formGroupCliente"
+    ></app-input-generic>
+  </div>
+  <div *ngIf="field.nameField.includes('direccion')">
+    <div class="d-flex flex-row align-items-center">
+      <app-input-generic class="col-md-9"
+                         [title]="field.title"
+                         [nameField]="field.nameField"
+                         [type]="field.type"
+                         [helpText]="field.helpText"
+                         [requiredMessage]="field.requiredMessage"
+                         [lengthMessage]="field.lengthMessage"
+                         [formGroup]="formGroupCliente"
+      ></app-input-generic>
+      <div class="col-md-3">
+        <button type="button" class="btn btn-primary" (click)="guardarDireccion()">
+          <i class="small material-icons">place</i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div mat-dialog-actions class="d-flex justify-content-center">
+  <button class="btn btn-info" type="button" style="margin: 0px 20px" (click)="guardarCliente()">Aceptar</button>
+  <button class="btn btn-danger" type="button" style="margin: 0px 20px" (click)="cancelar()">Cancelar</button>
+</div>

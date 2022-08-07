@@ -26,6 +26,8 @@ import { RutaNotasDeCreditoComponent } from './rutas/ruta-notas-de-credito/ruta-
 import { RutaRetencionesComponent } from './rutas/ruta-retenciones/ruta-retenciones.component';
 import { RutaEmpresaComponent } from './rutas/ruta-empresa/ruta-empresa.component';
 import { MatSnackBarModule} from "@angular/material/snack-bar";
+import { RutaClientesComponent } from './rutas/ruta-clientes/ruta-clientes.component';
+import { ModalClienteComponent } from './componentes/modal-cliente/modal-cliente.component';
 
 
 @NgModule({
@@ -45,6 +47,8 @@ import { MatSnackBarModule} from "@angular/material/snack-bar";
     RutaNotasDeCreditoComponent,
     RutaRetencionesComponent,
     RutaEmpresaComponent,
+    RutaClientesComponent,
+    ModalClienteComponent,
   ],
   imports: [
     BrowserModule,
