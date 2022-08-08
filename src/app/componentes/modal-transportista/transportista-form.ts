@@ -1,6 +1,6 @@
 import {InputGenericInterface} from "../../servicios/interfaces/input-generic.interface";
 
-export const clienteForm: InputGenericInterface[] = [
+export const transportistaForm: InputGenericInterface[] = [
   {
     title: 'Nombre Completo/Razón Social',
     nameField: 'razon_social',
@@ -26,26 +26,19 @@ export const clienteForm: InputGenericInterface[] = [
     lengthMessage: 'Este campo debe tener 10 o 13 caracteres'
   },
   {
-    title: 'Dirección de domicilio',
-    nameField: 'direccion',
-    type: 'text',
-    helpText: 'Ingrese una dirección',
-    requiredMessage: 'Este campo es requerido',
-  },
-  {
-    title: 'Teléfono',
-    nameField: 'telefono',
-    type: 'text',
-    helpText: 'Ingrese un teléfono convencional o celular',
-    requiredMessage: 'Este campo es requerido',
-    lengthMessage: 'Este campo debe tener máximo 10 caracteres'
-  },
-  {
     title: 'Correo electrónico',
     nameField: 'correo',
     type: 'email',
     helpText: 'Ingrese un correo electrónico',
     requiredMessage: 'Este campo es requerido',
     lengthMessage: 'Este campo debe tener máximo 45 caracteres'
+  },
+  {
+    title: 'Placa',
+    nameField: 'placa',
+    type: 'text',
+    helpText: 'Ingrese la placa del vehículo',
+    requiredMessage: 'Este campo es requerido',
+    lengthMessage: 'Este campo debe tener exactamente 9 caracteres'
   },
 ]

@@ -61,9 +61,6 @@ export class ModalClienteComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if(this.operacion === 'crear'){
-
-    }
     if(this.operacion === 'editar'){
       this.buscarCliente()
     }

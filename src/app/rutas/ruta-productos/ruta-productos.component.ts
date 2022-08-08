@@ -1,23 +1,22 @@
 import { Component, OnInit } from '@angular/core';
-import {FacturaInterface} from "../../servicios/http/factura/factura.interface";
-import {ActionButtonInterface} from "../../servicios/interfaces/actionButton.interface";
 import {ClienteInterface} from "../../servicios/http/cliente/cliente.interface";
+import {ActionButtonInterface} from "../../servicios/interfaces/actionButton.interface";
+import {DireccionCreateInterface} from "../../servicios/http/direccion/direccion-create.interface";
+import {ClienteCreateInterface} from "../../servicios/http/cliente/cliente-create.interface";
+import {DireccionInterface} from "../../servicios/http/direccion/direccion.interface";
 import {ClienteService} from "../../servicios/http/cliente/cliente.service";
 import {MatDialog} from "@angular/material/dialog";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {ModalClienteComponent} from "../../componentes/modal-cliente/modal-cliente.component";
 import {ActivatedRoute} from "@angular/router";
-import {DireccionInterface} from "../../servicios/http/direccion/direccion.interface";
 import {DireccionService} from "../../servicios/http/direccion/direccion.service";
-import {DireccionCreateInterface} from "../../servicios/http/direccion/direccion-create.interface";
-import {ClienteCreateInterface} from "../../servicios/http/cliente/cliente-create.interface";
+import {ModalClienteComponent} from "../../componentes/modal-cliente/modal-cliente.component";
 
 @Component({
-  selector: 'app-ruta-clientes',
-  templateUrl: './ruta-clientes.component.html',
-  styleUrls: ['./ruta-clientes.component.scss']
+  selector: 'app-ruta-productos',
+  templateUrl: './ruta-productos.component.html',
+  styleUrls: ['./ruta-productos.component.scss']
 })
-export class RutaClientesComponent implements OnInit {
+export class RutaProductosComponent implements OnInit {
 
   theads = [
     'Razón Social',
@@ -100,7 +99,7 @@ export class RutaClientesComponent implements OnInit {
 
   realizarAccion(action: string, id_cliente: number){
     if(action === 'eliminar'){
-      this.eliminarCliente(id_cliente)
+      this.eliminarProductora(id_cliente)
     }
     if(action === 'editar'){
       this.abrirModalCliente('editar', id_cliente)
@@ -154,13 +153,13 @@ export class RutaClientesComponent implements OnInit {
             console.log(error)
           },
           complete: () => {
-            // Crear Cliente
+            // Crear Usuario
             this.clienteService.create(this.nuevoCliente)
               .subscribe(
                 {
                   next: (data) => {
-                    const clienteCreado = data as ClienteInterface
-                    console.log(clienteCreado)
+                    const  usuarioCreado = data as ClienteInterface
+                    console.log(usuarioCreado)
                   },
                   error: (error) => {
                     console.log(error)
@@ -208,8 +207,8 @@ export class RutaClientesComponent implements OnInit {
       )
   }
 
-  eliminarCliente(idCliente: number){
-    const eliminar$ = this.clienteService.delete(idCliente);
+  eliminarProductora(idProductora: number){
+    const eliminar$ = this.clienteService.delete(idProductora);
     eliminar$.subscribe(
       {
         next: (datos) => {
@@ -226,4 +225,5 @@ export class RutaClientesComponent implements OnInit {
   refresh() {
     window.location.reload();
   }
+
 }

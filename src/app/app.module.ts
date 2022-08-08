@@ -28,6 +28,9 @@ import { RutaEmpresaComponent } from './rutas/ruta-empresa/ruta-empresa.componen
 import { MatSnackBarModule} from "@angular/material/snack-bar";
 import { RutaClientesComponent } from './rutas/ruta-clientes/ruta-clientes.component';
 import { ModalClienteComponent } from './componentes/modal-cliente/modal-cliente.component';
+import { RutaTransportistasComponent } from './rutas/ruta-transportistas/ruta-transportistas.component';
+import { RutaProductosComponent } from './rutas/ruta-productos/ruta-productos.component';
+import { ModalTransportistaComponent } from './componentes/modal-transportista/modal-transportista.component';
 
 
 @NgModule({
@@ -49,6 +52,9 @@ import { ModalClienteComponent } from './componentes/modal-cliente/modal-cliente
     RutaEmpresaComponent,
     RutaClientesComponent,
     ModalClienteComponent,
+    RutaTransportistasComponent,
+    RutaProductosComponent,
+    ModalTransportistaComponent,
   ],
   imports: [
     BrowserModule,

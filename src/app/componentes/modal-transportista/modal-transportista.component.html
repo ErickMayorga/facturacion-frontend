@@ -1,0 +1,18 @@
+<h1 mat-dialog-title class="d-flex justify-content-center">Nuevo transportista</h1>
+<div class="d-flex flex-column justify-content-center form-outline flex-fill mb-0" *ngFor="let field of fields">
+  <app-input-generic
+    [title]="field.title"
+    [nameField]="field.nameField"
+    [type]="field.type"
+    [helpText]="field.helpText"
+    [requiredMessage]="field.requiredMessage"
+    [lengthMessage]="field.lengthMessage"
+    [options]="field.options"
+    [formGroup]="formGroupTransportista"
+  ></app-input-generic>
+</div>
+<div mat-dialog-actions class="d-flex justify-content-center">
+  <button class="btn btn-info" type="button" style="margin: 0px 20px" (click)="guardarTransportista()">Aceptar</button>
+  <button class="btn btn-danger" type="button" style="margin: 0px 20px" (click)="cancelar()">Cancelar</button>
+</div>
+
