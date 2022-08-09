@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import {FacturaInterface} from "../../servicios/http/factura/factura.interface";
 import {ActionButtonInterface} from "../../servicios/interfaces/actionButton.interface";
 import {ClienteInterface} from "../../servicios/http/cliente/cliente.interface";
 import {ClienteService} from "../../servicios/http/cliente/cliente.service";
@@ -50,8 +49,7 @@ export class RutaClientesComponent implements OnInit {
               public dialog: MatDialog,
               private snackBar: MatSnackBar,
               private readonly activatedRoute: ActivatedRoute,
-              private readonly direccionService: DireccionService,
-              private _snackBar: MatSnackBar) {
+              private readonly direccionService: DireccionService,) {
     this.buscarClientes()
   }
 
@@ -189,7 +187,7 @@ export class RutaClientesComponent implements OnInit {
             console.error({error})
           },
           complete: () => {
-            this._snackBar.open('Se ha actualizado el cliente con éxito')
+            this.snackBar.open('Se ha actualizado el cliente con éxito')
           }
         }
       )

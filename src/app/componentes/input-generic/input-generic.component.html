@@ -32,7 +32,6 @@
   <div [formGroup]="formGroup" class="input-field col s12">
     <label>{{title}}</label><br><br>
     <select class="form-select" formControlName="{{nameField}}">
-      <option value="" disabled selected>{{helpText}}</option>
       <option *ngFor="let option of options" value="{{option}}">{{option}}</option>
     </select>
     <div *ngIf="formGroup.get(nameField)">
@@ -56,7 +55,7 @@
 </div>
 
 <!-- TEXT, NUMBER, ETC -->
-<div *ngIf="type != 'checkbox' && type != 'select'">
+<div *ngIf="type != 'checkbox' && type != 'select' && type != 'selectDB'">
   <div [formGroup]="formGroup" class="input-field">
     <input id="{{nameField}}" type="{{type}}" class="validate" formControlName="{{nameField}}">
     <label for="{{nameField}}" class="active">{{title}}</label>

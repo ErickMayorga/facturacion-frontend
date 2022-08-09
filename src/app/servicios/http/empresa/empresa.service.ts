@@ -45,9 +45,9 @@ export class EmpresaService {
         )
       );
   }
-  get(idUsuario: number):Observable<EmpresaInterface>{
+  get(idObject: number):Observable<EmpresaInterface>{
     return this.httpClient
-      .get(this.url + '/' + idUsuario)
+      .get(this.url + '/' + idObject)
       .pipe(
         map(
           (resultadoEnData) => resultadoEnData as EmpresaInterface
@@ -55,8 +55,8 @@ export class EmpresaService {
       );
   }
 
-  update(idUsuario:number, object: EmpresaInterface): Observable<EmpresaInterface>{
-    return this.httpClient.put(this.url  + '/' + idUsuario, object)
+  update(idObject:number, object: EmpresaInterface): Observable<EmpresaInterface>{
+    return this.httpClient.put(this.url  + '/' + idObject, object)
       .pipe(
         map(
           (resultadoEnData) => resultadoEnData as EmpresaInterface
@@ -64,8 +64,8 @@ export class EmpresaService {
       )
   }
 
-  delete(idUsuario:number):Observable<EmpresaInterface>{
-    return this.httpClient.delete(this.url  + '/' + idUsuario)
+  delete(idObject:number):Observable<EmpresaInterface>{
+    return this.httpClient.delete(this.url  + '/' + idObject)
       .pipe(
         map(
           (resultadoEnData) => resultadoEnData as EmpresaInterface

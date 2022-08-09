@@ -9,7 +9,7 @@
         <div class="d-flex flex-column align-items-center">
           <div class="d-flex justify-content-center search col-md-12">
             <i class="small material-icons">search</i>
-            <input type="text" placeholder="Busca un cliente" [(ngModel)]="busqueda" (change)="filtrarClientes()">
+            <input type="text" placeholder="Busca un cliente" [(ngModel)]="busqueda" (change)="filtrarProductos()">
           </div>
           <div class="input-field col-md-12">
             <span class="helper-text text-white">Ingresa un código o nombre de producto</span>
@@ -17,7 +17,7 @@
         </div>
       </div>
       <div class="col-md-2 d-flex justify-content-end">
-        <a class="btn-floating btn-large waves-effect waves-light add-button" (click)="abrirModalCliente('crear')">
+        <a class="btn-floating btn-large waves-effect waves-light add-button" (click)="abrirModalProducto('crear')">
           <i class="material-icons">add</i>
         </a>
       </div>
@@ -37,14 +37,15 @@
       </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let cliente of clientesBuscados">
-        <td>{{cliente.nombres_razon_social}}</td>
-        <td>{{cliente.tipo_identificacion}}</td>
-        <td>{{cliente.numero_identificacion}}</td>
+      <tr *ngFor="let producto of productosBuscados">
+        <td>{{producto.codigo_principal}}</td>
+        <td>{{producto.codigo_auxiliar}}</td>
+        <td>{{producto.nombre}}</td>
+        <td>{{producto.tipo_producto}}</td>
         <td>
           <div class="d-flex align-items-center justify-content-center">
             <mat-icon *ngFor="let action of actions" class="col-md-4 action-icon"
-                      (click)="realizarAccion(action.name, cliente.id_cliente)" style="margin: 0 10px">
+                      (click)="realizarAccion(action.name, producto.id_producto)" style="margin: 0 10px">
               {{action.icon}}
             </mat-icon>
           </div>

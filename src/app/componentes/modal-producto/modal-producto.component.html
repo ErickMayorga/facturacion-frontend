@@ -1,0 +1,83 @@
+<div class="overflow-auto">
+  <h1 mat-dialog-title class="d-flex justify-content-center">Nuevo producto</h1>
+  <div class="d-flex flex-wrap">
+    <div class="d-flex flex-column justify-content-center form-outline flex-fill col-md-6" *ngFor="let field of fields">
+      <app-input-generic
+        [title]="field.title"
+        [nameField]="field.nameField"
+        [type]="field.type"
+        [helpText]="field.helpText"
+        [requiredMessage]="field.requiredMessage"
+        [lengthMessage]="field.lengthMessage"
+        [options]="field.options"
+        [formGroup]="formGroupProducto"
+      ></app-input-generic>
+    </div>
+  </div>
+  <!-- IVA -->
+  <div [formGroup]="formGroupProducto" class="input-field col-md-12">
+    <label>IVA</label><br><br>
+    <select class="form-select" formControlName="iva">
+      <option *ngFor="let option of ivaImpuestos" value="{{option.id_impuesto}}">{{option.nombre_impuesto}}</option>
+    </select>
+    <div *ngIf="formGroupProducto.get('iva')">
+      <span *ngIf="formGroupProducto.get('iva')?.valid" class="helper-text">Seleccione un valor de IVA</span>
+      <span *ngIf="
+             formGroupProducto.get('iva')?.invalid &&
+             formGroupProducto.get('iva')?.touched &&
+             formGroupProducto.get('iva')?.dirty &&
+             !(formGroupProducto.get('iva')?.hasError('minlength') ||
+            formGroupProducto.get('iva')?.hasError('maxlength'))"
+            class="helper-text" style="color: var(--error)">
+      Este campo es requerido
+      </span>
+    </div>
+  </div>
+
+  <!-- ICE -->
+  <div [formGroup]="formGroupProducto" class="input-field col-md-12">
+    <label>ICE</label><br><br>
+    <select class="form-select" formControlName="ice">
+      <option *ngFor="let option of iceImpuestos" value="{{option.id_impuesto}}">{{option.nombre_impuesto}}</option>
+    </select>
+    <div *ngIf="formGroupProducto.get('ice')">
+      <span *ngIf="formGroupProducto.get('ice')?.valid" class="helper-text">Seleccione un valor de ICE</span>
+      <span *ngIf="
+             formGroupProducto.get('ice')?.invalid &&
+             formGroupProducto.get('ice')?.touched &&
+             formGroupProducto.get('ice')?.dirty &&
+             !(formGroupProducto.get('ice')?.hasError('minlength') ||
+            formGroupProducto.get('ice')?.hasError('maxlength'))"
+            class="helper-text" style="color: var(--error)">
+      Este campo es requerido
+      </span>
+    </div>
+  </div>
+
+  <!-- IRBPNR -->
+  <div [formGroup]="formGroupProducto" class="input-field col-md-12">
+    <label>IRBPNR</label><br><br>
+    <select class="form-select" formControlName="irbpnr">
+      <option *ngFor="let option of irbpnrImpuestos" value="{{option.id_impuesto}}">{{option.nombre_impuesto}}</option>
+    </select>
+    <div *ngIf="formGroupProducto.get('irbpnr')">
+      <span *ngIf="formGroupProducto.get('irbpnr')?.valid" class="helper-text">Seleccione un valor de IRBPNR</span>
+      <span *ngIf="
+             formGroupProducto.get('irbpnr')?.invalid &&
+             formGroupProducto.get('irbpnr')?.touched &&
+             formGroupProducto.get('irbpnr')?.dirty &&
+             !(formGroupProducto.get('irbpnr')?.hasError('minlength') ||
+            formGroupProducto.get('irbpnr')?.hasError('maxlength'))"
+            class="helper-text" style="color: var(--error)">
+      Este campo es requerido
+      </span>
+    </div>
+  </div>
+
+  <div mat-dialog-actions class="d-flex justify-content-center">
+    <button class="btn btn-info" type="button" style="margin: 0px 20px" [disabled]="formGroupProducto.invalid" (click)="guardarProducto()">Aceptar</button>
+    <button class="btn btn-danger" type="button" style="margin: 0px 20px" (click)="cancelar()">Cancelar</button>
+  </div>
+</div>
+
+

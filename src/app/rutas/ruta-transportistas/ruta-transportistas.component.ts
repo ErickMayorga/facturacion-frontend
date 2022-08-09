@@ -43,8 +43,7 @@ export class RutaTransportistasComponent implements OnInit {
   constructor(private readonly transportistaService: TransportistaService,
               public dialog: MatDialog,
               private snackBar: MatSnackBar,
-              private readonly activatedRoute: ActivatedRoute,
-              private _snackBar: MatSnackBar) {
+              private readonly activatedRoute: ActivatedRoute,) {
     this.buscarClientes()
   }
 
@@ -79,7 +78,7 @@ export class RutaTransportistasComponent implements OnInit {
       )
   }
 
-  filtrarClientes() {
+  filtrarTransportistas() {
     const transportistasFiltrados = []
     for(let transportista of this.transportistasDB){
       if(transportista.nombres_razon_social.includes(this.busqueda) || transportista.numero_identificacion.includes(this.busqueda)){
@@ -164,7 +163,7 @@ export class RutaTransportistasComponent implements OnInit {
             console.error({error})
           },
           complete: () => {
-            this._snackBar.open('Se ha actualizado el transportista con éxito')
+            this.snackBar.open('Se ha actualizado el transportista con éxito')
           }
         }
       )

@@ -31,6 +31,7 @@ import { ModalClienteComponent } from './componentes/modal-cliente/modal-cliente
 import { RutaTransportistasComponent } from './rutas/ruta-transportistas/ruta-transportistas.component';
 import { RutaProductosComponent } from './rutas/ruta-productos/ruta-productos.component';
 import { ModalTransportistaComponent } from './componentes/modal-transportista/modal-transportista.component';
+import { ModalProductoComponent } from './componentes/modal-producto/modal-producto.component';
 
 
 @NgModule({
@@ -55,6 +56,7 @@ import { ModalTransportistaComponent } from './componentes/modal-transportista/m
     RutaTransportistasComponent,
     RutaProductosComponent,
     ModalTransportistaComponent,
+    ModalProductoComponent,
   ],
   imports: [
     BrowserModule,

@@ -46,9 +46,9 @@ export class DireccionService {
         )
       );
   }
-  get(idUsuario: number):Observable<DireccionInterface>{
+  get(idObject: number):Observable<DireccionInterface>{
     return this.httpClient
-      .get(this.url + '/' + idUsuario)
+      .get(this.url + '/' + idObject)
       .pipe(
         map(
           (resultadoEnData) => resultadoEnData as DireccionInterface
@@ -56,8 +56,8 @@ export class DireccionService {
       );
   }
 
-  update(idUsuario:number, object: DireccionInterface): Observable<DireccionInterface>{
-    return this.httpClient.put(this.url  + '/' + idUsuario, object)
+  update(idObject:number, object: DireccionInterface): Observable<DireccionInterface>{
+    return this.httpClient.put(this.url  + '/' + idObject, object)
       .pipe(
         map(
           (resultadoEnData) => resultadoEnData as DireccionInterface
@@ -65,8 +65,8 @@ export class DireccionService {
       )
   }
 
-  delete(idUsuario:number):Observable<DireccionInterface>{
-    return this.httpClient.delete(this.url  + '/' + idUsuario)
+  delete(idObject:number):Observable<DireccionInterface>{
+    return this.httpClient.delete(this.url  + '/' + idObject)
       .pipe(
         map(
           (resultadoEnData) => resultadoEnData as DireccionInterface

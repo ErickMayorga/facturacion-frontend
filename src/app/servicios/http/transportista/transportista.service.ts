@@ -45,9 +45,9 @@ export class TransportistaService {
         )
       );
   }
-  get(idUsuario: number):Observable<TransportistaInterface>{
+  get(idObject: number):Observable<TransportistaInterface>{
     return this.httpClient
-      .get(this.url + '/' + idUsuario)
+      .get(this.url + '/' + idObject)
       .pipe(
         map(
           (resultadoEnData) => resultadoEnData as TransportistaInterface
@@ -55,8 +55,8 @@ export class TransportistaService {
       );
   }
 
-  update(idUsuario:number, object: TransportistaInterface): Observable<TransportistaInterface>{
-    return this.httpClient.put(this.url  + '/' + idUsuario, object)
+  update(idObject:number, object: TransportistaInterface): Observable<TransportistaInterface>{
+    return this.httpClient.put(this.url  + '/' + idObject, object)
       .pipe(
         map(
           (resultadoEnData) => resultadoEnData as TransportistaInterface
@@ -64,8 +64,8 @@ export class TransportistaService {
       )
   }
 
-  delete(idUsuario:number):Observable<TransportistaInterface>{
-    return this.httpClient.delete(this.url  + '/' + idUsuario)
+  delete(idObject:number):Observable<TransportistaInterface>{
+    return this.httpClient.delete(this.url  + '/' + idObject)
       .pipe(
         map(
           (resultadoEnData) => resultadoEnData as TransportistaInterface
