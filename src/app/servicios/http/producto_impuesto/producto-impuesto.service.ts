@@ -55,6 +55,18 @@ export class ProductoImpuestoService {
       );
   }
 
+  getImpuestosPorProducto(idProducto: number) {
+    return this.httpClient
+      .get(
+        this.url + '/producto/' + idProducto,
+      )
+      .pipe(
+        map(
+          (resultadoEnData) => resultadoEnData as ProductoImpuestoInterface[]
+        )
+      );
+  }
+
   update(idObject:number, object: ProductoImpuestoInterface): Observable<ProductoImpuestoInterface>{
     return this.httpClient.put(this.url  + '/' + idObject, object)
       .pipe(
@@ -73,15 +85,12 @@ export class ProductoImpuestoService {
       )
   }
 
-  getImpuestosPorProducto(idProducto: number) {
-    return this.httpClient
-      .get(
-        this.url + '/producto/' + idProducto,
-      )
+  deleteImpuestos(idProducto: number){
+    return this.httpClient.delete(this.url  + '/producto/' + idProducto)
       .pipe(
         map(
           (resultadoEnData) => resultadoEnData as ProductoImpuestoInterface[]
         )
-      );
+      )
   }
 }

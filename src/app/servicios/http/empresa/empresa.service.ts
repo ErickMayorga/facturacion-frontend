@@ -45,9 +45,22 @@ export class EmpresaService {
         )
       );
   }
+
   get(idObject: number):Observable<EmpresaInterface>{
     return this.httpClient
       .get(this.url + '/' + idObject)
+      .pipe(
+        map(
+          (resultadoEnData) => resultadoEnData as EmpresaInterface
+        )
+      );
+  }
+
+  getEmpresa(idUsuario: number) {
+    return this.httpClient
+      .get(
+        this.url + '/usuario/' + idUsuario,
+      )
       .pipe(
         map(
           (resultadoEnData) => resultadoEnData as EmpresaInterface

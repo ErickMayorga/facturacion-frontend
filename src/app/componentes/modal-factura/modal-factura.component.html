@@ -1,0 +1,204 @@
+<div class="overflow-auto">
+  <h1 mat-dialog-title class="d-flex justify-content-center">Nueva factura</h1>
+  <!-- INFORMACION TRIBUTARIA -->
+  <span style="font-size: 16px"><b>Información Tributaria</b></span>
+  <div class="d-flex flex-wrap section-form">
+    <div class="col-md-12 span-calculated">
+      <span><b>RUC:</b> {{empresaActual.ruc}}</span>
+    </div>
+    <div class="col-md-6 span-calculated">
+      <span><b>Razón Social:</b> {{empresaActual.nombres_razon_social}}</span>
+    </div>
+    <div class="col-md-6 span-calculated">
+      <span><b>Nombre Comercial:</b> {{empresaActual.nombre_comercial}}</span>
+    </div>
+    <div class="col-md-6 span-calculated">
+      <span><b>Contribuyente Especial:</b> {{empresaActual.num_contribuyente_especial}}</span>
+    </div>
+    <div class="col-md-6 span-calculated">
+      <span *ngIf="empresaActual.obligado_contabilidad"><b>Obligado a contabilidad:</b> Sí</span>
+      <span *ngIf="!empresaActual.obligado_contabilidad"><b>Obligado a contabilidad:</b> No</span>
+    </div>
+    <div class="col-md-6 span-calculated">
+      <span><b>Direccion Matriz:</b> {{empresaActual.id_direccion_matriz}}</span>
+    </div>
+    <div class="col-md-6 span-calculated">
+      <span><b>Direccion Establecimiento:</b> {{empresaActual.id_direccion_establecimiento}}</span>
+    </div>
+  </div>
+
+  <!-- INFORMACION DE LA FACTURA -->
+  <span style="font-size: 16px"><b>Información de la factura</b></span>
+  <div class="d-flex flex-wrap section-form">
+    <div class="col-md-6 span-calculated" style="margin-bottom: 20px">
+      <span><b>Número de comprobante:</b> </span>
+    </div>
+    <div class="col-md-6 span-calculated" style="margin-bottom: 20px">
+      <span><b>Clave de acceso:</b> </span>
+    </div>
+    <div class="d-flex flex-column justify-content-center form-outline flex-fill col-md-6" *ngFor="let field of fields.slice(0,fields.length-1)">
+      <app-input-generic
+        [title]="field.title"
+        [nameField]="field.nameField"
+        [type]="field.type"
+        [helpText]="field.helpText"
+        [requiredMessage]="field.requiredMessage"
+        [lengthMessage]="field.lengthMessage"
+        [options]="field.options"
+        [formGroup]="formGroupFactura"
+      ></app-input-generic>
+    </div>
+  </div>
+
+  <!-- INFORMACION DEL COMPRADOR -->
+  <span style="font-size: 16px"><b>Información del comprador</b></span>
+  <div class="d-flex flex-wrap section-form">
+    <div class="d-flex flex-column justify-content-center form-outline flex-fill col-md-12">
+      <div [formGroup]="formGroupFactura" class="input-field">
+        <input id="numero_identificacion" type="text" class="validate"
+               formControlName="numero_identificacion" [(ngModel)]="busquedaCliente" (change)="buscarCliente()">
+        <label for="numero_identificacion" class="active">Número de identificación</label>
+
+        <div *ngIf="formGroupFactura.get('numero_identificacion')">
+          <span *ngIf="formGroupFactura.get('numero_identificacion')?.valid ||
+          !formGroupFactura.get('numero_identificacion')?.touched"
+                class="helper-text">
+            Ingrese el número de identificación del cliente
+          </span>
+          <span *ngIf="
+             formGroupFactura.get('numero_identificacion')?.invalid &&
+             formGroupFactura.get('numero_identificacion')?.touched &&
+             formGroupFactura.get('numero_identificacion')?.dirty &&
+             !(formGroupFactura.get('numero_identificacion')?.hasError('minlength') ||
+            formGroupFactura.get('numero_identificacion')?.hasError('maxlength'))"
+                class="helper-text" style="color: var(--error)">
+            Este campo es obligatorio
+          </span>
+                <span *ngIf="formGroupFactura.get('numero_identificacion')?.hasError('minlength') ||
+                formGroupFactura.get('numero_identificacion')?.hasError('maxlength')"
+                      class="helper-text" style="color: var(--error)">
+            El número de identificación debe tener 10 o 13 caracteres
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 span-calculated" style="margin-top: 10px">
+      <span><b>Razón Social:</b> {{clienteDB.nombres_razon_social}}</span>
+    </div>
+    <div class="col-md-6 span-calculated" style="margin-top: 10px">
+      <span *ngIf="clienteDB.id_direccion!=-1"><b>Dirección:</b> {{clienteDB.id_direccion}}</span>
+      <span *ngIf="clienteDB.id_direccion === -1"><b>Dirección:</b> </span>
+    </div>
+    <div class="col-md-6 span-calculated">
+      <span><b>Teléfono:</b> {{clienteDB.telefono}}</span>
+    </div>
+    <div class="col-md-6 span-calculated">
+      <span><b>Correo:</b> {{clienteDB.correo_electronico}}</span>
+    </div>
+  </div>
+
+  <!-- DETALLE DE FACTURA -->
+  <span style="font-size: 16px"><b>Detalle de la factura</b></span>
+  <div class="d-flex flex-wrap section-form">
+    <div class="d-flex col-md-3" style="margin-bottom: 10px">
+      <button type="button" class="btn btn-primary btn-lg" (click)="agregarProducto()">Agregar Producto</button>
+    </div>
+    <!-- TABLA DE PRODUCTOS -->
+    <div class="d-flex justify-content-center">
+      <div class="col-md-12">
+        <table class="table">
+          <thead class="table-primary">
+          <tr>
+            <th scope="col" *ngFor="let thead of theadsDetalle">
+              {{thead}}
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let detalle of detallesDB">
+            <td>{{detalle.id_producto}}</td>
+            <td>TO DO</td>
+            <td>TO DO</td>
+            <td>TO DO</td>
+            <td>{{detalle.cantidad}}</td>
+            <td>{{detalle.descuento}}</td>
+            <td>{{detalle.valor_ice}}</td>
+            <td>{{detalle.valor_irbpnr}}</td>
+            <td>{{detalle.total_producto}}</td>
+            <td>
+              <div class="d-flex align-items-center justify-content-center">
+                <mat-icon *ngFor="let action of actionsDetalle" class="col-md-4 action-icon"
+                          (click)="realizarAccionDetalle(action.name, detalle.id_factura_detalle)" style="margin: 0 10px">
+                  {{action.icon}}
+                </mat-icon>
+              </div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="d-flex flex-row">
+      <div class="d-flex flex-column">
+        <div class="d-flex col-md-3" style="margin-bottom: 10px">
+          <button type="button" class="btn btn-primary btn-lg" (click)="agregarPago()">Agregar Pago</button>
+        </div>
+        <!-- TABLA DE PAGOS -->
+        <div class="d-flex justify-content-center col-md-12">
+          <div class="col-md-12">
+            <table class="table">
+              <thead class="table-primary">
+              <tr>
+                <th scope="col" *ngFor="let thead of theadsPagos">
+                  {{thead}}
+                </th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let pago of pagosDB">
+                <td>{{pago.id_metodo_de_pago}}</td>
+                <td>{{pago.valor_pago}}</td>
+                <td>{{pago.plazo}}</td>
+                <td>{{pago.medida_tiempo}}</td>
+                <td>
+                  <div class="d-flex align-items-center justify-content-center">
+                    <mat-icon *ngFor="let action of actionsDetalle" class="col-md-4 action-icon"
+                              (click)="realizarAccionPago(action.name, pago.id_factura_pago)" style="margin: 0 10px">
+                      {{action.icon}}
+                    </mat-icon>
+                  </div>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TOTALES -->
+      <div class="col-md-5 d-flex justify-content-end">
+        <div class="section-form col-md-10">
+          <div class="col-md-12 span-calculated">
+            <span><b>Total sin IVA:</b> </span>
+          </div>
+          <div class="col-md-12 span-calculated">
+            <span><b>IVA:</b> </span>
+          </div>
+          <div class="col-md-12 span-calculated">
+            <span><b>Total descuento:</b> </span>
+          </div>
+          <div class="col-md-12 span-calculated">
+            <span><b>Total con IVA:</b> </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div mat-dialog-actions class="d-flex justify-content-center">
+    <button class="btn btn-info" type="button" style="margin: 0px 20px" [disabled]="formGroupFactura.invalid" (click)="guardarFactura()">Aceptar</button>
+    <button class="btn btn-danger" type="button" style="margin: 0px 20px" (click)="cancelar()">Cancelar</button>
+  </div>
+</div>
+
+

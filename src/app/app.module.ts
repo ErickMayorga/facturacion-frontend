@@ -32,6 +32,10 @@ import { RutaTransportistasComponent } from './rutas/ruta-transportistas/ruta-tr
 import { RutaProductosComponent } from './rutas/ruta-productos/ruta-productos.component';
 import { ModalTransportistaComponent } from './componentes/modal-transportista/modal-transportista.component';
 import { ModalProductoComponent } from './componentes/modal-producto/modal-producto.component';
+import { ModalFacturaComponent } from './componentes/modal-factura/modal-factura.component';
+import { ModalFormatoFacturaComponent } from './componentes/modal-formato-factura/modal-formato-factura.component';
+import { ModalAgregarProductoComponent } from './componentes/modal-agregar-producto/modal-agregar-producto.component';
+import { ModalAgregarPagoComponent } from './componentes/modal-agregar-pago/modal-agregar-pago.component';
 
 
 @NgModule({
@@ -57,6 +61,10 @@ import { ModalProductoComponent } from './componentes/modal-producto/modal-produ
     RutaProductosComponent,
     ModalTransportistaComponent,
     ModalProductoComponent,
+    ModalFacturaComponent,
+    ModalFormatoFacturaComponent,
+    ModalAgregarProductoComponent,
+    ModalAgregarPagoComponent,
   ],
   imports: [
     BrowserModule,

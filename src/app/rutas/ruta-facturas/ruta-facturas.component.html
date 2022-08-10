@@ -1,21 +1,60 @@
-<div class="d-flex flex-row">
-  <table class="table">
-    <thead class="table-dark">
-    <tr>
-      <th scope="col" *ngFor="let thead of theads">
-        {{thead}}
-      </th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="let factura of facturas">
-      <td *ngFor="let action of actions">
-        <div class="col-md-12">
-          <mat-icon class="col-md-4" (click)="realizarAccion(action.name)">{{action.icon}}</mat-icon>
+<!-- HEADER -->
+<div class="d-flex justify-content-center">
+  <div class="crud-header col-md-11">
+    <div class="d-flex flex-row align-items-center">
+      <div class="col-md-5">
+        <span class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4 text-white">Facturas</span>
+      </div>
+      <div class="col-md-5">
+        <div class="d-flex flex-column align-items-center">
+          <div class="d-flex justify-content-center search col-md-12">
+            <i class="small material-icons">search</i>
+            <input type="text" placeholder="Busca una factura" [(ngModel)]="busqueda" (change)="filtrarFacturas()">
+          </div>
+          <div class="input-field col-md-12">
+            <span class="helper-text text-white">Ingresa un número de comprobante</span>
+          </div>
         </div>
-      </td>
-    </tr>
-    </tbody>
-  </table>
+      </div>
+      <div class="col-md-2 d-flex justify-content-end">
+        <a class="btn-floating btn-large waves-effect waves-light add-button" (click)="abrirModalFactura('crear')">
+          <i class="material-icons">add</i>
+        </a>
+      </div>
+    </div>
+  </div>
 </div>
+
+<!-- TABLE -->
+<div class="d-flex justify-content-center">
+  <div class="col-md-11">
+    <table class="table">
+      <thead class="table-primary">
+      <tr>
+        <th scope="col" *ngFor="let thead of theads">
+          {{thead}}
+        </th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let factura of facturasBuscadas">
+        <td>{{factura.numero_comprobante}}</td>
+        <td>TO DO</td>
+        <td>TO DO</td>
+        <td>{{factura.fecha_emision}}</td>
+        <td>{{factura.total_con_iva}}</td>
+        <td>
+          <div class="d-flex align-items-center justify-content-center">
+            <mat-icon *ngFor="let action of actions" class="col-md-4 action-icon"
+                      (click)="realizarAccion(action.name, factura.id_factura)" style="margin: 0 10px">
+              {{action.icon}}
+            </mat-icon>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
 

@@ -4,6 +4,7 @@ import {HttpClient} from "@angular/common/http";
 import {map, Observable} from "rxjs";
 import {ClienteInterface} from "./cliente.interface";
 import {ClienteCreateInterface} from "./cliente-create.interface";
+import {EmpresaInterface} from "../empresa/empresa.interface";
 
 @Injectable({
   providedIn: 'root'
@@ -45,9 +46,22 @@ export class ClienteService {
         )
       );
   }
+
   get(idObject: number):Observable<ClienteInterface>{
     return this.httpClient
       .get(this.url + '/' + idObject)
+      .pipe(
+        map(
+          (resultadoEnData) => resultadoEnData as ClienteInterface
+        )
+      );
+  }
+
+  getCliente(cedula: string) {
+    return this.httpClient
+      .get(
+        this.url + '/cedula/' + cedula,
+      )
       .pipe(
         map(
           (resultadoEnData) => resultadoEnData as ClienteInterface

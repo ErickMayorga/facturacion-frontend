@@ -159,7 +159,7 @@ export class RutaProductosComponent implements OnInit {
             console.log(error)
           },
           complete: () => {
-            // Crar Producto impuesto
+            // Crear Producto impuesto
             for(let impuesto of this.impuestosRegistro){
               if(impuesto.id_impuesto > 0){
                 impuesto.id_producto = idProductoCreado
@@ -221,11 +221,9 @@ export class RutaProductosComponent implements OnInit {
   }
 
   eliminarProducto(idProducto: number){
-    let productoImpuestoEliminar: ProductoImpuestoInterface[] = []
-
     //Eliminar producto
-    const eliminar$ = this.productoService.delete(idProducto);
-    eliminar$.subscribe(
+    const eliminarProducto$ = this.productoService.delete(idProducto);
+    eliminarProducto$.subscribe(
       {
         next: (datos) => {
           //console.log({datos})
@@ -236,7 +234,20 @@ export class RutaProductosComponent implements OnInit {
         }
       }
     )
-    // TODO: Eliminar producto-impuesto
+    //Eliminar producto-impuestos
+    const eliminarProductoImpuestos$ = this.productoImpuestoService.deleteImpuestos(idProducto);
+    eliminarProductoImpuestos$.subscribe(
+      {
+        next: (datos) => {
+          //console.log({datos})
+          //this.refresh()
+        },
+        error: (error) => {
+          console.error({error})
+        }
+      }
+    )
+
   }
 
 
