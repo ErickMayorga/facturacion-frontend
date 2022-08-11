@@ -51,7 +51,7 @@ export class RutaProductosComponent implements OnInit {
               private snackBar: MatSnackBar,
               private readonly activatedRoute: ActivatedRoute,
               private readonly  productoImpuestoService: ProductoImpuestoService) {
-    this.buscarProductos()
+
   }
 
   ngOnInit(): void {
@@ -62,6 +62,7 @@ export class RutaProductosComponent implements OnInit {
         next:(parametrosRuta) => {
           //console.log(parametrosRuta)
           this.idUsuario = Number.parseInt(parametrosRuta['idUsuario']);
+          this.buscarProductos()
         }
       })
   }
@@ -69,7 +70,7 @@ export class RutaProductosComponent implements OnInit {
   // Búsqueda y filtro de productos
 
   buscarProductos() {
-    this.productoService.getAll({})
+    this.productoService.getProductos(this.idUsuario)
       .subscribe(
         {
           next: (datos) => {

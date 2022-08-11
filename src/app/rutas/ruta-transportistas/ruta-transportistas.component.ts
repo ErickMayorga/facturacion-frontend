@@ -44,7 +44,6 @@ export class RutaTransportistasComponent implements OnInit {
               public dialog: MatDialog,
               private snackBar: MatSnackBar,
               private readonly activatedRoute: ActivatedRoute,) {
-    this.buscarClientes()
   }
 
   ngOnInit(): void {
@@ -55,6 +54,7 @@ export class RutaTransportistasComponent implements OnInit {
         next:(parametrosRuta) => {
           //console.log(parametrosRuta)
           this.idUsuario = Number.parseInt(parametrosRuta['idUsuario']);
+          this.buscarClientes()
         }
       })
   }
@@ -62,14 +62,14 @@ export class RutaTransportistasComponent implements OnInit {
   // Búsqueda y filtro de clientes
 
   buscarClientes() {
-    this.transportistaService.getAll({})
+    this.transportistaService.getTransportistas(this.idUsuario)
       .subscribe(
         {
           next: (datos) => {
             this.transportistasDB = datos as TransportistaInterface[]
           },
           error: (error) => {
-            console.log(error)
+            console.error(error)
           },
           complete: () => {
             this.transportistasBuscados = this.transportistasDB

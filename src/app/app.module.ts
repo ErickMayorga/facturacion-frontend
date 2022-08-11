@@ -36,6 +36,7 @@ import { ModalFacturaComponent } from './componentes/modal-factura/modal-factura
 import { ModalFormatoFacturaComponent } from './componentes/modal-formato-factura/modal-formato-factura.component';
 import { ModalAgregarProductoComponent } from './componentes/modal-agregar-producto/modal-agregar-producto.component';
 import { ModalAgregarPagoComponent } from './componentes/modal-agregar-pago/modal-agregar-pago.component';
+import {CommonModule} from "@angular/common";
 
 
 @NgModule({
@@ -77,7 +78,8 @@ import { ModalAgregarPagoComponent } from './componentes/modal-agregar-pago/moda
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    CommonModule
   ],
   providers: [
     {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher}

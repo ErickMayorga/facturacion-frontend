@@ -45,6 +45,19 @@ export class ProductoService {
         )
       );
   }
+
+  getProductos(idUsuario: number){
+    return this.httpClient
+      .get(
+        this.url + '/usuario/' + idUsuario,
+      )
+      .pipe(
+        map(
+          (resultadoEnData) => resultadoEnData as ProductoInterface[]
+        )
+      );
+  }
+
   get(idObject: number):Observable<ProductoInterface>{
     return this.httpClient
       .get(this.url + '/' + idObject)

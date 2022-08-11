@@ -1,1 +1,48 @@
-<p>modal-agregar-producto works!</p>
+<div class="overflow-auto">
+  <h1 mat-dialog-title class="d-flex justify-content-center">Nuevo producto</h1>
+
+  <div class="d-flex flex-column justify-content-center form-outline flex-fill col-md-12">
+    <div class="input-field">
+      <input id="numero_identificacion" type="text" class="validate" [(ngModel)]="busquedaProducto" (change)="filtrarProductos()">
+      <label for="numero_identificacion" class="active">Buscar producto</label>
+      <span class="helper-text">
+        Ingrese un código o nombre de producto
+      </span>
+    </div>
+  </div>
+
+  <!-- TABLE -->
+  <div class="d-flex justify-content-center">
+    <div class="col-md-11">
+      <table class="table">
+        <thead class="table-primary">
+        <tr>
+          <th scope="col" *ngFor="let thead of theads">
+            {{thead}}
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let producto of productosBuscados">
+          <td>{{producto.codigo_principal}}</td>
+          <td>{{producto.codigo_auxiliar}}</td>
+          <td>{{producto.nombre}}</td>
+          <td>{{producto.tipo_producto}}</td>
+          <td>
+            <div class="d-flex align-items-center justify-content-center">
+              <mat-icon class="col-md-4 action-icon"
+                        (click)="agregarProducto(producto)" style="margin: 0 10px">
+                add
+              </mat-icon>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div mat-dialog-actions class="d-flex justify-content-center">
+    <button class="btn btn-danger" type="button" style="margin: 0px 20px" (click)="cancelar()">Cancelar</button>
+  </div>
+</div>
+

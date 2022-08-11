@@ -13,8 +13,11 @@ import {FacturaService} from "../../servicios/http/factura/factura.service";
 import {FacturaDetalleService} from "../../servicios/http/factura-detalle/factura-detalle.service";
 import {FacturaPagoService} from "../../servicios/http/factura-pago/factura-pago.service";
 import {ModalFacturaComponent} from "../../componentes/modal-factura/modal-factura.component";
-import {EmpresaService} from "../../servicios/http/empresa/empresa.service";
-import {EmpresaInterface} from "../../servicios/http/empresa/empresa.interface";
+import {TablaFacturaInterface} from "../../servicios/interfaces/tabla-factura.interface";
+import {ClienteService} from "../../servicios/http/cliente/cliente.service";
+import {ClienteInterface} from "../../servicios/http/cliente/cliente.interface";
+import {TablaFacturaDetalleInterface} from "../../servicios/interfaces/tabla-factura-detalle.interface";
+import {TablaFacturaPagoInterface} from "../../servicios/interfaces/tabla-factura-pago.interface";
 
 @Component({
   selector: 'app-ruta-facturas',
@@ -33,7 +36,7 @@ export class RutaFacturasComponent implements OnInit {
   ];
 
   facturasDB: FacturaInterface[] = []
-  facturasBuscadas: FacturaInterface[] = []
+  facturasBuscadas: TablaFacturaInterface[] = []
 
   actions: ActionButtonInterface[] = [
     {
@@ -52,21 +55,28 @@ export class RutaFacturasComponent implements OnInit {
   busqueda = '';
   idUsuario: number = -1;
 
-  detallesRegistro: FacturaDetalleCreateInterface[] = []
-  detallesSeleccionados: FacturaDetalleInterface[] = []
+  //detallesRegistro: FacturaDetalleCreateInterface[] = []
+  //detallesSeleccionados: FacturaDetalleInterface[] = []
 
-  pagosRegistro: FacturaPagoCreateInterface[] = []
-  pagosSeleccionados: FacturaPagoInterface[] = []
+  //pagosRegistro: FacturaPagoCreateInterface[] = []
+  //pagosSeleccionados: FacturaPagoInterface[] = []
+
+  detallesTabla: TablaFacturaDetalleInterface[] = []
+  pagosTabla: TablaFacturaPagoInterface[] = []
 
   nuevaFactura: FacturaCreateInterface = {} as FacturaCreateInterface
   facturaSeleccionada: FacturaInterface = {} as FacturaInterface
+
+  // Tabla
+  facturasTabla: TablaFacturaInterface[] = []
 
   constructor(private readonly facturaService: FacturaService,
               public dialog: MatDialog,
               private snackBar: MatSnackBar,
               private readonly activatedRoute: ActivatedRoute,
               private readonly  facturaDetalleService: FacturaDetalleService,
-              private readonly facturaPagoService: FacturaPagoService,) {
+              private readonly facturaPagoService: FacturaPagoService,
+              private readonly clienteService: ClienteService) {
     this.buscarFacturas()
   }
 
@@ -96,19 +106,47 @@ export class RutaFacturasComponent implements OnInit {
           },
           complete: () => {
             this.crearRegistrosTabla()
-            this.facturasBuscadas = this.facturasDB
+            //this.facturasBuscadas = this.facturasDB
           }
         }
       )
   }
 
   crearRegistrosTabla(){
-
+    let index = 0
+    for(let factura of this.facturasDB){
+      this.clienteService.get(factura.id_cliente)
+        .subscribe(
+          {
+            next: (datos) => {
+              const cliente = datos as ClienteInterface
+              const facturaTabla: TablaFacturaInterface = {
+                idFactura: factura.id_factura,
+                numero_comprobante: factura.numero_comprobante,
+                razon_social_comprador: cliente.nombres_razon_social,
+                identificacion_comprador: cliente.numero_identificacion,
+                fecha_emision: factura.fecha_emision,
+                valor_total: factura.total_con_iva
+              }
+              this.facturasTabla.push(facturaTabla)
+            },
+            error: (err) => {
+              console.error(err)
+            },
+            complete: () => {
+              index++
+              if(index === this.facturasDB.length){
+                this.facturasBuscadas = this.facturasTabla
+              }
+            }
+          }
+        )
+    }
   }
 
   filtrarFacturas() {
     const facturasFiltradas = []
-    for(let factura of this.facturasDB){
+    for(let factura of this.facturasTabla){
       if(factura.numero_comprobante.includes(this.busqueda)){
         facturasFiltradas.push(factura)
       }
@@ -126,7 +164,7 @@ export class RutaFacturasComponent implements OnInit {
       this.abrirModalFactura('editar', idFactura)
     }
     if(action === 'eliminar'){
-      this.eliminarFactura(idFactura)
+      this.deshabilitarFactura(idFactura)
     }
   }
 
@@ -143,7 +181,8 @@ export class RutaFacturasComponent implements OnInit {
         data: {
           usuario: this.idUsuario,
           operacion: operacion,
-          factura: idFactura
+          factura: idFactura,
+          next: this.facturasDB.length + 1
         }
       }
     )
@@ -153,22 +192,25 @@ export class RutaFacturasComponent implements OnInit {
         (datos) => {
           if(datos!=undefined){
             const factura = datos['factura']
-            const detalles = datos['detalles']
-            const pagos = datos['pagos']
+            const detalles = datos['detalles'] as TablaFacturaDetalleInterface
+            const pagos = datos['pagos'] as TablaFacturaPagoInterface
+            console.log(factura)
+            console.log(detalles)
+            console.log(pagos)
 
             if(operacion === 'crear'){
               this.nuevaFactura = factura as FacturaCreateInterface
-              this.detallesRegistro = detalles as FacturaDetalleCreateInterface[]
-              this.pagosRegistro = pagos as FacturaPagoCreateInterface[]
+              //this.detallesRegistro = detalles as FacturaDetalleCreateInterface[]
+              //this.pagosRegistro = pagos as FacturaPagoCreateInterface[]
               //console.log(this.detallesRegistro)
-              this.registrarInformacion()
+              //this.registrarInformacion()
             }
             if(operacion === 'editar'){
               this.facturaSeleccionada = factura as FacturaInterface
-              this.detallesSeleccionados = detalles as FacturaDetalleInterface[]
-              this.pagosSeleccionados = pagos as FacturaPagoInterface[]
+              //this.detallesSeleccionados = detalles as FacturaDetalleInterface[]
+              //this.pagosSeleccionados = pagos as FacturaPagoInterface[]
               //console.log(this.detallesSeleccionados)
-              this.actualizarInformacion()
+              //this.actualizarInformacion()
             }
           }
         }
@@ -191,43 +233,8 @@ export class RutaFacturasComponent implements OnInit {
             console.log(error)
           },
           complete: () => {
-            // Crear Factura Detalles
-            for (let detalle of this.detallesRegistro) {
-              if (detalle.id_producto > 0) { // TODO: Revisar consistencia
-                detalle.id_factura = idFacturaCreada
-                this.facturaDetalleService.create(detalle)
-                  .subscribe(
-                    {
-                      next: (data) => {
-                        const facturaDetalleCreado = data as FacturaDetalleInterface
-                        //console.log(productoImpuestoCreado)
-                      },
-                      error: (error) => {
-                        console.log(error)
-                      }
-                    }
-                  )
-              }
-            }
-
-            // Crear Factura Pagos
-            for (let pago of this.pagosRegistro) {
-              if (pago.id_metodo_de_pago > 0) { // TODO: Revisar consistencia
-                pago.id_factura = idFacturaCreada
-                this.facturaPagoService.create(pago)
-                  .subscribe(
-                    {
-                      next: (data) => {
-                        const facturaPagoCreado = data as FacturaPagoInterface
-                        //console.log(productoImpuestoCreado)
-                      },
-                      error: (error) => {
-                        console.log(error)
-                      }
-                    }
-                  )
-              }
-            }
+            this.procesarDetalles()
+            this.procesarPagos()
             this.refresh()
             //this.snackBar.open('Se ha ingresado con éxito el nuevo producto!')
           }
@@ -249,52 +256,55 @@ export class RutaFacturasComponent implements OnInit {
             console.error({error})
           },
           complete: () => {
+            this.procesarDetalles()
+            this.procesarPagos()
             this.refresh()
           }
         }
       )
+  }
 
-    // Actualizar detalles
-    for(let detalle of this.detallesSeleccionados){
-      if(detalle.id_factura_detalle != undefined){ // TODO: Revisar consistencia
-        const actualizarFacturaDetalle$ = this.facturaDetalleService.update(detalle.id_factura_detalle, detalle)
-        actualizarFacturaDetalle$
-          .subscribe(
-            {
-              next: (datos) => {
-                console.log(datos)
-                //this._snackBar.open('Se ha actualizado su información con éxito')
-              },
-              error: (error) => {
-                console.error({error})
-              }
-            }
-          )
-      }
-    }
+  procesarDetalles(){
+    for(let detalle of this.detallesTabla){
+      if(detalle.estado === 'c'){
 
-    // Actualizar pagos
-    for(let pago of this.pagosSeleccionados){
-      if(pago.id_factura_pago != undefined){ // TODO: Revisar consistencia
-        const actualizarFacturaPago$ = this.facturaPagoService.update(pago.id_factura_pago, pago)
-        actualizarFacturaPago$
-          .subscribe(
-            {
-              next: (datos) => {
-                console.log(datos)
-                //this._snackBar.open('Se ha actualizado su información con éxito')
-              },
-              error: (error) => {
-                console.error({error})
-              }
-            }
-          )
+      }else if(detalle.estado === 'u'){
+
+      }else if(detalle.estado === 'd'){
+
       }
+
     }
   }
 
-  eliminarFactura(idFactura: number){
+  procesarPagos(){
+    for(let pago of this.pagosTabla){
+      if(pago.estado === 'c'){
+
+      }else if(pago.estado === 'u'){
+
+      }else if(pago.estado === 'd'){
+
+      }
+
+    }
+  }
+
+  crearDetalleFactura(detalleTabla: TablaFacturaDetalleInterface){
+    const detalle = {
+
+    } as FacturaDetalleInterface
+  }
+
+  crearPagoFactura(pagoTabla: TablaFacturaPagoInterface){
+    const pago = {
+
+    } as FacturaPagoInterface
+  }
+
+  deshabilitarFactura(idFactura: number){ // TODO
     //Eliminar factura
+    /*
     const eliminarProducto$ = this.facturaService.delete(idFactura);
     eliminarProducto$.subscribe(
       {
@@ -308,34 +318,7 @@ export class RutaFacturasComponent implements OnInit {
       }
     )
 
-    //Eliminar detalle de factura
-    const eliminarDetalleFactura$ = this.facturaDetalleService.deleteDetalle(idFactura);
-    eliminarDetalleFactura$.subscribe(
-      {
-        next: (datos) => {
-          //console.log({datos})
-          //this.refresh()
-        },
-        error: (error) => {
-          console.error({error})
-        }
-      }
-    )
-
-    //Eliminar detalle de factura
-    const eliminarPagosFactura$ = this.facturaPagoService.deletePagos(idFactura);
-    eliminarPagosFactura$.subscribe(
-      {
-        next: (datos) => {
-          //console.log({datos})
-          //this.refresh()
-        },
-        error: (error) => {
-          console.error({error})
-        }
-      }
-    )
-
+     */
   }
 
   refresh() {

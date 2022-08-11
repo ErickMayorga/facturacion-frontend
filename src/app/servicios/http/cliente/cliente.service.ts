@@ -47,6 +47,18 @@ export class ClienteService {
       );
   }
 
+  getClientes(idUsuario: number){
+    return this.httpClient
+      .get(
+        this.url + '/usuario/' + idUsuario,
+      )
+      .pipe(
+        map(
+          (resultadoEnData) => resultadoEnData as ClienteInterface[]
+        )
+      );
+  }
+
   get(idObject: number):Observable<ClienteInterface>{
     return this.httpClient
       .get(this.url + '/' + idObject)
@@ -57,10 +69,10 @@ export class ClienteService {
       );
   }
 
-  getCliente(cedula: string) {
+  getCliente(idUsuario:number, cedula: string) {
     return this.httpClient
       .get(
-        this.url + '/cedula/' + cedula,
+        this.url + '/cedula/' + idUsuario + '/' + cedula,
       )
       .pipe(
         map(

@@ -39,14 +39,14 @@
       <tbody>
       <tr *ngFor="let factura of facturasBuscadas">
         <td>{{factura.numero_comprobante}}</td>
-        <td>TO DO</td>
-        <td>TO DO</td>
+        <td>{{factura.razon_social_comprador}}</td>
+        <td>{{factura.identificacion_comprador}}</td>
         <td>{{factura.fecha_emision}}</td>
-        <td>{{factura.total_con_iva}}</td>
+        <td>{{factura.valor_total}}</td>
         <td>
           <div class="d-flex align-items-center justify-content-center">
             <mat-icon *ngFor="let action of actions" class="col-md-4 action-icon"
-                      (click)="realizarAccion(action.name, factura.id_factura)" style="margin: 0 10px">
+                      (click)="realizarAccion(action.name, factura.idFactura)" style="margin: 0 10px">
               {{action.icon}}
             </mat-icon>
           </div>

@@ -45,9 +45,34 @@ export class TransportistaService {
         )
       );
   }
+
+  getTransportistas(idUsuario: number){
+    return this.httpClient
+      .get(
+        this.url + '/usuario/' + idUsuario,
+      )
+      .pipe(
+        map(
+          (resultadoEnData) => resultadoEnData as TransportistaInterface[]
+        )
+      );
+  }
+
   get(idObject: number):Observable<TransportistaInterface>{
     return this.httpClient
       .get(this.url + '/' + idObject)
+      .pipe(
+        map(
+          (resultadoEnData) => resultadoEnData as TransportistaInterface
+        )
+      );
+  }
+
+  getTransportista(idUsuario:number, cedula: string) {
+    return this.httpClient
+      .get(
+        this.url + '/cedula/' + idUsuario + '/' + cedula,
+      )
       .pipe(
         map(
           (resultadoEnData) => resultadoEnData as TransportistaInterface

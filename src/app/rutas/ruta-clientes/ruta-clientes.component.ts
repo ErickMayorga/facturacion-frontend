@@ -50,7 +50,6 @@ export class RutaClientesComponent implements OnInit {
               private snackBar: MatSnackBar,
               private readonly activatedRoute: ActivatedRoute,
               private readonly direccionService: DireccionService,) {
-    this.buscarClientes()
   }
 
   ngOnInit(): void {
@@ -61,6 +60,7 @@ export class RutaClientesComponent implements OnInit {
         next:(parametrosRuta) => {
           //console.log(parametrosRuta)
           this.idUsuario = Number.parseInt(parametrosRuta['idUsuario']);
+          this.buscarClientes()
         }
       })
   }
@@ -68,14 +68,14 @@ export class RutaClientesComponent implements OnInit {
   // Búsqueda y filtro de clientes
 
   buscarClientes() {
-    this.clienteService.getAll({})
+    this.clienteService.getClientes(this.idUsuario)
       .subscribe(
         {
           next: (datos) => {
             this.clientesDB = datos as ClienteInterface[]
           },
           error: (error) => {
-            console.log(error)
+            console.error(error)
           },
           complete: () => {
             this.clientesBuscados = this.clientesDB
