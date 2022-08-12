@@ -38,12 +38,12 @@
       </thead>
       <tbody>
       <tr *ngFor="let factura of facturasBuscadas">
-        <td>{{factura.numero_comprobante}}</td>
-        <td>{{factura.razon_social_comprador}}</td>
-        <td>{{factura.identificacion_comprador}}</td>
-        <td>{{factura.fecha_emision}}</td>
-        <td>{{factura.valor_total}}</td>
-        <td>
+        <td *ngIf="factura.habilitado">{{factura.numero_comprobante}}</td>
+        <td *ngIf="factura.habilitado">{{factura.razon_social_comprador}}</td>
+        <td *ngIf="factura.habilitado">{{factura.identificacion_comprador}}</td>
+        <td *ngIf="factura.habilitado">{{factura.fecha_emision}}</td>
+        <td *ngIf="factura.habilitado">{{factura.valor_total.toFixed(2)}}</td>
+        <td *ngIf="factura.habilitado">
           <div class="d-flex align-items-center justify-content-center">
             <mat-icon *ngFor="let action of actions" class="col-md-4 action-icon"
                       (click)="realizarAccion(action.name, factura.idFactura)" style="margin: 0 10px">

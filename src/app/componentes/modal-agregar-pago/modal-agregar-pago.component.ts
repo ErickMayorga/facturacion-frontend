@@ -74,10 +74,10 @@ export class ModalAgregarPagoComponent implements OnInit {
     const idMetodoPago =  Number.parseInt(this.formGroupPago.get('metodo_pago')?.value)
     const valor_pago =  Number.parseFloat(this.formGroupPago.get('valor_pago')?.value)
     let unidad_tiempo: string =  this.formGroupPago.get('unidad_tiempo')?.value.trim()
-    let plazo_tiempo: number | '' =  Number.parseInt(this.formGroupPago.get('plazo_tiempo')?.value)
+    let plazo_tiempo: number =  Number.parseInt(this.formGroupPago.get('plazo_tiempo')?.value)
 
     if(isNaN(plazo_tiempo)){
-      plazo_tiempo = ''
+      plazo_tiempo = 0
     }
 
     this.metodoPagoService.get(idMetodoPago)
@@ -86,6 +86,7 @@ export class ModalAgregarPagoComponent implements OnInit {
           next: (datos) => {
             const metodo = datos as MetodoPagoInterface
             const pago: TablaFacturaPagoInterface = {
+              id_factura: NaN,
               id_pago: NaN,
               id_metodo_pago: idMetodoPago,
               nombre_metodo: metodo.nombre_metodo_pago,

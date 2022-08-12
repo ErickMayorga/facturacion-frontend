@@ -12,4 +12,5 @@ export interface FacturaCreateInterface {
   total_descuento: number
   total_sin_iva: number
   total_con_iva: number
+  habilitado: boolean
 }

@@ -4,6 +4,7 @@ import {HttpClient} from "@angular/common/http";
 import {map, Observable} from "rxjs";
 import {FacturaCreateInterface} from "./factura-create.interface";
 import {FacturaInterface} from "./factura.interface";
+import {ClienteInterface} from "../cliente/cliente.interface";
 
 @Injectable({
   providedIn: 'root'
@@ -45,6 +46,19 @@ export class FacturaService {
         )
       );
   }
+
+  getFacturas(idEmpresa: number){
+    return this.httpClient
+      .get(
+        this.url + '/empresa/' + idEmpresa,
+      )
+      .pipe(
+        map(
+          (resultadoEnData) => resultadoEnData as FacturaInterface[]
+        )
+      );
+  }
+
   get(idObject: number):Observable<FacturaInterface>{
     return this.httpClient
       .get(this.url + '/' + idObject)
@@ -66,6 +80,15 @@ export class FacturaService {
 
   delete(idObject:number):Observable<FacturaInterface>{
     return this.httpClient.delete(this.url  + '/' + idObject)
+      .pipe(
+        map(
+          (resultadoEnData) => resultadoEnData as FacturaInterface
+        )
+      )
+  }
+
+  deshabilitar(idComprobante: number){
+    return this.httpClient.delete(this.url  + '/deshabilitar/' + idComprobante)
       .pipe(
         map(
           (resultadoEnData) => resultadoEnData as FacturaInterface

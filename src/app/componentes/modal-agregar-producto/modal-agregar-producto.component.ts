@@ -128,6 +128,7 @@ export class ModalAgregarProductoComponent implements OnInit {
 
   crearRegistroProducto(producto: ProductoInterface, iva: number, ice: number, irbpnr: number){
     const detalle: TablaFacturaDetalleInterface = {
+      id_factura: NaN,
       id_detalle: NaN,
       id_producto: producto.id_producto,
       codigo_principal: producto.codigo_principal,

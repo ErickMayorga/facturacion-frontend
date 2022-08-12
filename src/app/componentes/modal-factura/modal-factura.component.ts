@@ -139,7 +139,9 @@ export class ModalFacturaComponent implements OnInit {
         {
           next: (datos) => {
             this.empresaActual = datos as EmpresaInterface
-            this.numeroComprobante = this.empresaActual.codigo_establecimiento + '-' + this.empresaActual.codigo_punto_emision + '-' + this.data.next
+            if(this.operacion === 'crear'){
+              this.numeroComprobante = this.empresaActual.codigo_establecimiento + '-' + this.empresaActual.codigo_punto_emision + '-' + this.data.next
+            }
           },
           error: (err) => {
             console.error(err)
@@ -196,7 +198,7 @@ export class ModalFacturaComponent implements OnInit {
                 {
                   next: (datos) => {
                     this.clienteDB = datos as ClienteInterface
-                    console.log(this.clienteDB.id_cliente)
+                    //console.log(this.clienteDB.id_cliente)
                   },
                   error: (err) => {
                     console.error(err)
@@ -247,6 +249,8 @@ export class ModalFacturaComponent implements OnInit {
   }
 
   cargarInformacion() {
+    this.claveAcceso = this.facturaDB.clave_acceso
+    this.numeroComprobante = this.facturaDB.numero_comprobante
     this.formGroupFactura.patchValue({
       fecha_emision: this.facturaDB.fecha_emision,
       guia_remision: this.facturaDB.guia_de_remision,
@@ -256,6 +260,18 @@ export class ModalFacturaComponent implements OnInit {
 
   cargarCliente(){
     this.busquedaCliente = this.clienteDB.numero_identificacion
+    this.direccionService.get(this.clienteDB.id_direccion)
+      .subscribe(
+        {
+          next: (datos) => {
+            const direccion = datos as DireccionInterface
+            this.direccionCliente = this.direccionService.getStringDireccion(direccion)
+          },
+          error: (err) => {
+            console.log(err)
+          }
+        }
+      )
   }
 
   cargarDetalle(){
@@ -266,6 +282,7 @@ export class ModalFacturaComponent implements OnInit {
             next: (datos) => {
               const producto = datos as ProductoInterface
               const productoTabla: TablaFacturaDetalleInterface = {
+                id_factura: this.facturaActual,
                 id_detalle: detalle.id_factura_detalle,
                 id_producto: detalle.id_producto,
                 codigo_principal: producto.codigo_principal,
@@ -283,6 +300,10 @@ export class ModalFacturaComponent implements OnInit {
             },
             error: (err) => {
               console.error(err)
+            },
+            complete: () => {
+              this.actualizarTotales()
+              this.actualizarDescuento()
             }
           }
         )
@@ -297,6 +318,7 @@ export class ModalFacturaComponent implements OnInit {
             next: (datos) => {
               const metodo_pago = datos as MetodoPagoInterface
               const pagoTabla: TablaFacturaPagoInterface = {
+                id_factura: this.facturaActual,
                 id_pago: pago.id_factura_pago,
                 id_metodo_pago: metodo_pago.id_metodo_de_pago,
                 nombre_metodo: metodo_pago.nombre_metodo_pago,
@@ -315,19 +337,20 @@ export class ModalFacturaComponent implements OnInit {
     }
   }
 
+
+  // Enviar datos para crear o actualizar factura
   guardarFactura(){
     const fecha_emision =  this.formGroupFactura.get('fecha_emision')?.value
     const guia_remision =  this.formGroupFactura.get('guia_remision')?.value.trim()
-    const numero_identificacion =  this.formGroupFactura.get('numero_identificacion')?.value.trim()
 
     let facturaObject: FacturaInterface | FacturaCreateInterface = {} as FacturaCreateInterface
 
     if(this.operacion === 'crear'){
-      const facturaCreate = {
+      facturaObject = {
         id_empresa: this.empresaActual.id_empresa,
         numero_comprobante: this.numeroComprobante,
         id_cliente: this.clienteDB.id_cliente,
-        fecha_emision: fecha_emision,
+        fecha_emision: new Date(fecha_emision),
         clave_acceso: this.claveAcceso,
         guia_de_remision: guia_remision,
         propina: 0,
@@ -336,18 +359,18 @@ export class ModalFacturaComponent implements OnInit {
         total_sin_impuestos: this.total_sin_impuestos,
         total_descuento: this.total_descuento,
         total_sin_iva: this.total_sin_iva,
-        total_con_iva: this.total_con_iva
+        total_con_iva: this.total_con_iva,
+        habilitado: true
       } as FacturaCreateInterface
-      facturaObject = facturaCreate
     }
 
     if(this.operacion === 'editar'){
-      const facturaUpdate = {
+      facturaObject = {
         id_factura: this.facturaActual,
         id_empresa: this.empresaActual.id_empresa,
         numero_comprobante: this.numeroComprobante,
         id_cliente: this.clienteDB.id_cliente,
-        fecha_emision: fecha_emision,
+        fecha_emision: new Date(fecha_emision),
         clave_acceso: this.claveAcceso,
         guia_de_remision: guia_remision,
         propina: 0,
@@ -356,50 +379,17 @@ export class ModalFacturaComponent implements OnInit {
         total_sin_impuestos: this.total_sin_impuestos,
         total_descuento: this.total_descuento,
         total_sin_iva: this.total_sin_iva,
-        total_con_iva: this.total_con_iva
+        total_con_iva: this.total_con_iva,
+        habilitado: true
       } as FacturaInterface
-      facturaObject = facturaUpdate
     }
 
     this.dialogRef.close({factura: facturaObject, detalles: this.detallesTabla, pagos: this.pagosTabla})
   }
 
-  eliminarDetalle(detalle: TablaFacturaDetalleInterface) {
-    if(this.operacion === 'crear'){
-      this.detallesTabla = this.detallesTabla.filter(
-        (item) => item.id_producto !== detalle.id_producto
-      )
-    }
-    if(this.operacion === 'editar'){
-      if(detalle.estado === 'u'){
-        detalle.estado = 'd'
-      }else{
-        this.detallesTabla = this.detallesTabla.filter(
-          (item) => item.id_producto !== detalle.id_producto
-        )
-      }
-    }
-  }
-
-  eliminarPago(pago: TablaFacturaPagoInterface) {
-    if(this.operacion === 'crear'){
-      this.pagosTabla = this.pagosTabla.filter(
-        (item) => item.id_metodo_pago !== pago.id_metodo_pago
-      )
-    }
-    if(this.operacion === 'editar'){
-      if(pago.estado === 'u'){
-        pago.estado = 'd'
-      }else{
-        this.pagosTabla = this.pagosTabla.filter(
-          (item) => item.id_metodo_pago !== pago.id_metodo_pago
-        )
-      }
-    }
-  }
-
+  // Consulta de información del cliente
   buscarCliente(){
-    this.clienteService.getCliente(this.usuarioActual,this.busquedaCliente) // TODO: Filtrar por solo clientes del usuario Actual
+    this.clienteService.getCliente(this.usuarioActual,this.busquedaCliente)
       .subscribe(
         {
           next: (datos) => {
@@ -429,6 +419,7 @@ export class ModalFacturaComponent implements OnInit {
       )
   }
 
+  // Agregar nuevo producto
   abrirModalAgregarProducto() {
     const referenciaDialogo = this.dialog.open(
       ModalAgregarProductoComponent,
@@ -446,6 +437,7 @@ export class ModalFacturaComponent implements OnInit {
         (datos) => {
           if(datos!=undefined){
             const detalleTabla = datos['detalle'] as TablaFacturaDetalleInterface
+            detalleTabla.id_factura = this.facturaActual
             this.detallesTabla.push(detalleTabla)
             this.actualizarTotales()
             this.actualizarDescuento()
@@ -454,6 +446,7 @@ export class ModalFacturaComponent implements OnInit {
       )
   }
 
+  // Agregar nueva forma de pago
   abrirModalAgregarPago() {
     const referenciaDialogo = this.dialog.open(
       ModalAgregarPagoComponent,
@@ -470,6 +463,7 @@ export class ModalFacturaComponent implements OnInit {
         (datos) => {
           if(datos!=undefined){
             const pago = datos['pago'] as TablaFacturaPagoInterface
+            pago.id_factura = this.facturaActual
             this.pagosTabla.push(pago)
           }
         }
@@ -480,8 +474,10 @@ export class ModalFacturaComponent implements OnInit {
     this.total_sin_iva = 0
     this.total_sin_impuestos = 0
     for(let detalle of this.detallesTabla){
-      this.total_sin_iva += (detalle.precio_unitario + detalle.valor_ice + detalle.valor_irbpnr) * detalle.cantidad
-      this.total_sin_impuestos += detalle.precio_unitario * detalle.cantidad
+      if(detalle.estado != 'd'){
+        this.total_sin_iva += (detalle.precio_unitario + detalle.valor_ice + detalle.valor_irbpnr) * detalle.cantidad
+        this.total_sin_impuestos += detalle.precio_unitario * detalle.cantidad
+      }
     }
     this.total_con_iva = this.total_sin_iva * 1.12
   }
@@ -489,7 +485,50 @@ export class ModalFacturaComponent implements OnInit {
   actualizarDescuento() {
     this.total_descuento = 0
     for(let detalle of this.detallesTabla){
-      this.total_descuento += detalle.descuento
+      if(detalle.estado != 'd'){
+        this.total_descuento += detalle.descuento
+      }
+    }
+  }
+
+  // Eliminar un detalle de la lista
+  eliminarDetalle(detalle: TablaFacturaDetalleInterface) {
+    //console.log('Antes: ', this.detallesTabla)
+    if(this.operacion === 'crear'){
+      this.detallesTabla = this.detallesTabla.filter(
+        (item) => item.id_producto !== detalle.id_producto
+      )
+      //console.log('Despues: ', this.detallesTabla)
+    }
+    if(this.operacion === 'editar'){
+      if(detalle.estado === 'u'){
+        detalle.estado = 'd'
+      }else{
+        this.detallesTabla = this.detallesTabla.filter(
+          (item) => item.id_producto !== detalle.id_producto
+        )
+      }
+      //console.log('Despues: ', this.detallesTabla)
+    }
+    this.actualizarTotales()
+    this.actualizarDescuento()
+  }
+
+  // Eliminar un pago de la lista
+  eliminarPago(pago: TablaFacturaPagoInterface) {
+    if(this.operacion === 'crear'){
+      this.pagosTabla = this.pagosTabla.filter(
+        (item) => item.id_metodo_pago !== pago.id_metodo_pago
+      )
+    }
+    if(this.operacion === 'editar'){
+      if(pago.estado === 'u'){
+        pago.estado = 'd'
+      }else{
+        this.pagosTabla = this.pagosTabla.filter(
+          (item) => item.id_metodo_pago !== pago.id_metodo_pago
+        )
+      }
     }
   }
 }

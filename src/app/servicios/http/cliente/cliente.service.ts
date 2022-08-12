@@ -4,7 +4,6 @@ import {HttpClient} from "@angular/common/http";
 import {map, Observable} from "rxjs";
 import {ClienteInterface} from "./cliente.interface";
 import {ClienteCreateInterface} from "./cliente-create.interface";
-import {EmpresaInterface} from "../empresa/empresa.interface";
 
 @Injectable({
   providedIn: 'root'

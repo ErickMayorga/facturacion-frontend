@@ -1,4 +1,5 @@
 export interface TablaFacturaPagoInterface {
+  id_factura: number
   id_pago: number
   id_metodo_pago:number
   nombre_metodo: string

@@ -117,20 +117,20 @@
           </thead>
           <tbody>
           <tr *ngFor="let detalle of detallesTabla">
-            <td>{{detalle.codigo_principal}}</td>
-            <td>{{detalle.codigo_auxiliar}}</td>
-            <td>{{detalle.nombre_producto}}</td>
-            <td>{{detalle.precio_unitario}}</td>
-            <td>
+            <td *ngIf="detalle.estado != 'd'">{{detalle.codigo_principal}}</td>
+            <td *ngIf="detalle.estado != 'd'">{{detalle.codigo_auxiliar}}</td>
+            <td *ngIf="detalle.estado != 'd'">{{detalle.nombre_producto}}</td>
+            <td *ngIf="detalle.estado != 'd'">{{detalle.precio_unitario}}</td>
+            <td *ngIf="detalle.estado != 'd'">
               <input type="number" min="1" step="1" class="input-tabla" [(ngModel)]="detalle.cantidad" (change)="actualizarTotales()">
             </td>
-            <td>
+            <td *ngIf="detalle.estado != 'd'">
               <input type="number" min="0" step="0.01" class="input-tabla" [(ngModel)]="detalle.descuento" (change)="actualizarDescuento()">
             </td>
-            <td>{{(detalle.valor_ice * detalle.cantidad).toFixed(2)}}</td>
-            <td>{{(detalle.valor_irbpnr * detalle.cantidad).toFixed(2)}}</td>
-            <td>{{((detalle.precio_unitario + detalle.valor_ice + detalle.valor_irbpnr) * detalle.cantidad).toFixed(2)}}</td>
-            <td>
+            <td *ngIf="detalle.estado != 'd'">{{(detalle.valor_ice * detalle.cantidad).toFixed(2)}}</td>
+            <td *ngIf="detalle.estado != 'd'">{{(detalle.valor_irbpnr * detalle.cantidad).toFixed(2)}}</td>
+            <td *ngIf="detalle.estado != 'd'">{{((detalle.precio_unitario + detalle.valor_ice + detalle.valor_irbpnr) * detalle.cantidad).toFixed(2)}}</td>
+            <td *ngIf="detalle.estado != 'd'">
               <div class="d-flex align-items-center justify-content-center">
                 <mat-icon class="col-md-4 action-icon"
                           (click)="eliminarDetalle(detalle)" style="margin: 0 10px">
@@ -165,7 +165,8 @@
               <tr *ngFor="let pago of pagosTabla">
                 <td>{{pago.nombre_metodo}}</td>
                 <td>{{pago.valor}}</td>
-                <td>{{pago.plazo}}</td>
+                <td *ngIf="pago.plazo != 0">{{pago.plazo}}</td>
+                <td *ngIf="pago.plazo === 0"></td>
                 <td>{{pago.unidad_tiempo}}</td>
                 <td>
                   <div class="d-flex align-items-center justify-content-center">

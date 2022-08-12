@@ -1,4 +1,5 @@
 export interface TablaFacturaDetalleInterface {
+  id_factura: number
   id_detalle: number
   id_producto: number
   codigo_principal: string

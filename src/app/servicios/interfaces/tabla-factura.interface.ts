@@ -5,4 +5,5 @@ export interface TablaFacturaInterface {
   identificacion_comprador: string
   fecha_emision: Date
   valor_total: number
+  habilitado: boolean
 }
