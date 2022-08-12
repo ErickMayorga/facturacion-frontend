@@ -37,6 +37,7 @@ import { ModalFormatoFacturaComponent } from './componentes/modal-formato-factur
 import { ModalAgregarProductoComponent } from './componentes/modal-agregar-producto/modal-agregar-producto.component';
 import { ModalAgregarPagoComponent } from './componentes/modal-agregar-pago/modal-agregar-pago.component';
 import {CommonModule} from "@angular/common";
+import {MatTabsModule} from "@angular/material/tabs";
 
 
 @NgModule({
@@ -79,7 +80,8 @@ import {CommonModule} from "@angular/common";
     MatInputModule,
     MatIconModule,
     MatSnackBarModule,
-    CommonModule
+    CommonModule,
+    MatTabsModule
   ],
   providers: [
     {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher}

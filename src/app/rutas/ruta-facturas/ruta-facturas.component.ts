@@ -20,6 +20,7 @@ import {TablaFacturaPagoInterface} from "../../servicios/interfaces/tabla-factur
 import {FacturaPagoCreateInterface} from "../../servicios/http/factura-pago/factura-pago-create.interface";
 import {EmpresaService} from "../../servicios/http/empresa/empresa.service";
 import {EmpresaInterface} from "../../servicios/http/empresa/empresa.interface";
+import {ModalFormatoFacturaComponent} from "../../componentes/modal-formato-factura/modal-formato-factura.component";
 
 @Component({
   selector: 'app-ruta-facturas',
@@ -183,7 +184,17 @@ export class RutaFacturasComponent implements OnInit {
 
   // VISUALIZACIÓN
   mostrarFormatoFactura(idFactura: number) {
-
+    this.dialog.open(
+      ModalFormatoFacturaComponent,
+      {
+        disableClose: false,
+        data: {
+          usuario: this.idUsuario,
+          empresa: this.empresaActual,
+          factura: idFactura,
+        }
+      }
+    )
   }
 
   abrirModalFactura(operacion: 'crear'|'editar', idFactura: number = -1){
