@@ -163,12 +163,12 @@
               </thead>
               <tbody>
               <tr *ngFor="let pago of pagosTabla">
-                <td>{{pago.nombre_metodo}}</td>
-                <td>{{pago.valor}}</td>
-                <td *ngIf="pago.plazo != 0">{{pago.plazo}}</td>
-                <td *ngIf="pago.plazo === 0"></td>
-                <td>{{pago.unidad_tiempo}}</td>
-                <td>
+                <td *ngIf="pago.estado != 'd'">{{pago.nombre_metodo}}</td>
+                <td *ngIf="pago.estado != 'd'">{{pago.valor}}</td>
+                <td *ngIf="pago.plazo != 0 && pago.estado != 'd'">{{pago.plazo}}</td>
+                <td *ngIf="pago.plazo === 0 && pago.estado != 'd'"></td>
+                <td *ngIf="pago.estado != 'd'">{{pago.unidad_tiempo}}</td>
+                <td *ngIf="pago.estado != 'd'">
                   <div class="d-flex align-items-center justify-content-center">
                     <mat-icon class="col-md-4 action-icon"
                               (click)="eliminarPago(pago)" style="margin: 0 10px">
