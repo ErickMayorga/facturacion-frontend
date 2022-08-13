@@ -1,0 +1,50 @@
+// CRUD HEADER
+.crud-header {
+  background-color: var(--blue);
+  padding: 20px 0;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+// TABLE
+table {
+  table-layout:fixed;
+}
+td,th{
+  text-align: center;
+}
+.action-icon {
+  cursor: pointer;
+}
+
+// SEARCH BAR
+.search {
+  width: 100%;
+  border: 1px solid blue;
+  background-color: white;
+  border-radius: 40px;
+  border: 1px solid var(--gray2);
+}
+
+.search input {
+  font-size: 18px;
+  outline: none;
+  border-bottom-style: hidden;
+}
+.search input:focus {
+  border-bottom-style: hidden;
+  outline: none;
+}
+
+.search .material-icons {
+  padding: 10px;
+}
+
+// ADD BUTTON
+.add-button {
+  margin-right: 20%;
+}
+
+.input-field span{
+  padding-left: 10%;
+}

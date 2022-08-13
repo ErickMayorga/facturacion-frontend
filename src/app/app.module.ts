@@ -38,6 +38,17 @@ import { ModalAgregarProductoComponent } from './componentes/modal-agregar-produ
 import { ModalAgregarPagoComponent } from './componentes/modal-agregar-pago/modal-agregar-pago.component';
 import {CommonModule} from "@angular/common";
 import {MatTabsModule} from "@angular/material/tabs";
+import { ModalAgregarDestinatarioComponent } from './componentes/modal-agregar-destinatario/modal-agregar-destinatario.component';
+import { ModalAgregarImpuestoComponent } from './componentes/modal-agregar-impuesto/modal-agregar-impuesto.component';
+import { ModalAgregarModificacionComponent } from './componentes/modal-agregar-modificacion/modal-agregar-modificacion.component';
+import { ModalRetencionComponent } from './componentes/modal-retencion/modal-retencion.component';
+import { ModalGuiaRemisionComponent } from './componentes/modal-guia-remision/modal-guia-remision.component';
+import { ModalFormatoRetencionComponent } from './componentes/modal-formato-retencion/modal-formato-retencion.component';
+import { ModalFormatoGuiaRemisionComponent } from './componentes/modal-formato-guia-remision/modal-formato-guia-remision.component';
+import { ModalNotaCreditoComponent } from './componentes/modal-nota-credito/modal-nota-credito.component';
+import { ModalFormatoNotaCreditoComponent } from './componentes/modal-formato-nota-credito/modal-formato-nota-credito.component';
+import { ModalNotaDebitoComponent } from './componentes/modal-nota-debito/modal-nota-debito.component';
+import { ModalFormatoNotaDebitoComponent } from './componentes/modal-formato-nota-debito/modal-formato-nota-debito.component';
 
 
 @NgModule({
@@ -67,6 +78,17 @@ import {MatTabsModule} from "@angular/material/tabs";
     ModalFormatoFacturaComponent,
     ModalAgregarProductoComponent,
     ModalAgregarPagoComponent,
+    ModalAgregarDestinatarioComponent,
+    ModalAgregarImpuestoComponent,
+    ModalAgregarModificacionComponent,
+    ModalRetencionComponent,
+    ModalGuiaRemisionComponent,
+    ModalFormatoRetencionComponent,
+    ModalFormatoGuiaRemisionComponent,
+    ModalNotaCreditoComponent,
+    ModalFormatoNotaCreditoComponent,
+    ModalNotaDebitoComponent,
+    ModalFormatoNotaDebitoComponent,
   ],
   imports: [
     BrowserModule,
