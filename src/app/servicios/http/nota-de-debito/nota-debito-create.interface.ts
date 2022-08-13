@@ -1,0 +1,10 @@
+export interface NotaDebitoCreateInterface {
+  id_factura: number
+  numero_comprobante: string
+  fecha_emision: Date
+  clave_acceso: string
+  total_sin_modificacion: number
+  total_con_modificacion: number
+  habilitado: boolean
+  id_empresa: number
+}

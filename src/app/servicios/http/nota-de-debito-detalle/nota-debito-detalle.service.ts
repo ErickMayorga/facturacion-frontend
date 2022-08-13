@@ -2,29 +2,29 @@ import {Injectable} from "@angular/core";
 import {environment} from "../../../../environments/environment";
 import {HttpClient} from "@angular/common/http";
 import {map, Observable} from "rxjs";
-import {FacturaDetalleCreateInterface} from "./factura-detalle-create.interface";
-import {FacturaDetalleInterface} from "./factura-detalle.interface";
+import {NotaDebitoDetalleCreateInterface} from "./nota-debito-detalle-create.interface";
+import {NotaDebitoDetalleInterface} from "./nota-debito-detalle.interface";
 
 @Injectable({
   providedIn: 'root'
 })
-export class FacturaDetalleService {
-  url = environment.urlAPI + '/factura-detalle'
+export class NotaDebitoDetalleService {
+  url = environment.urlAPI + '/nota-de-debito-detalle'
 
   constructor(private readonly httpClient: HttpClient) {
 
   }
 
-  create(object: FacturaDetalleCreateInterface): Observable<FacturaDetalleInterface>{
+  create(object: NotaDebitoDetalleCreateInterface): Observable<NotaDebitoDetalleInterface>{
     return this.httpClient.post(this.url,object,{})
       .pipe(
         map(
-          (resultadoEnData) => resultadoEnData as FacturaDetalleInterface
+          (resultadoEnData) => resultadoEnData as NotaDebitoDetalleInterface
         )
       );
   }
 
-  getAll(queryParams?:any): Observable<FacturaDetalleInterface[]>{
+  getAll(queryParams?:any): Observable<NotaDebitoDetalleInterface[]>{
     Object
       .keys(queryParams)
       .forEach( k => {
@@ -41,47 +41,47 @@ export class FacturaDetalleService {
       )
       .pipe(
         map(
-          (resultadoEnData) => resultadoEnData as FacturaDetalleInterface[]
+          (resultadoEnData) => resultadoEnData as NotaDebitoDetalleInterface[]
         )
       );
   }
 
-  get(idObject: number):Observable<FacturaDetalleInterface>{
+  get(idObject: number):Observable<NotaDebitoDetalleInterface>{
     return this.httpClient
       .get(this.url + '/' + idObject)
       .pipe(
         map(
-          (resultadoEnData) => resultadoEnData as FacturaDetalleInterface
+          (resultadoEnData) => resultadoEnData as NotaDebitoDetalleInterface
         )
       );
   }
 
-  getDetalleFactura(idComprobante: number) {
+  getDetalles(idComprobante: number) {
     return this.httpClient
       .get(
         this.url + '/comprobante/' + idComprobante,
       )
       .pipe(
         map(
-          (resultadoEnData) => resultadoEnData as FacturaDetalleInterface[]
+          (resultadoEnData) => resultadoEnData as NotaDebitoDetalleInterface[]
         )
       );
   }
 
-  update(idObject:number, object: FacturaDetalleInterface): Observable<FacturaDetalleInterface>{
+  update(idObject:number, object: NotaDebitoDetalleInterface): Observable<NotaDebitoDetalleInterface>{
     return this.httpClient.put(this.url  + '/' + idObject, object)
       .pipe(
         map(
-          (resultadoEnData) => resultadoEnData as FacturaDetalleInterface
+          (resultadoEnData) => resultadoEnData as NotaDebitoDetalleInterface
         )
       )
   }
 
-  delete(idObject:number):Observable<FacturaDetalleInterface>{
+  delete(idObject:number):Observable<NotaDebitoDetalleInterface>{
     return this.httpClient.delete(this.url  + '/' + idObject)
       .pipe(
         map(
-          (resultadoEnData) => resultadoEnData as FacturaDetalleInterface
+          (resultadoEnData) => resultadoEnData as NotaDebitoDetalleInterface
         )
       )
   }
@@ -90,7 +90,7 @@ export class FacturaDetalleService {
     return this.httpClient.delete(this.url  + '/comprobante/' + idComprobante)
       .pipe(
         map(
-          (resultadoEnData) => resultadoEnData as FacturaDetalleInterface[]
+          (resultadoEnData) => resultadoEnData as NotaDebitoDetalleInterface[]
         )
       )
   }

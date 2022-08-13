@@ -2,29 +2,29 @@ import {Injectable} from "@angular/core";
 import {environment} from "../../../../environments/environment";
 import {HttpClient} from "@angular/common/http";
 import {map, Observable} from "rxjs";
-import {FacturaDetalleCreateInterface} from "./factura-detalle-create.interface";
-import {FacturaDetalleInterface} from "./factura-detalle.interface";
+import {RetencionDetalleCreateInterface} from "./retencion-detalle-create.interface";
+import {RetencionDetalleInterface} from "./retencion-detalle.interface";
 
 @Injectable({
   providedIn: 'root'
 })
-export class FacturaDetalleService {
-  url = environment.urlAPI + '/factura-detalle'
+export class RetencionDetalleService {
+  url = environment.urlAPI + '/retencion-detalle'
 
   constructor(private readonly httpClient: HttpClient) {
 
   }
 
-  create(object: FacturaDetalleCreateInterface): Observable<FacturaDetalleInterface>{
+  create(object: RetencionDetalleCreateInterface): Observable<RetencionDetalleInterface>{
     return this.httpClient.post(this.url,object,{})
       .pipe(
         map(
-          (resultadoEnData) => resultadoEnData as FacturaDetalleInterface
+          (resultadoEnData) => resultadoEnData as RetencionDetalleInterface
         )
       );
   }
 
-  getAll(queryParams?:any): Observable<FacturaDetalleInterface[]>{
+  getAll(queryParams?:any): Observable<RetencionDetalleInterface[]>{
     Object
       .keys(queryParams)
       .forEach( k => {
@@ -41,47 +41,47 @@ export class FacturaDetalleService {
       )
       .pipe(
         map(
-          (resultadoEnData) => resultadoEnData as FacturaDetalleInterface[]
+          (resultadoEnData) => resultadoEnData as RetencionDetalleInterface[]
         )
       );
   }
 
-  get(idObject: number):Observable<FacturaDetalleInterface>{
+  get(idObject: number):Observable<RetencionDetalleInterface>{
     return this.httpClient
       .get(this.url + '/' + idObject)
       .pipe(
         map(
-          (resultadoEnData) => resultadoEnData as FacturaDetalleInterface
+          (resultadoEnData) => resultadoEnData as RetencionDetalleInterface
         )
       );
   }
 
-  getDetalleFactura(idComprobante: number) {
+  getDetalles(idComprobante: number) {
     return this.httpClient
       .get(
         this.url + '/comprobante/' + idComprobante,
       )
       .pipe(
         map(
-          (resultadoEnData) => resultadoEnData as FacturaDetalleInterface[]
+          (resultadoEnData) => resultadoEnData as RetencionDetalleInterface[]
         )
       );
   }
 
-  update(idObject:number, object: FacturaDetalleInterface): Observable<FacturaDetalleInterface>{
+  update(idObject:number, object: RetencionDetalleInterface): Observable<RetencionDetalleInterface>{
     return this.httpClient.put(this.url  + '/' + idObject, object)
       .pipe(
         map(
-          (resultadoEnData) => resultadoEnData as FacturaDetalleInterface
+          (resultadoEnData) => resultadoEnData as RetencionDetalleInterface
         )
       )
   }
 
-  delete(idObject:number):Observable<FacturaDetalleInterface>{
+  delete(idObject:number):Observable<RetencionDetalleInterface>{
     return this.httpClient.delete(this.url  + '/' + idObject)
       .pipe(
         map(
-          (resultadoEnData) => resultadoEnData as FacturaDetalleInterface
+          (resultadoEnData) => resultadoEnData as RetencionDetalleInterface
         )
       )
   }
@@ -90,7 +90,7 @@ export class FacturaDetalleService {
     return this.httpClient.delete(this.url  + '/comprobante/' + idComprobante)
       .pipe(
         map(
-          (resultadoEnData) => resultadoEnData as FacturaDetalleInterface[]
+          (resultadoEnData) => resultadoEnData as RetencionDetalleInterface[]
         )
       )
   }
