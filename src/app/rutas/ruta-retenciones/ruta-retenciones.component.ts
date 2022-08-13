@@ -99,6 +99,7 @@ export class RutaRetencionesComponent implements OnInit {
         {
           next: (datos) => {
             this.empresaActual = datos as EmpresaInterface
+            //console.log(this.empresaActual)
           },
           error: (err) => {
             console.error(err)

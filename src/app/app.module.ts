@@ -49,6 +49,7 @@ import { ModalNotaCreditoComponent } from './componentes/modal-nota-credito/moda
 import { ModalFormatoNotaCreditoComponent } from './componentes/modal-formato-nota-credito/modal-formato-nota-credito.component';
 import { ModalNotaDebitoComponent } from './componentes/modal-nota-debito/modal-nota-debito.component';
 import { ModalFormatoNotaDebitoComponent } from './componentes/modal-formato-nota-debito/modal-formato-nota-debito.component';
+import { PantallaIndicacionesComponent } from './componentes/pantalla-indicaciones/pantalla-indicaciones.component';
 
 
 @NgModule({
@@ -89,6 +90,7 @@ import { ModalFormatoNotaDebitoComponent } from './componentes/modal-formato-not
     ModalFormatoNotaCreditoComponent,
     ModalNotaDebitoComponent,
     ModalFormatoNotaDebitoComponent,
+    PantallaIndicacionesComponent,
   ],
   imports: [
     BrowserModule,
