@@ -19,6 +19,7 @@ import {ProductoImpuestoCreateInterface} from "../../servicios/http/producto_imp
 export class ModalProductoComponent implements OnInit {
   formGroupProducto = new FormGroup({});
   fields = productoForm
+  tituloModal = ''
 
   usuarioActual: number = -1;
   operacion = ''
@@ -65,7 +66,10 @@ export class ModalProductoComponent implements OnInit {
 
   ngOnInit(): void {
     if(this.operacion === 'editar'){
+      this.tituloModal = 'Actualización de producto'
       this.buscarProducto()
+    } else{
+      this.tituloModal = 'Registro de producto'
     }
   }
 

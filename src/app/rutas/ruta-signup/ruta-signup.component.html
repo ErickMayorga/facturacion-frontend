@@ -52,7 +52,9 @@
               </div>
 
               <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
-                <button type="button" [disabled]="formGroupUsuario.invalid" class="btn btn-primary btn-lg" (click)="registrarUsuario()">Registrarme</button>
+                <button type="button" [disabled]="formGroupUsuario.invalid" class="btn btn-primary btn-lg" style="margin: 0px 20px"
+                        (click)="registrarUsuario()">Registrarme</button>
+                <button type="button" class="btn btn-primary btn-lg" style="margin: 0px 20px" [routerLink]="['/login']">Cancelar</button>
               </div>
             </form>
           </div>

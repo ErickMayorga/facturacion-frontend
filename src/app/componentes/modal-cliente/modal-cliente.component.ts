@@ -18,6 +18,7 @@ export class ModalClienteComponent implements OnInit {
 
   formGroupCliente = new FormGroup({});
   fields = clienteForm
+  tituloModal = ''
 
   nextDireccion = -1
   usuarioActual: number = -1;
@@ -60,7 +61,10 @@ export class ModalClienteComponent implements OnInit {
 
   ngOnInit(): void {
     if(this.operacion === 'editar'){
+      this.tituloModal = 'Actualización de cliente'
       this.buscarCliente()
+    } else{
+      this.tituloModal = 'Registro de cliente'
     }
   }
 

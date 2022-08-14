@@ -51,7 +51,7 @@ export class RutaRetencionesComponent implements OnInit {
     },
     {
       name: 'eliminar',
-      icon: 'delete'
+      icon: 'block'
     },
   ]
   busqueda = '';

@@ -34,6 +34,7 @@ export class ModalFacturaComponent implements OnInit {
 
   formGroupFactura = new FormGroup({});
   fields = facturaForm
+  tituloModal = ''
 
   // TABLA DETALLE
   theadsDetalle = [
@@ -128,7 +129,10 @@ export class ModalFacturaComponent implements OnInit {
 
   ngOnInit(): void {
     if(this.operacion === 'editar'){
+      this.tituloModal = 'Actualización de factura'
       this.buscarFactura()
+    }else{
+      this.tituloModal = 'Registro de factura'
     }
   }
 

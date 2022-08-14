@@ -15,6 +15,7 @@ export class ModalDireccionComponent implements OnInit {
   formGroupDireccion = new FormGroup({});
   direccionPrevia:DireccionInterface = {} as DireccionInterface
   fields = direccionForm
+  tituloModal = ''
 
   constructor( @Inject(MAT_DIALOG_DATA) public data: any,
                public dialogRef: MatDialogRef<ModalDireccionComponent>,
@@ -32,11 +33,14 @@ export class ModalDireccionComponent implements OnInit {
   ngOnInit(): void {
     if(this.direccionPrevia != undefined){
       //const direccionArray = this.direccionPrevia.trim().split(',')
+      this.tituloModal = 'Actualización de dirección'
       this.formGroupDireccion.patchValue({
         canton: this.direccionPrevia.canton,
         parroquia: this.direccionPrevia.parroquia,
         descripcion: this.direccionPrevia.descripcion_exacta
       });
+    }else{
+      this.tituloModal = 'Registro de dirección'
     }
   }
 

@@ -1,4 +1,4 @@
-<h1 mat-dialog-title class="d-flex justify-content-center">Nueva dirección</h1>
+<h1 mat-dialog-title class="d-flex justify-content-center">{{tituloModal}}</h1>
 <div class="d-flex flex-column justify-content-center form-outline flex-fill mb-0" *ngFor="let field of fields">
   <app-input-generic
     [title]="field.title"

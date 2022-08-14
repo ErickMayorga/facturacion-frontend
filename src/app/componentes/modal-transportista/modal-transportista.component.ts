@@ -15,6 +15,7 @@ export class ModalTransportistaComponent implements OnInit {
 
   formGroupTransportista = new FormGroup({});
   fields = transportistaForm
+  tituloModal = ''
 
   usuarioActual: number = -1;
   operacion = ''
@@ -42,7 +43,10 @@ export class ModalTransportistaComponent implements OnInit {
 
   ngOnInit(): void {
     if(this.operacion === 'editar'){
+      this.tituloModal = 'Actualización de transportista'
       this.buscarTransportista()
+    } else{
+      this.tituloModal = 'Registro de transportista'
     }
   }
 

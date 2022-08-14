@@ -52,7 +52,7 @@ export class RutaFacturasComponent implements OnInit {
     },
     {
       name: 'eliminar',
-      icon: 'delete'
+      icon: 'block'
     },
   ]
   busqueda = '';

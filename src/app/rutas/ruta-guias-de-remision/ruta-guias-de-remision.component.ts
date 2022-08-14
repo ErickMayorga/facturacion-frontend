@@ -48,7 +48,7 @@ export class RutaGuiasDeRemisionComponent implements OnInit {
     },
     {
       name: 'eliminar',
-      icon: 'delete'
+      icon: 'block'
     },
   ]
   busqueda = '';
