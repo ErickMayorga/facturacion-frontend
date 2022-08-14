@@ -157,6 +157,9 @@ export class RutaClientesComponent implements OnInit {
               .subscribe(
                 {
                   next: (data) => {
+                    this.snackBar.open('El cliente ha sido registrado con éxito!', 'OK', {
+                      duration: 3000
+                    });
                     const clienteCreado = data as ClienteInterface
                     console.log(clienteCreado)
                   },
@@ -165,7 +168,6 @@ export class RutaClientesComponent implements OnInit {
                   },
                   complete: () => {
                     this.refresh()
-                    this.snackBar.open('Se ha ingresado con éxito el nuevo cliente!')
                   }
                 }
               )
@@ -180,14 +182,17 @@ export class RutaClientesComponent implements OnInit {
       .subscribe(
         {
           next: (datos) => {
+            this.snackBar.open('El cliente ha sido actualizado con éxito!', 'OK', {
+              duration: 3000
+            });
             //console.log(datos)
-            this.refresh()
+
           },
           error: (error) => {
             console.error({error})
           },
           complete: () => {
-            this.snackBar.open('Se ha actualizado el cliente con éxito')
+            this.refresh()
           }
         }
       )
@@ -211,11 +216,17 @@ export class RutaClientesComponent implements OnInit {
     eliminar$.subscribe(
       {
         next: (datos) => {
+          this.snackBar.open('El cliente ha sido eliminado con éxito!', 'OK', {
+            duration: 3000
+          });
           //console.log({datos})
-          this.refresh()
+
         },
         error: (error) => {
           console.error({error})
+        },
+        complete: () => {
+          this.refresh()
         }
       }
     )

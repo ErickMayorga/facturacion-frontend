@@ -106,21 +106,23 @@ export class RutaFacturasComponent implements OnInit {
             console.error(err)
           },
           complete: () => {
-            this.facturaService.getFacturas(this.empresaActual.id_empresa)
-              .subscribe(
-                {
-                  next: (datos) => {
-                    this.facturasDB = datos as FacturaInterface[]
-                  },
-                  error: (error) => {
-                    console.log(error)
-                  },
-                  complete: () => {
-                    this.crearRegistrosTabla()
-                    //this.facturasBuscadas = this.facturasDB
+            if(this.empresaActual != null){
+              this.facturaService.getFacturas(this.empresaActual.id_empresa)
+                .subscribe(
+                  {
+                    next: (datos) => {
+                      this.facturasDB = datos as FacturaInterface[]
+                    },
+                    error: (error) => {
+                      console.log(error)
+                    },
+                    complete: () => {
+                      this.crearRegistrosTabla()
+                      //this.facturasBuscadas = this.facturasDB
+                    }
                   }
-                }
-              )
+                )
+            }
           }
         }
       )
@@ -242,7 +244,9 @@ export class RutaFacturasComponent implements OnInit {
       .subscribe(
         {
           next: (data) => {
-            this.snackBar.open('Se ha ingresado con éxito la nueva factura!')
+            this.snackBar.open('La factura ha sido registrada con éxito!', 'OK', {
+              duration: 3000
+            });
             const facturaCreada = data as FacturaInterface
             this.idFacturaCreada = facturaCreada.id_factura
             //console.log(facturaCreada)
@@ -265,7 +269,9 @@ export class RutaFacturasComponent implements OnInit {
       .subscribe(
         {
           next: (datos) => {
-            this.snackBar.open('Se ha actualizado la factura con éxito!')
+            this.snackBar.open('La factura ha sido actualizada con éxito!', 'OK', {
+              duration: 3000
+            });
             //console.log(datos)
           },
           error: (error) => {
@@ -469,7 +475,9 @@ export class RutaFacturasComponent implements OnInit {
       .subscribe(
         {
           next: (datos) => {
-
+            this.snackBar.open('La factura ha sido deshabilitada con éxito!', 'OK', {
+              duration: 3000
+            });
           },
           error: (err) => {
             console.error(err)

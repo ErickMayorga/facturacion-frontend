@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {InputGenericInterface} from "../../servicios/interfaces/input-generic.interface";
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
 import {UsuarioService} from "../../servicios/http/usuario/usuario.service";
 import {UsuarioCreateInterface} from "../../servicios/http/usuario/usuario-create.interface";
@@ -10,6 +9,8 @@ import {MatDialog} from "@angular/material/dialog";
 import {ModalDireccionComponent} from "../../componentes/modal-direccion/modal-direccion.component";
 import {DireccionService} from "../../servicios/http/direccion/direccion.service";
 import {DireccionInterface} from "../../servicios/http/direccion/direccion.interface";
+import {signUpForm} from "./sign-up-form";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-ruta-signup',
@@ -19,57 +20,7 @@ import {DireccionInterface} from "../../servicios/http/direccion/direccion.inter
 export class RutaSignupComponent implements OnInit {
   formGroupUsuario = new FormGroup({});
 
-  fields: InputGenericInterface[] = [
-    {
-      title: 'Nombres',
-      nameField: 'nombres',
-      type: 'text',
-      helpText: 'Ingrese sus nombres',
-      requiredMessage: 'El campo nombres es requerido',
-      lengthMessage: 'El campo nombres debe tener máximo 45 caracteres'
-    },
-    {
-      title: 'Apellidos',
-      nameField: 'apellidos',
-      type: 'text',
-      helpText: 'Ingrese sus apellidos',
-      requiredMessage: 'El campo apellidos es requerido',
-      lengthMessage: 'El campo apellidos debe tener máximo 45 caracteres'
-    },
-    {
-      title: 'Correo electrónico',
-      nameField: 'correo',
-      type: 'email',
-      helpText: 'Ingrese su correo electrónico',
-      requiredMessage: 'El correo electrónico es requerido',
-      lengthMessage: 'El correo debe tener máximo 45 caracteres'
-    },
-    {
-      title: 'Dirección',
-      nameField: 'direccion',
-      type: 'text',
-      helpText: 'Ingrese su dirección de domicilio',
-      requiredMessage: 'La dirección es requerida',
-      lengthMessage: ''
-    },
-    {
-      title: 'Contraseña',
-      nameField: 'passwordUsuario',
-      type: 'password',
-      helpText: 'Ingrese una contraseña entre 8 y 16 caracteres alfanuméricos',
-      requiredMessage: 'La contraseña es requerida',
-      lengthMessage: 'La contraseña debe tener entre 8 y 16 caracteres alfanuméricos'
-    },
-    {
-      title: 'Confirma tu contraseña',
-      nameField: 'passwordConfirmacion',
-      type: 'password',
-      helpText: 'Ingrese nuevamente su contraseña',
-      requiredMessage: 'La confirmación de contraseña es requerida',
-      lengthMessage: 'La contraseña debe tener entre 8 y 16 caracteres alfanuméricos'
-    }
-
-  ];
+  fields = signUpForm
 
   passwordCheck = true
   direccionTemp: DireccionCreateInterface = {} as DireccionCreateInterface;
@@ -79,7 +30,8 @@ export class RutaSignupComponent implements OnInit {
               private readonly formBuilder: FormBuilder,
               private readonly usuarioService: UsuarioService,
               private readonly direccionService: DireccionService,
-              public dialog: MatDialog) {
+              public dialog: MatDialog,
+              private snackBar: MatSnackBar) {
 
     this.formGroupUsuario =this.formBuilder.group(
       {
@@ -107,12 +59,12 @@ export class RutaSignupComponent implements OnInit {
     this.verificarPassword(password, confirmacion)
 
     if(this.passwordCheck){
-
+      let direccionCreada: DireccionInterface = {} as DireccionInterface
       this.direccionService.create(this.direccionTemp)
         .subscribe(
           {
             next: (data) => {
-              const direccionCreada = data as DireccionInterface
+              direccionCreada = data as DireccionInterface
               this.idDireccionRegistrada = direccionCreada.id_direccion
               //console.log(direccionCreada)
             },
@@ -120,32 +72,39 @@ export class RutaSignupComponent implements OnInit {
               console.log(error)
             },
             complete: () => {
-              const usuario = {
-                nombres: nombre,
-                apellidos: apellido,
-                id_direccion: this.idDireccionRegistrada,
-                correo_electronico: correo,
-                password: password
-              } as UsuarioCreateInterface
+              if(direccionCreada != null){
+                const usuario = {
+                  nombres: nombre,
+                  apellidos: apellido,
+                  id_direccion: this.idDireccionRegistrada,
+                  correo_electronico: correo,
+                  password: password
+                } as UsuarioCreateInterface
 
-              // Crear Usuario
-              this.usuarioService.create(usuario)
-                .subscribe(
-                  {
-                    next: (data) => {
-                      const  usuarioCreado = data as UsuarioInterface
-                      //console.log(usuarioCreado)
-                    },
-                    error: (error) => {
-                      console.log(error)
+                // Crear Usuario
+                this.usuarioService.create(usuario)
+                  .subscribe(
+                    {
+                      next: (data) => {
+                        const  usuarioCreado = data as UsuarioInterface
+                        this.snackBar.open('El usuario ha sido registrado con éxito!', 'OK', {
+                          duration: 3000
+                        });
+                        //console.log(usuarioCreado)
+                      },
+                      error: (error) => {
+                        console.log(error)
+                      },
+                      complete: () => {
+                        const ruta = ['/login'];
+                        this.router.navigate(ruta);
+                      }
                     }
-                  }
-                )
+                  )
+              }
             }
           }
         )
-      const ruta = ['/login'];
-      this.router.navigate(ruta);
     }
   }
 

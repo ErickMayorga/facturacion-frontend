@@ -136,6 +136,9 @@ export class RutaTransportistasComponent implements OnInit {
       .subscribe(
         {
           next: (data) => {
+            this.snackBar.open('El transportista ha sido registrado con éxito!', 'OK', {
+              duration: 3000
+            });
             const transportistaCreado = data as TransportistaInterface
             console.log(transportistaCreado)
           },
@@ -144,7 +147,6 @@ export class RutaTransportistasComponent implements OnInit {
           },
           complete: () => {
             this.refresh()
-            this.snackBar.open('Se ha ingresado con éxito el nuevo transportista!')
           }
         }
       )
@@ -156,14 +158,17 @@ export class RutaTransportistasComponent implements OnInit {
       .subscribe(
         {
           next: (datos) => {
+            this.snackBar.open('El transportista ha sido actualizado con éxito!', 'OK', {
+              duration: 3000
+            });
             //console.log(datos)
-            this.refresh()
+
           },
           error: (error) => {
             console.error({error})
           },
           complete: () => {
-            this.snackBar.open('Se ha actualizado el transportista con éxito')
+            this.refresh()
           }
         }
       )
@@ -174,11 +179,17 @@ export class RutaTransportistasComponent implements OnInit {
     eliminar$.subscribe(
       {
         next: (datos) => {
+          this.snackBar.open('El transportista ha sido eliminado con éxito!', 'OK', {
+            duration: 3000
+          });
           //console.log({datos})
-          this.refresh()
+
         },
         error: (error) => {
           console.error({error})
+        },
+        complete: () => {
+          this.refresh()
         }
       }
     )

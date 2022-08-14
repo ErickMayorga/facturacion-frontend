@@ -16,7 +16,7 @@ export const facturaForm: InputGenericInterface[] = [
     lengthMessage: 'Este campo puede tener máximo 45 caracteres'
   },
   {
-    title: 'Número de identificación',
+    title: '*Número de identificación',
     nameField: 'numero_identificacion',
     type: 'text',
     helpText: 'Ingrese el número de identificación del cliente para cargar su información',

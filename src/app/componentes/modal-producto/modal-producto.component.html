@@ -23,11 +23,16 @@
     <div *ngIf="formGroupProducto.get('iva')">
       <span *ngIf="formGroupProducto.get('iva')?.valid" class="helper-text">Seleccione un valor de IVA</span>
       <span *ngIf="
-             formGroupProducto.get('iva')?.invalid &&
+             (formGroupProducto.get('iva')?.invalid &&
              formGroupProducto.get('iva')?.touched &&
              formGroupProducto.get('iva')?.dirty &&
              !(formGroupProducto.get('iva')?.hasError('minlength') ||
-            formGroupProducto.get('iva')?.hasError('maxlength'))"
+            formGroupProducto.get('iva')?.hasError('maxlength'))) ||
+
+            (formGroupProducto.get('iva')?.invalid &&
+             formGroupProducto.get('iva')?.touched &&
+             !(formGroupProducto.get('iva')?.hasError('minlength') ||
+            formGroupProducto.get('iva')?.hasError('maxlength')))"
             class="helper-text" style="color: var(--error)">
       Este campo es requerido
       </span>
@@ -43,11 +48,16 @@
     <div *ngIf="formGroupProducto.get('ice')">
       <span *ngIf="formGroupProducto.get('ice')?.valid" class="helper-text">Seleccione un valor de ICE</span>
       <span *ngIf="
-             formGroupProducto.get('ice')?.invalid &&
+             (formGroupProducto.get('ice')?.invalid &&
              formGroupProducto.get('ice')?.touched &&
              formGroupProducto.get('ice')?.dirty &&
              !(formGroupProducto.get('ice')?.hasError('minlength') ||
-            formGroupProducto.get('ice')?.hasError('maxlength'))"
+            formGroupProducto.get('ice')?.hasError('maxlength'))) ||
+
+            (formGroupProducto.get('ice')?.invalid &&
+             formGroupProducto.get('ice')?.touched &&
+             !(formGroupProducto.get('ice')?.hasError('minlength') ||
+            formGroupProducto.get('ice')?.hasError('maxlength')))"
             class="helper-text" style="color: var(--error)">
       Este campo es requerido
       </span>
@@ -63,11 +73,16 @@
     <div *ngIf="formGroupProducto.get('irbpnr')">
       <span *ngIf="formGroupProducto.get('irbpnr')?.valid" class="helper-text">Seleccione un valor de IRBPNR</span>
       <span *ngIf="
-             formGroupProducto.get('irbpnr')?.invalid &&
+             (formGroupProducto.get('irbpnr')?.invalid &&
              formGroupProducto.get('irbpnr')?.touched &&
              formGroupProducto.get('irbpnr')?.dirty &&
              !(formGroupProducto.get('irbpnr')?.hasError('minlength') ||
-            formGroupProducto.get('irbpnr')?.hasError('maxlength'))"
+            formGroupProducto.get('irbpnr')?.hasError('maxlength'))) ||
+
+            (formGroupProducto.get('irbpnr')?.invalid &&
+             formGroupProducto.get('irbpnr')?.touched &&
+             !(formGroupProducto.get('irbpnr')?.hasError('minlength') ||
+            formGroupProducto.get('irbpnr')?.hasError('maxlength')))"
             class="helper-text" style="color: var(--error)">
       Este campo es requerido
       </span>

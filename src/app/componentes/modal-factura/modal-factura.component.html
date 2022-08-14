@@ -30,23 +30,17 @@
   <!-- INFORMACION DE LA FACTURA -->
   <span style="font-size: 16px"><b>Información de la factura</b></span>
   <div class="d-flex flex-wrap section-form">
-    <div class="col-md-6 span-calculated" style="margin-bottom: 20px">
+    <div class="col-md-6 span-calculated">
       <span><b>Número de comprobante:</b> {{numeroComprobante}}</span>
     </div>
-    <div class="col-md-6 span-calculated" style="margin-bottom: 20px">
+    <div class="col-md-6 span-calculated">
       <span><b>Clave de acceso:</b> {{claveAcceso}}</span>
     </div>
-    <div class="d-flex flex-column justify-content-center form-outline flex-fill col-md-6" *ngFor="let field of fields.slice(0,fields.length-1)">
-      <app-input-generic
-        [title]="field.title"
-        [nameField]="field.nameField"
-        [type]="field.type"
-        [helpText]="field.helpText"
-        [requiredMessage]="field.requiredMessage"
-        [lengthMessage]="field.lengthMessage"
-        [options]="field.options"
-        [formGroup]="formGroupFactura"
-      ></app-input-generic>
+    <div class="col-md-6 span-calculated">
+      <span><b>Fecha de emisión:</b> {{fechaEmision}}</span>
+    </div>
+    <div class="col-md-6 span-calculated">
+      <span><b>Guia de remisión:</b> {{guiaRemision}}</span>
     </div>
   </div>
 
@@ -66,11 +60,16 @@
             Ingrese el número de identificación del cliente
           </span>
           <span *ngIf="
-             formGroupFactura.get('numero_identificacion')?.invalid &&
+             (formGroupFactura.get('numero_identificacion')?.invalid &&
              formGroupFactura.get('numero_identificacion')?.touched &&
              formGroupFactura.get('numero_identificacion')?.dirty &&
              !(formGroupFactura.get('numero_identificacion')?.hasError('minlength') ||
-            formGroupFactura.get('numero_identificacion')?.hasError('maxlength'))"
+            formGroupFactura.get('numero_identificacion')?.hasError('maxlength'))) ||
+
+            (formGroupFactura.get('numero_identificacion')?.invalid &&
+             formGroupFactura.get('numero_identificacion')?.touched &&
+             !(formGroupFactura.get('numero_identificacion')?.hasError('minlength') ||
+            formGroupFactura.get('numero_identificacion')?.hasError('maxlength')))"
                 class="helper-text" style="color: var(--error)">
             Este campo es obligatorio
           </span>
@@ -83,17 +82,20 @@
       </div>
     </div>
     <div class="col-md-6 span-calculated" style="margin-top: 10px">
-      <span><b>Razón Social:</b> {{clienteDB.nombres_razon_social}}</span>
+      <span *ngIf="clienteDB != null"><b>Razón Social:</b> {{clienteDB.nombres_razon_social}}</span>
+      <span *ngIf="clienteDB === null"><b>Razón Social:</b> </span>
     </div>
     <div class="col-md-6 span-calculated" style="margin-top: 10px">
-      <span *ngIf="clienteDB.id_direccion!=-1"><b>Dirección:</b> {{direccionCliente}}</span>
-      <span *ngIf="clienteDB.id_direccion === -1"><b>Dirección:</b> </span>
+      <span *ngIf="clienteDB != null"><b>Dirección:</b> {{direccionCliente}}</span>
+      <span *ngIf="clienteDB === null"><b>Dirección:</b> </span>
     </div>
     <div class="col-md-6 span-calculated">
-      <span><b>Teléfono:</b> {{clienteDB.telefono}}</span>
+      <span *ngIf="clienteDB != null"><b>Teléfono:</b> {{clienteDB.telefono}}</span>
+      <span *ngIf="clienteDB === null"><b>Teléfono:</b></span>
     </div>
     <div class="col-md-6 span-calculated">
-      <span><b>Correo:</b> {{clienteDB.correo_electronico}}</span>
+      <span *ngIf="clienteDB != null"><b>Correo:</b> {{clienteDB.correo_electronico}}</span>
+      <span *ngIf="clienteDB === null"><b>Correo:</b></span>
     </div>
   </div>
 
@@ -101,7 +103,7 @@
   <span style="font-size: 16px"><b>Detalle de la factura</b></span>
   <div class="d-flex flex-wrap section-form">
     <div class="d-flex col-md-3" style="margin-bottom: 10px">
-      <button type="button" class="btn btn-primary btn-lg" [disabled]="clienteDB.id_cliente === -1"
+      <button type="button" class="btn btn-primary btn-lg" [disabled]="clienteDB === null"
               (click)="abrirModalAgregarProducto()">Agregar Producto</button>
     </div>
     <!-- TABLA DE PRODUCTOS -->
@@ -147,7 +149,7 @@
     <div class="d-flex flex-row">
       <div class="d-flex flex-column">
         <div class="d-flex col-md-5" style="margin-bottom: 10px">
-          <button type="button" class="btn btn-primary btn-lg" [disabled]="clienteDB.id_cliente === -1"
+          <button type="button" class="btn btn-primary btn-lg" [disabled]="clienteDB === null"
                   (click)="abrirModalAgregarPago()">Agregar Pago</button>
         </div>
         <!-- TABLA DE PAGOS -->
@@ -206,7 +208,9 @@
     </div>
   </div>
   <div mat-dialog-actions class="d-flex justify-content-center">
-    <button class="btn btn-info" type="button" style="margin: 0px 20px" [disabled]="formGroupFactura.invalid" (click)="guardarFactura()">Aceptar</button>
+    <button class="btn btn-info" type="button" style="margin: 0px 20px"
+            [disabled]="formGroupFactura.invalid || detallesTabla.length === 0 || pagosTabla.length === 0"
+            (click)="guardarFactura()">Aceptar</button>
     <button class="btn btn-danger" type="button" style="margin: 0px 20px" (click)="cancelar()">Cancelar</button>
   </div>
 </div>

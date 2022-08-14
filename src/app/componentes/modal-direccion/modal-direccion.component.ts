@@ -30,7 +30,7 @@ export class ModalDireccionComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if(this.direccionPrevia.id_direccion != undefined){
+    if(this.direccionPrevia != undefined){
       //const direccionArray = this.direccionPrevia.trim().split(',')
       this.formGroupDireccion.patchValue({
         canton: this.direccionPrevia.canton,
@@ -51,7 +51,7 @@ export class ModalDireccionComponent implements OnInit {
 
     let direccionActual = null
 
-    if(this.direccionPrevia.id_direccion === undefined){
+    if(this.direccionPrevia === undefined){
       direccionActual = {
         canton: canton,
         parroquia: parroquia,

@@ -1,8 +1,6 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {DireccionCreateInterface} from "../../servicios/http/direccion/direccion-create.interface";
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {InputGenericInterface} from "../../servicios/interfaces/input-generic.interface";
 import {ClienteCreateInterface} from "../../servicios/http/cliente/cliente-create.interface";
 import {ModalDireccionComponent} from "../modal-direccion/modal-direccion.component";
 import {DireccionService} from "../../servicios/http/direccion/direccion.service";
@@ -44,7 +42,7 @@ export class ModalClienteComponent implements OnInit {
         numero_identificacion: ['', [Validators.required, Validators.maxLength(13)]],
         direccion: ['', Validators.required],
         telefono: ['', [Validators.required, Validators.maxLength(10)]],
-        correo: ['', [Validators.required, Validators.maxLength(45)]],
+        correo: ['', [Validators.required, Validators.maxLength(45), Validators.email]],
       }
     )
     this.direccionService.getNextIndex()

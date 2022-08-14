@@ -56,9 +56,9 @@ export class ModalProductoComponent implements OnInit {
         tipo_producto: ['', [Validators.required, Validators.maxLength(45)]],
         nombre: ['', [Validators.required, Validators.maxLength(45)]],
         valor_unitario: ['', [Validators.required]],
-        iva: ['', [Validators.maxLength(45)]],
-        ice: ['', [Validators.maxLength(45)]],
-        irbpnr: ['', [Validators.maxLength(45)]],
+        iva: [1, [Validators.maxLength(45)]],
+        ice: [7, [Validators.maxLength(45)]],
+        irbpnr: [6, [Validators.maxLength(45)]],
       }
     )
   }

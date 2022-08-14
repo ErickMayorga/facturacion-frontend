@@ -36,7 +36,7 @@ import { ModalFacturaComponent } from './componentes/modal-factura/modal-factura
 import { ModalFormatoFacturaComponent } from './componentes/modal-formato-factura/modal-formato-factura.component';
 import { ModalAgregarProductoComponent } from './componentes/modal-agregar-producto/modal-agregar-producto.component';
 import { ModalAgregarPagoComponent } from './componentes/modal-agregar-pago/modal-agregar-pago.component';
-import {CommonModule} from "@angular/common";
+import {CommonModule, DatePipe} from "@angular/common";
 import {MatTabsModule} from "@angular/material/tabs";
 import { ModalAgregarDestinatarioComponent } from './componentes/modal-agregar-destinatario/modal-agregar-destinatario.component';
 import { ModalAgregarImpuestoComponent } from './componentes/modal-agregar-impuesto/modal-agregar-impuesto.component';
@@ -108,7 +108,8 @@ import { PantallaIndicacionesComponent } from './componentes/pantalla-indicacion
     MatTabsModule
   ],
   providers: [
-    {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher}
+    {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher},
+    DatePipe
   ],
   bootstrap: [AppComponent]
 })

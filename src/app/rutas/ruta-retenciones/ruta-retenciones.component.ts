@@ -105,22 +105,24 @@ export class RutaRetencionesComponent implements OnInit {
             console.error(err)
           },
           complete: () => {
-            // Buscar retenciones por empresa
-            this.retencionService.getComprobantes(this.empresaActual.id_empresa)
-              .subscribe(
-                {
-                  next: (datos) => {
-                    this.retencionesDB = datos as RetencionInterface[]
-                  },
-                  error: (error) => {
-                    console.log(error)
-                  },
-                  complete: () => {
-                    this.crearRegistrosTabla()
-                    //this.facturasBuscadas = this.facturasDB
+            if(this.empresaActual != null){
+              // Buscar retenciones por empresa
+              this.retencionService.getComprobantes(this.empresaActual.id_empresa)
+                .subscribe(
+                  {
+                    next: (datos) => {
+                      this.retencionesDB = datos as RetencionInterface[]
+                    },
+                    error: (error) => {
+                      console.log(error)
+                    },
+                    complete: () => {
+                      this.crearRegistrosTabla()
+                      //this.facturasBuscadas = this.facturasDB
+                    }
                   }
-                }
-              )
+                )
+            }
           }
         }
       )
@@ -259,7 +261,9 @@ export class RutaRetencionesComponent implements OnInit {
       .subscribe(
         {
           next: (data) => {
-            this.snackBar.open('Se ha ingresado con éxito el nuevo comprobante de retención!')
+            this.snackBar.open('El comprobante de retención ha sido registrado con éxito!', 'OK', {
+              duration: 3000
+            });
             const guiaRemisionCreada = data as RetencionInterface
             this.idRetencionCreada = guiaRemisionCreada.id_comprobante_de_retencion
             //console.log(facturaCreada)
@@ -282,7 +286,9 @@ export class RutaRetencionesComponent implements OnInit {
       .subscribe(
         {
           next: (datos) => {
-            this.snackBar.open('Se ha actualizado el comprobante de retención con éxito!')
+            this.snackBar.open('El comprobante de retención ha sido actualizado con éxito!', 'OK', {
+              duration: 3000
+            });
             //console.log(datos)
           },
           error: (error) => {
@@ -402,7 +408,9 @@ export class RutaRetencionesComponent implements OnInit {
       .subscribe(
         {
           next: (datos) => {
-
+            this.snackBar.open('El comprobante de retención ha sido deshabilitado con éxito!', 'OK', {
+              duration: 3000
+            });
           },
           error: (err) => {
             console.error(err)

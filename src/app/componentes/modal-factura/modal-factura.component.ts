@@ -23,6 +23,7 @@ import {TablaFacturaPagoInterface} from "../../servicios/interfaces/tabla-factur
 import {ProductoService} from "../../servicios/http/producto/producto.service";
 import {MetodoPagoService} from "../../servicios/http/metodo-de-pago/metodo-pago.service";
 import {MetodoPagoInterface} from "../../servicios/http/metodo-de-pago/metodo-pago.interface";
+import {DatePipe} from "@angular/common";
 
 @Component({
   selector: 'app-modal-factura',
@@ -89,6 +90,8 @@ export class ModalFacturaComponent implements OnInit {
   //Cálculos
   numeroComprobante = ''
   claveAcceso = ''
+  fechaEmision: string | null  = ''
+  guiaRemision: string | undefined = ''
 
   busquedaCliente: string = ''
   total_sin_iva = 0
@@ -107,15 +110,16 @@ export class ModalFacturaComponent implements OnInit {
                private readonly productoService: ProductoService,
                private readonly metodoPagoService: MetodoPagoService,
                private readonly direccionService: DireccionService,
-               public dialog: MatDialog,) {
+               public dialog: MatDialog,
+               private datePipe: DatePipe) {
+    const today = new Date()
+    this.fechaEmision = this.datePipe.transform(today, 'dd-MM-yyyy')
     this.usuarioActual = this.data.usuario
     this.operacion = this.data.operacion
     this.facturaActual = this.data.factura
     this.claveAcceso = (Math.floor(Math.random() * 9999999999) + 1000000000).toString()
     this.formGroupFactura =this.formBuilder.group(
       {
-        fecha_emision: ['', [Validators.required]],
-        guia_remision: ['', [Validators.maxLength(45)]],
         numero_identificacion: ['', [Validators.required, Validators.maxLength(13)]],
       }
     )
@@ -186,6 +190,8 @@ export class ModalFacturaComponent implements OnInit {
         {
           next: (datos) => {
             this.facturaDB = datos as FacturaInterface
+            this.fechaEmision = this.datePipe.transform(this.facturaDB.fecha_emision, 'dd-MM-yyyy')
+            this.guiaRemision = this.facturaDB.guia_de_remision
           },
           error: (err) => {
             console.error(err)
@@ -252,8 +258,8 @@ export class ModalFacturaComponent implements OnInit {
     this.claveAcceso = this.facturaDB.clave_acceso
     this.numeroComprobante = this.facturaDB.numero_comprobante
     this.formGroupFactura.patchValue({
-      fecha_emision: this.facturaDB.fecha_emision,
-      guia_remision: this.facturaDB.guia_de_remision,
+      fecha_emision: this.fechaEmision,
+      guia_remision: this.guiaRemision,
       numero_identificacion: this.clienteDB.numero_identificacion,
     });
   }
@@ -340,9 +346,6 @@ export class ModalFacturaComponent implements OnInit {
 
   // Enviar datos para crear o actualizar factura
   guardarFactura(){
-    const fecha_emision =  this.formGroupFactura.get('fecha_emision')?.value
-    const guia_remision =  this.formGroupFactura.get('guia_remision')?.value.trim()
-
     let facturaObject: FacturaInterface | FacturaCreateInterface = {} as FacturaCreateInterface
 
     if(this.operacion === 'crear'){
@@ -350,9 +353,9 @@ export class ModalFacturaComponent implements OnInit {
         id_empresa: this.empresaActual.id_empresa,
         numero_comprobante: this.numeroComprobante,
         id_cliente: this.clienteDB.id_cliente,
-        fecha_emision: new Date(fecha_emision),
+        fecha_emision: new Date(),
         clave_acceso: this.claveAcceso,
-        guia_de_remision: guia_remision,
+        guia_de_remision: this.guiaRemision,
         propina: 0,
         importe_total: 0,
         moneda: 'USD',
@@ -370,9 +373,9 @@ export class ModalFacturaComponent implements OnInit {
         id_empresa: this.empresaActual.id_empresa,
         numero_comprobante: this.numeroComprobante,
         id_cliente: this.clienteDB.id_cliente,
-        fecha_emision: new Date(fecha_emision),
+        fecha_emision: this.facturaDB.fecha_emision,
         clave_acceso: this.claveAcceso,
-        guia_de_remision: guia_remision,
+        guia_de_remision: this.guiaRemision,
         propina: 0,
         importe_total: 0,
         moneda: 'USD',
@@ -393,27 +396,27 @@ export class ModalFacturaComponent implements OnInit {
       .subscribe(
         {
           next: (datos) => {
-            if(datos != null){
-              this.clienteDB = datos as ClienteInterface
-            }
+            this.clienteDB = datos as ClienteInterface
           },
           error: (err) => {
             console.error(err)
           },
           complete: () => {
-            //Buscar dirección cliente
-            this.direccionService.get(this.clienteDB.id_direccion)
-              .subscribe(
-                {
-                  next: (datos) => {
-                    const direccion = datos as DireccionInterface
-                    this.direccionCliente = this.direccionService.getStringDireccion(direccion)
-                  },
-                  error: (err) => {
-                    console.log(err)
+            if(this.clienteDB != null){
+              //Buscar dirección cliente
+              this.direccionService.get(this.clienteDB.id_direccion)
+                .subscribe(
+                  {
+                    next: (datos) => {
+                      const direccion = datos as DireccionInterface
+                      this.direccionCliente = this.direccionService.getStringDireccion(direccion)
+                    },
+                    error: (err) => {
+                      console.log(err)
+                    }
                   }
-                }
-              )
+                )
+            }
           }
         }
       )

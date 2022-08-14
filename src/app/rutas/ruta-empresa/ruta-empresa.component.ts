@@ -30,7 +30,6 @@ export class RutaEmpresaComponent implements OnInit {
   direccionEstablecimientoActual: DireccionInterface = {} as DireccionInterface
   idDireccionEstablecimiento = -1
   empresaRegistrada: EmpresaInterface = {} as EmpresaInterface ;
-  tieneEmpresa = false
 
   constructor(private readonly router: Router,
               private readonly activatedRoute: ActivatedRoute,
@@ -38,14 +37,14 @@ export class RutaEmpresaComponent implements OnInit {
               private readonly empresaService: EmpresaService,
               private readonly direccionService: DireccionService,
               public dialog: MatDialog,
-              private _snackBar: MatSnackBar) {
+              private snackBar: MatSnackBar) {
     this.formGroupEmpresa =this.formBuilder.group(
       {
         ruc: ['', [Validators.required, Validators.maxLength(13)]],
         razon_social: ['', [Validators.required, Validators.maxLength(100)]],
         nombre_comercial: ['', [Validators.maxLength(45)]],
-        direccion_matriz: [{value: '', disable: true}, Validators.required],
-        direccion_establecimiento: [{value: '', disable: true}, Validators.required],
+        direccion_matriz: ['', Validators.required],
+        direccion_establecimiento: ['', Validators.required],
         codigo_establecimiento: ['', [Validators.required, Validators.maxLength(10)]],
         codigo_punto_emision: ['', [Validators.required, Validators.maxLength(10)]],
         contribuyente_especial: ['', Validators.required],
@@ -71,26 +70,17 @@ export class RutaEmpresaComponent implements OnInit {
   // Carga inicial de empresa registrada (si existe)
 
   private buscarEmpresa() {
-    this.empresaService.getAll({})
+    this.empresaService.getEmpresa(this.idUsuario)
       .subscribe(
         {
           next: (datos) => { // try then
-            const empresas = datos as EmpresaInterface[]
-            // Verificar si el usuario tiene empresa
-            for(let empresa of empresas){
-              if(empresa.id_usuario === this.idUsuario){
-                this.tieneEmpresa = true
-                this.empresaRegistrada = empresa
-                return
-              }
-            }
-            this.tieneEmpresa = false
+            this.empresaRegistrada = datos as EmpresaInterface
           },
           error: (error) => { // catch
             console.error({error});
           },
           complete: () => {
-            if(this.tieneEmpresa){
+            if(this.empresaRegistrada != null){
               this.cargarInformacion()
             }
           }
@@ -144,7 +134,7 @@ export class RutaEmpresaComponent implements OnInit {
   // Guardado general de información y direcciones
 
   guardarInformacion() {
-    if(this.tieneEmpresa){
+    if(this.empresaRegistrada != null){
       this.actualizarInformacion()
     }else{
       this.registrarInformacion()
@@ -174,7 +164,7 @@ export class RutaEmpresaComponent implements OnInit {
           if(datos!=undefined){
             const direccion = datos['direccion']
             if(name === 'direccion_matriz'){
-              if(!this.tieneEmpresa){
+              if(this.empresaRegistrada === null){
                 this.direccionMatrizRegistro = direccion as DireccionCreateInterface
               }else{
                 this.direccionMatrizActual = direccion as DireccionInterface
@@ -183,7 +173,7 @@ export class RutaEmpresaComponent implements OnInit {
                 direccion_matriz: this.direccionService.getStringDireccion(direccion),
               });
             }else if(name === 'direccion_establecimiento'){
-              if(!this.tieneEmpresa){
+              if(this.empresaRegistrada === null){
                 this.direccionEstablecimientoRegistro = direccion as DireccionCreateInterface
               }else {
                 this.direccionEstablecimientoActual = direccion as DireccionInterface
@@ -264,6 +254,9 @@ export class RutaEmpresaComponent implements OnInit {
           next: (data) => {
             const empresaCreada = data as EmpresaInterface
             this.empresaRegistrada = empresaCreada
+            this.snackBar.open('Se ha registrado su información con éxito!', 'OK', {
+              duration: 3000
+            });
             //console.log(empresaCreada)
           },
           error: (error) => {
@@ -312,7 +305,9 @@ export class RutaEmpresaComponent implements OnInit {
       .subscribe(
         {
           next: (datos) => {
-            this._snackBar.open('Se ha actualizado su información con éxito')
+            this.snackBar.open('Se ha actualizado su información con éxito!', 'OK', {
+              duration: 3000
+            });
           },
           error: (error) => {
             console.error({error})

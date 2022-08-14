@@ -100,22 +100,24 @@ export class RutaGuiasDeRemisionComponent implements OnInit {
             console.error(err)
           },
           complete: () => {
-            // Buscar guias de remision por empresa
-            this.guiaRemisionService.getComprobantes(this.empresaActual.id_empresa)
-              .subscribe(
-                {
-                  next: (datos) => {
-                    this.guiasRemisionDB = datos as GuiaRemisionInterface[]
-                  },
-                  error: (error) => {
-                    console.log(error)
-                  },
-                  complete: () => {
-                    this.crearRegistrosTabla()
-                    //this.facturasBuscadas = this.facturasDB
+            if(this.empresaActual != null){
+              // Buscar guias de remision por empresa
+              this.guiaRemisionService.getComprobantes(this.empresaActual.id_empresa)
+                .subscribe(
+                  {
+                    next: (datos) => {
+                      this.guiasRemisionDB = datos as GuiaRemisionInterface[]
+                    },
+                    error: (error) => {
+                      console.log(error)
+                    },
+                    complete: () => {
+                      this.crearRegistrosTabla()
+                      //this.facturasBuscadas = this.facturasDB
+                    }
                   }
-                }
-              )
+                )
+            }
           }
         }
       )
@@ -234,7 +236,9 @@ export class RutaGuiasDeRemisionComponent implements OnInit {
       .subscribe(
         {
           next: (data) => {
-            this.snackBar.open('Se ha ingresado con éxito la nueva guía de remisión!')
+            this.snackBar.open('La guía de remisión ha sido registrada con éxito!', 'OK', {
+              duration: 3000
+            });
             const guiaRemisionCreada = data as GuiaRemisionInterface
             this.idGuiaRemisionCreada = guiaRemisionCreada.id_guia_de_remision
             //console.log(facturaCreada)
@@ -257,7 +261,9 @@ export class RutaGuiasDeRemisionComponent implements OnInit {
       .subscribe(
         {
           next: (datos) => {
-            this.snackBar.open('Se ha actualizado la guía de remisión con éxito!')
+            this.snackBar.open('La guía de remisión ha sido actualizada con éxito!', 'OK', {
+              duration: 3000
+            });
             //console.log(datos)
           },
           error: (error) => {
@@ -365,7 +371,9 @@ export class RutaGuiasDeRemisionComponent implements OnInit {
       .subscribe(
         {
           next: (datos) => {
-
+            this.snackBar.open('La guía de remisión ha sido deshabilitada con éxito!', 'OK', {
+              duration: 3000
+            });
           },
           error: (err) => {
             console.error(err)

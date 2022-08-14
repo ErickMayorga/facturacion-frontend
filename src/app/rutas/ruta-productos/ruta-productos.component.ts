@@ -151,7 +151,9 @@ export class RutaProductosComponent implements OnInit {
       .subscribe(
         {
           next: (data) => {
-            this.snackBar.open('Se ha ingresado con éxito el nuevo producto!')
+            this.snackBar.open('El producto ha sido registrado con éxito!', 'OK', {
+              duration: 3000
+            });
             const productoCreado = data as ProductoInterface
             idProductoCreado = productoCreado.id_producto
             console.log(productoCreado)
@@ -191,7 +193,9 @@ export class RutaProductosComponent implements OnInit {
       .subscribe(
         {
           next: (datos) => {
-            this.snackBar.open('Se ha actualizado el producto con éxito')
+            this.snackBar.open('El producto ha sido actualizado con éxito!', 'OK', {
+              duration: 3000
+            });
             console.log(datos)
           },
           error: (error) => {
@@ -241,10 +245,16 @@ export class RutaProductosComponent implements OnInit {
       {
         next: (datos) => {
           //console.log({datos})
-          //this.refresh()
+          this.snackBar.open('El producto ha sido eliminado con éxito!', 'OK', {
+            duration: 3000
+          });
+
         },
         error: (error) => {
           console.error({error})
+        },
+        complete: () => {
+          this.refresh()
         }
       }
     )
