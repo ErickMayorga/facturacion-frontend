@@ -46,6 +46,9 @@ export class ModalClienteComponent implements OnInit {
         correo: ['', [Validators.required, Validators.maxLength(45), Validators.email]],
       }
     )
+
+    this.formGroupCliente.get('direccion')?.disable()
+
     this.direccionService.getNextIndex()
       .subscribe(
         {

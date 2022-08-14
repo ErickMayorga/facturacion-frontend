@@ -52,6 +52,8 @@ export class RutaEmpresaComponent implements OnInit {
         ambiente:['', Validators.required]
       }
     )
+    this.formGroupEmpresa.get('direccion_matriz')?.disable()
+    this.formGroupEmpresa.get('direccion_establecimiento')?.disable()
   }
 
   ngOnInit(): void {

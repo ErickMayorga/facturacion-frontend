@@ -43,6 +43,7 @@ export class RutaSignupComponent implements OnInit {
         passwordConfirmacion: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(16)]],
       }
     )
+    this.formGroupUsuario.get('direccion')?.disable()
   }
 
   ngOnInit(): void {
