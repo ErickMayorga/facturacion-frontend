@@ -1,0 +1,20 @@
+
+<div class="d-flex flex-column justify-content-center">
+  <div class="d-flex align-items-center justify-content-center">
+    <mat-icon class="col-md-4 icon-display">
+      {{icono}}
+    </mat-icon>
+  </div>
+  <div class="d-flex justify-content-center">
+    <h2><b>{{titulo}}</b></h2>
+  </div>
+  <div class="input-field d-flex justify-content-center">
+    <span class="helper-text">{{mensaje}}</span>
+  </div>
+</div>
+<div mat-dialog-actions class="d-flex justify-content-center">
+  <button type="button" class="btn btn-danger" style="margin: 10px 20px" (click)="confirmar()">Confirmar</button>
+  <button type="button" class="btn btn-secondary" style="margin: 10px 20px" (click)="cancelar()">Cancelar</button>
+</div>
+
+

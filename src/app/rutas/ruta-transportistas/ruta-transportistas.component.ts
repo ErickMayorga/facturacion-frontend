@@ -7,6 +7,7 @@ import {TransportistaInterface} from "../../servicios/http/transportista/transpo
 import {TransportistaCreateInterface} from "../../servicios/http/transportista/transportista-create.interface";
 import {TransportistaService} from "../../servicios/http/transportista/transportista.service";
 import {ModalTransportistaComponent} from "../../componentes/modal-transportista/modal-transportista.component";
+import {ConfirmacionDeAccionComponent} from "../../componentes/confirmacion-de-accion/confirmacion-de-accion.component";
 
 @Component({
   selector: 'app-ruta-transportistas',
@@ -175,24 +176,46 @@ export class RutaTransportistasComponent implements OnInit {
   }
 
   eliminarTransportista(idTransportista: number){
-    const eliminar$ = this.transportistaService.delete(idTransportista);
-    eliminar$.subscribe(
+    const referenciaDialogo = this.dialog.open(
+      ConfirmacionDeAccionComponent,
       {
-        next: (datos) => {
-          this.snackBar.open('El transportista ha sido eliminado con éxito!', 'OK', {
-            duration: 3000
-          });
-          //console.log({datos})
-
-        },
-        error: (error) => {
-          console.error({error})
-        },
-        complete: () => {
-          this.refresh()
+        disableClose: false,
+        data: {
+          icono: 'warning',
+          titulo: 'Confirmación de eliminación',
+          mensaje: '¿Está seguro que desea eliminar este transportista?'
         }
       }
     )
+    const despuesCerrado$ = referenciaDialogo.afterClosed()
+    despuesCerrado$
+      .subscribe(
+        (datos) => {
+          if(datos!=undefined){
+            const confirmacion = datos as boolean
+            if(confirmacion){
+              const eliminar$ = this.transportistaService.delete(idTransportista);
+              eliminar$.subscribe(
+                {
+                  next: (datos) => {
+                    this.snackBar.open('El transportista ha sido eliminado con éxito!', 'OK', {
+                      duration: 3000
+                    });
+                    //console.log({datos})
+
+                  },
+                  error: (error) => {
+                    console.error({error})
+                  },
+                  complete: () => {
+                    this.refresh()
+                  }
+                }
+              )
+            }
+          }
+        }
+      )
   }
 
   refresh() {

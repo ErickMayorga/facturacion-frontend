@@ -50,6 +50,7 @@ import { ModalFormatoNotaCreditoComponent } from './componentes/modal-formato-no
 import { ModalNotaDebitoComponent } from './componentes/modal-nota-debito/modal-nota-debito.component';
 import { ModalFormatoNotaDebitoComponent } from './componentes/modal-formato-nota-debito/modal-formato-nota-debito.component';
 import { PantallaIndicacionesComponent } from './componentes/pantalla-indicaciones/pantalla-indicaciones.component';
+import { ConfirmacionDeAccionComponent } from './componentes/confirmacion-de-accion/confirmacion-de-accion.component';
 
 
 @NgModule({
@@ -91,6 +92,7 @@ import { PantallaIndicacionesComponent } from './componentes/pantalla-indicacion
     ModalNotaDebitoComponent,
     ModalFormatoNotaDebitoComponent,
     PantallaIndicacionesComponent,
+    ConfirmacionDeAccionComponent,
   ],
   imports: [
     BrowserModule,

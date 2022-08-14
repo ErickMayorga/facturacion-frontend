@@ -10,6 +10,7 @@ import {DireccionInterface} from "../../servicios/http/direccion/direccion.inter
 import {DireccionService} from "../../servicios/http/direccion/direccion.service";
 import {DireccionCreateInterface} from "../../servicios/http/direccion/direccion-create.interface";
 import {ClienteCreateInterface} from "../../servicios/http/cliente/cliente-create.interface";
+import {ConfirmacionDeAccionComponent} from "../../componentes/confirmacion-de-accion/confirmacion-de-accion.component";
 
 @Component({
   selector: 'app-ruta-clientes',
@@ -212,24 +213,46 @@ export class RutaClientesComponent implements OnInit {
   }
 
   eliminarCliente(idCliente: number){
-    const eliminar$ = this.clienteService.delete(idCliente);
-    eliminar$.subscribe(
+    const referenciaDialogo = this.dialog.open(
+      ConfirmacionDeAccionComponent,
       {
-        next: (datos) => {
-          this.snackBar.open('El cliente ha sido eliminado con éxito!', 'OK', {
-            duration: 3000
-          });
-          //console.log({datos})
-
-        },
-        error: (error) => {
-          console.error({error})
-        },
-        complete: () => {
-          this.refresh()
+        disableClose: false,
+        data: {
+          icono: 'warning',
+          titulo: 'Confirmación de eliminación',
+          mensaje: '¿Está seguro que desea eliminar este cliente?'
         }
       }
     )
+    const despuesCerrado$ = referenciaDialogo.afterClosed()
+    despuesCerrado$
+      .subscribe(
+        (datos) => {
+          if(datos!=undefined){
+            const confirmacion = datos as boolean
+            if(confirmacion){
+              const eliminar$ = this.clienteService.delete(idCliente);
+              eliminar$.subscribe(
+                {
+                  next: (datos) => {
+                    this.snackBar.open('El cliente ha sido eliminado con éxito!', 'OK', {
+                      duration: 3000
+                    });
+                    //console.log({datos})
+
+                  },
+                  error: (error) => {
+                    console.error({error})
+                  },
+                  complete: () => {
+                    this.refresh()
+                  }
+                }
+              )
+            }
+          }
+        }
+      )
   }
 
   refresh() {

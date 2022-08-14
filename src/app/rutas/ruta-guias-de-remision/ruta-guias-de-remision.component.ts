@@ -17,6 +17,7 @@ import {ModalFormatoGuiaRemisionComponent} from "../../componentes/modal-formato
 import {ModalGuiaRemisionComponent} from "../../componentes/modal-guia-remision/modal-guia-remision.component";
 import {DestinatarioCreateInterface} from "../../servicios/http/destinatario/destinatario-create.interface";
 import {DestinatarioInterface} from "../../servicios/http/destinatario/destinatario.interface";
+import {ConfirmacionDeAccionComponent} from "../../componentes/confirmacion-de-accion/confirmacion-de-accion.component";
 
 @Component({
   selector: 'app-ruta-guias-de-remision',
@@ -367,19 +368,41 @@ export class RutaGuiasDeRemisionComponent implements OnInit {
   }
 
   deshabilitarGuiaRemision(idGuiaRemision: number){
-    this.guiaRemisionService.deshabilitar(idGuiaRemision)
+    const referenciaDialogo = this.dialog.open(
+      ConfirmacionDeAccionComponent,
+      {
+        disableClose: false,
+        data: {
+          icono: 'warning',
+          titulo: 'Confirmación de deshabilitación',
+          mensaje: '¿Está seguro que desea deshabilitar esta guía de remisión?'
+        }
+      }
+    )
+    const despuesCerrado$ = referenciaDialogo.afterClosed()
+    despuesCerrado$
       .subscribe(
-        {
-          next: (datos) => {
-            this.snackBar.open('La guía de remisión ha sido deshabilitada con éxito!', 'OK', {
-              duration: 3000
-            });
-          },
-          error: (err) => {
-            console.error(err)
-          },
-          complete: () => {
-            this.refresh()
+        (datos) => {
+          if(datos!=undefined){
+            const confirmacion = datos as boolean
+            if(confirmacion){
+              this.guiaRemisionService.deshabilitar(idGuiaRemision)
+                .subscribe(
+                  {
+                    next: (datos) => {
+                      this.snackBar.open('La guía de remisión ha sido deshabilitada con éxito!', 'OK', {
+                        duration: 3000
+                      });
+                    },
+                    error: (err) => {
+                      console.error(err)
+                    },
+                    complete: () => {
+                      this.refresh()
+                    }
+                  }
+                )
+            }
           }
         }
       )

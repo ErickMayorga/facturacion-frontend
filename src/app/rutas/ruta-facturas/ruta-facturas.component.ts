@@ -21,6 +21,7 @@ import {FacturaPagoCreateInterface} from "../../servicios/http/factura-pago/fact
 import {EmpresaService} from "../../servicios/http/empresa/empresa.service";
 import {EmpresaInterface} from "../../servicios/http/empresa/empresa.interface";
 import {ModalFormatoFacturaComponent} from "../../componentes/modal-formato-factura/modal-formato-factura.component";
+import {ConfirmacionDeAccionComponent} from "../../componentes/confirmacion-de-accion/confirmacion-de-accion.component";
 
 @Component({
   selector: 'app-ruta-facturas',
@@ -471,19 +472,41 @@ export class RutaFacturasComponent implements OnInit {
   }
 
   deshabilitarFactura(idFactura: number){
-    this.facturaService.deshabilitar(idFactura)
+    const referenciaDialogo = this.dialog.open(
+      ConfirmacionDeAccionComponent,
+      {
+        disableClose: false,
+        data: {
+          icono: 'warning',
+          titulo: 'Confirmación de deshabilitación',
+          mensaje: '¿Está seguro que desea deshabilitar esta factura?'
+        }
+      }
+    )
+    const despuesCerrado$ = referenciaDialogo.afterClosed()
+    despuesCerrado$
       .subscribe(
-        {
-          next: (datos) => {
-            this.snackBar.open('La factura ha sido deshabilitada con éxito!', 'OK', {
-              duration: 3000
-            });
-          },
-          error: (err) => {
-            console.error(err)
-          },
-          complete: () => {
-            this.refresh()
+        (datos) => {
+          if(datos!=undefined){
+            const confirmacion = datos as boolean
+            if(confirmacion){
+              this.facturaService.deshabilitar(idFactura)
+                .subscribe(
+                  {
+                    next: (datos) => {
+                      this.snackBar.open('La factura ha sido deshabilitada con éxito!', 'OK', {
+                        duration: 3000
+                      });
+                    },
+                    error: (err) => {
+                      console.error(err)
+                    },
+                    complete: () => {
+                      this.refresh()
+                    }
+                  }
+                )
+            }
           }
         }
       )

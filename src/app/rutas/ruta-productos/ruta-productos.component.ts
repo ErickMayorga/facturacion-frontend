@@ -10,6 +10,7 @@ import {ModalProductoComponent} from "../../componentes/modal-producto/modal-pro
 import {ProductoImpuestoCreateInterface} from "../../servicios/http/producto_impuesto/producto-impuesto-create.interface";
 import {ProductoImpuestoInterface} from "../../servicios/http/producto_impuesto/producto-impuesto.interface";
 import {ProductoImpuestoService} from "../../servicios/http/producto_impuesto/producto-impuesto.service";
+import {ConfirmacionDeAccionComponent} from "../../componentes/confirmacion-de-accion/confirmacion-de-accion.component";
 
 @Component({
   selector: 'app-ruta-productos',
@@ -226,42 +227,61 @@ export class RutaProductosComponent implements OnInit {
   }
 
   eliminarProducto(idProducto: number){
-    //Eliminar producto
-    const eliminarProducto$ = this.productoService.delete(idProducto);
-    eliminarProducto$.subscribe(
+    const referenciaDialogo = this.dialog.open(
+      ConfirmacionDeAccionComponent,
       {
-        next: (datos) => {
-          //console.log({datos})
-          this.refresh()
-        },
-        error: (error) => {
-          console.error({error})
+        disableClose: false,
+        data: {
+          icono: 'warning',
+          titulo: 'Confirmación de eliminación',
+          mensaje: '¿Está seguro que desea eliminar este producto?'
         }
       }
     )
-    //Eliminar producto-impuestos
-    const eliminarProductoImpuestos$ = this.productoImpuestoService.deleteImpuestos(idProducto);
-    eliminarProductoImpuestos$.subscribe(
-      {
-        next: (datos) => {
-          //console.log({datos})
-          this.snackBar.open('El producto ha sido eliminado con éxito!', 'OK', {
-            duration: 3000
-          });
-
-        },
-        error: (error) => {
-          console.error({error})
-        },
-        complete: () => {
-          this.refresh()
+    const despuesCerrado$ = referenciaDialogo.afterClosed()
+    despuesCerrado$
+      .subscribe(
+        (datos) => {
+          if(datos!=undefined){
+            const confirmacion = datos as boolean
+            if(confirmacion){
+              //Eliminar producto
+              const eliminarProducto$ = this.productoService.delete(idProducto);
+              eliminarProducto$.subscribe(
+                {
+                  next: (datos) => {
+                    this.snackBar.open('El producto ha sido eliminado con éxito!', 'OK', {
+                      duration: 3000
+                    });
+                    //console.log({datos})
+                  },
+                  error: (error) => {
+                    console.error({error})
+                  },
+                  complete: () => {
+                    //Eliminar producto-impuestos
+                    const eliminarProductoImpuestos$ = this.productoImpuestoService.deleteImpuestos(idProducto);
+                    eliminarProductoImpuestos$.subscribe(
+                      {
+                        next: (datos) => {
+                          //console.log({datos})
+                        },
+                        error: (error) => {
+                          console.error({error})
+                        },
+                        complete: () => {
+                          this.refresh()
+                        }
+                      }
+                    )
+                  }
+                }
+              )
+            }
+          }
         }
-      }
-    )
-
+      )
   }
-
-
 
   refresh() {
     window.location.reload();

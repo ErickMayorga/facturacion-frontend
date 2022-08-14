@@ -19,6 +19,7 @@ import {ModalFormatoRetencionComponent} from "../../componentes/modal-formato-re
 import {ModalRetencionComponent} from "../../componentes/modal-retencion/modal-retencion.component";
 import {RetencionDetalleCreateInterface} from "../../servicios/http/comprobante-de-retencion-detalle/retencion-detalle-create.interface";
 import {RetencionDetalleInterface} from "../../servicios/http/comprobante-de-retencion-detalle/retencion-detalle.interface";
+import {ConfirmacionDeAccionComponent} from "../../componentes/confirmacion-de-accion/confirmacion-de-accion.component";
 
 @Component({
   selector: 'app-ruta-retenciones',
@@ -404,19 +405,41 @@ export class RutaRetencionesComponent implements OnInit {
   }
 
   deshabilitarRetencion(idRetencion: number){
-    this.retencionService.deshabilitar(idRetencion)
+    const referenciaDialogo = this.dialog.open(
+      ConfirmacionDeAccionComponent,
+      {
+        disableClose: false,
+        data: {
+          icono: 'warning',
+          titulo: 'Confirmación de deshabilitación',
+          mensaje: '¿Está seguro que desea deshabilitar este comprobante de retención?'
+        }
+      }
+    )
+    const despuesCerrado$ = referenciaDialogo.afterClosed()
+    despuesCerrado$
       .subscribe(
-        {
-          next: (datos) => {
-            this.snackBar.open('El comprobante de retención ha sido deshabilitado con éxito!', 'OK', {
-              duration: 3000
-            });
-          },
-          error: (err) => {
-            console.error(err)
-          },
-          complete: () => {
-            this.refresh()
+        (datos) => {
+          if(datos!=undefined){
+            const confirmacion = datos as boolean
+            if(confirmacion){
+              this.retencionService.deshabilitar(idRetencion)
+                .subscribe(
+                  {
+                    next: (datos) => {
+                      this.snackBar.open('El comprobante de retención ha sido deshabilitado con éxito!', 'OK', {
+                        duration: 3000
+                      });
+                    },
+                    error: (err) => {
+                      console.error(err)
+                    },
+                    complete: () => {
+                      this.refresh()
+                    }
+                  }
+                )
+            }
           }
         }
       )
