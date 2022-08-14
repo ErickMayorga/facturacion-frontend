@@ -2,9 +2,6 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {ProductoService} from "../../servicios/http/producto/producto.service";
 import {ProductoInterface} from "../../servicios/http/producto/producto.interface";
-import {ActionButtonInterface} from "../../servicios/interfaces/actionButton.interface";
-import {FacturaDetalleInterface} from "../../servicios/http/factura-detalle/factura-detalle.interface";
-import {FacturaDetalleCreateInterface} from "../../servicios/http/factura-detalle/factura-detalle-create.interface";
 import {TablaFacturaDetalleInterface} from "../../servicios/interfaces/tabla-factura-detalle.interface";
 import {ProductoImpuestoService} from "../../servicios/http/producto_impuesto/producto-impuesto.service";
 import {ImpuestoService} from "../../servicios/http/impuesto/impuesto.service";
@@ -79,7 +76,7 @@ export class ModalAgregarProductoComponent implements OnInit {
   }
 
   agregarProducto(producto: ProductoInterface) {
-    let valor_iva: number = 0
+    let porcentaje_iva: number = 0
     let valor_ice: number = 0
     let valor_irbpnr: number = 0
     let index = 0
@@ -97,13 +94,21 @@ export class ModalAgregarProductoComponent implements OnInit {
                     next: (datos) => {
                       const impuesto = datos as ImpuestoInterface
                       if(impuesto.categoria === 'iva'){
-                        valor_iva = impuesto.valor_impuesto
+                        porcentaje_iva = impuesto.valor_impuesto
                       }
                       if(impuesto.categoria === 'ice'){
-                        valor_ice = impuesto.valor_impuesto
+                        if(impuesto.tipo_tarifa === 'específica'){
+                          valor_ice = impuesto.valor_impuesto
+                        }else{
+                          valor_ice = producto.valor_unitario * impuesto.valor_impuesto
+                        }
                       }
                       if(impuesto.categoria === 'irbpnr'){
-                        valor_irbpnr = impuesto.valor_impuesto
+                        if(impuesto.tipo_tarifa === 'específica'){
+                          valor_irbpnr = impuesto.valor_impuesto
+                        }else{
+                          valor_irbpnr = producto.valor_unitario * impuesto.valor_impuesto
+                        }
                       }
                     },
                     error: (err) => {
@@ -112,6 +117,7 @@ export class ModalAgregarProductoComponent implements OnInit {
                     complete: () => {
                       index++
                       if(index === productoImpuestos.length){
+                        const valor_iva = (producto.valor_unitario + valor_ice + valor_irbpnr) * porcentaje_iva
                         this.crearRegistroProducto(producto, valor_iva, valor_ice, valor_irbpnr)
                       }
                     }
@@ -127,6 +133,7 @@ export class ModalAgregarProductoComponent implements OnInit {
   }
 
   crearRegistroProducto(producto: ProductoInterface, iva: number, ice: number, irbpnr: number){
+
     const detalle: TablaFacturaDetalleInterface = {
       id_factura: NaN,
       id_detalle: NaN,
@@ -137,6 +144,7 @@ export class ModalAgregarProductoComponent implements OnInit {
       precio_unitario: producto.valor_unitario,
       cantidad: 1,
       descuento: 0,
+      valor_iva: iva,
       valor_ice: ice,
       valor_irbpnr: irbpnr,
       valor_total: producto.valor_unitario,

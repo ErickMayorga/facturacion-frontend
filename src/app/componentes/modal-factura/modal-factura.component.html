@@ -106,6 +106,21 @@
       <button type="button" class="btn btn-primary btn-lg" [disabled]="clienteDB === null"
               (click)="abrirModalAgregarProducto()">Agregar Producto</button>
     </div>
+    <!-- PROPINA -->
+    <div class="d-flex flex-column justify-content-center form-outline flex-fill">
+      <div [formGroup]="formGroupFactura" class="input-field col-md-9">
+        <input id="propina" type="number" step="0.01" class="validate" formControlName="propina" [(ngModel)]="propina" (change)="actualizarTotales()">
+        <label for="numero_identificacion" class="active">Propina</label>
+
+        <div *ngIf="formGroupFactura.get('propina')">
+          <span *ngIf="formGroupFactura.get('propina')?.valid ||
+          !formGroupFactura.get('propina')?.touched"
+                class="helper-text">
+            Ingrese un valor de propina
+          </span>
+        </div>
+      </div>
+    </div>
     <!-- TABLA DE PRODUCTOS -->
     <div class="d-flex justify-content-center">
       <div class="col-md-12">
@@ -127,7 +142,7 @@
               <input type="number" min="1" step="1" class="input-tabla" [(ngModel)]="detalle.cantidad" (change)="actualizarTotales()">
             </td>
             <td *ngIf="detalle.estado != 'd'">
-              <input type="number" min="0" step="0.01" class="input-tabla" [(ngModel)]="detalle.descuento" (change)="actualizarDescuento()">
+              <input type="number" min="0" step="0.01" class="input-tabla" [(ngModel)]="detalle.descuento" (change)="actualizarTotales()">
             </td>
             <td *ngIf="detalle.estado != 'd'">{{(detalle.valor_ice * detalle.cantidad).toFixed(2)}}</td>
             <td *ngIf="detalle.estado != 'd'">{{(detalle.valor_irbpnr * detalle.cantidad).toFixed(2)}}</td>
@@ -195,13 +210,19 @@
             <span><b>Total sin IVA:</b> {{total_sin_iva.toFixed(2)}}</span>
           </div>
           <div class="col-md-12 span-calculated">
-            <span><b>IVA:</b> {{(total_sin_iva * 0.12).toFixed(2)}}</span>
+            <span><b>IVA:</b> {{total_iva.toFixed(2)}}</span>
+          </div>
+          <div class="col-md-12 span-calculated">
+            <span><b>ICE:</b> {{total_ice.toFixed(2)}}</span>
+          </div>
+          <div class="col-md-12 span-calculated">
+            <span><b>IRBPNR:</b> {{total_irbpnr.toFixed(2)}}</span>
           </div>
           <div class="col-md-12 span-calculated">
             <span><b>Total descuento:</b> {{total_descuento.toFixed(2)}}</span>
           </div>
           <div class="col-md-12 span-calculated">
-            <span><b>Total con IVA:</b> {{total_con_iva.toFixed(2)}}</span>
+            <span><b>Importe total:</b> {{importe_total.toFixed(2)}}</span>
           </div>
         </div>
       </div>

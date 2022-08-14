@@ -20,9 +20,9 @@ import {ConfirmacionDeAccionComponent} from "../../componentes/confirmacion-de-a
 export class RutaProductosComponent implements OnInit {
 
   theads = [
-    'Código Producto',
+    'Código Principal',
     'Código Auxiliar',
-    'Descripción',
+    'Nombre del producto',
     'Tipo de producto',
     'Acciones'
   ];

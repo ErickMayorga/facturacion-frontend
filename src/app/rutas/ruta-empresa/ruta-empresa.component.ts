@@ -256,7 +256,7 @@ export class RutaEmpresaComponent implements OnInit {
           next: (data) => {
             const empresaCreada = data as EmpresaInterface
             this.empresaRegistrada = empresaCreada
-            this.snackBar.open('Se ha registrado su información con éxito!', 'OK', {
+            this.snackBar.open('La información del emisor ha sido registrada con éxito!', 'OK', {
               duration: 3000
             });
             //console.log(empresaCreada)

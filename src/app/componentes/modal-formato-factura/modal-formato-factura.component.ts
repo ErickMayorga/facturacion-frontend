@@ -19,7 +19,6 @@ import {MetodoPagoService} from "../../servicios/http/metodo-de-pago/metodo-pago
 import {MetodoPagoInterface} from "../../servicios/http/metodo-de-pago/metodo-pago.interface";
 import {TablaFacturaPagoInterface} from "../../servicios/interfaces/tabla-factura-pago.interface";
 import {ActionButtonInterface} from "../../servicios/interfaces/actionButton.interface";
-import {ImpuestoInterface} from "../../servicios/http/impuesto/impuesto.interface";
 
 @Component({
   selector: 'app-modal-formato-factura',
@@ -98,10 +97,15 @@ export class ModalFormatoFacturaComponent implements OnInit {
   pagosTabla: TablaFacturaPagoInterface[] = []
 
   //Cálculos
+  moneda = ''
+  propina = 0
   total_sin_iva = 0
-  total_con_iva = 0
+  total_iva = 0
+  total_ice = 0
+  total_irbpnr = 0
   total_descuento = 0
   total_sin_impuestos = 0
+  importe_total = 0
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any,
               public dialogRef: MatDialogRef<ModalFormatoFacturaComponent>,
@@ -179,6 +183,7 @@ export class ModalFormatoFacturaComponent implements OnInit {
         {
           next: (datos) => {
             this.facturaDB = datos as FacturaInterface
+            this.propina = this.facturaDB.propina
           },
           error: (err) => {
             console.error(err)
@@ -273,6 +278,7 @@ export class ModalFormatoFacturaComponent implements OnInit {
                 precio_unitario: producto.valor_unitario,
                 cantidad: detalle.cantidad,
                 descuento: detalle.descuento,
+                valor_iva: detalle.valor_iva,
                 valor_ice: detalle.valor_ice,
                 valor_irbpnr: detalle.valor_irbpnr,
                 valor_total: detalle.total_producto,
@@ -321,24 +327,21 @@ export class ModalFormatoFacturaComponent implements OnInit {
   actualizarTotales() {
     this.total_sin_iva = 0
     this.total_sin_impuestos = 0
+    this.total_iva = 0
+    this.total_descuento = 0
     for(let detalle of this.detallesTabla){
       if(detalle.estado != 'd'){
         this.total_sin_iva += (detalle.precio_unitario + detalle.valor_ice + detalle.valor_irbpnr) * detalle.cantidad
         this.total_sin_impuestos += detalle.precio_unitario * detalle.cantidad
-      }
-    }
-    this.actualizarDescuento()
-    this.total_con_iva = (this.total_sin_iva * 1.12) - this.total_descuento
-  }
-
-  actualizarDescuento() {
-    this.total_descuento = 0
-    for(let detalle of this.detallesTabla){
-      if(detalle.estado != 'd'){
+        this.total_iva += detalle.valor_iva * detalle.cantidad
+        this.total_ice += detalle.valor_ice * detalle.cantidad
+        this.total_irbpnr += detalle.valor_irbpnr * detalle.cantidad
         this.total_descuento += detalle.descuento
       }
     }
+    this.importe_total = this.total_sin_iva + this.total_iva + this.propina - this.total_descuento
   }
+
 
   realizarAccion(name: string, id_factura_detalle: number) {
 

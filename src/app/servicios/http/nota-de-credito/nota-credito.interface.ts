@@ -6,10 +6,11 @@ export interface NotaCreditoInterface {
   clave_acceso: string
   motivo: string
   total_sin_impuestos: number
-  total_con_impuestos: number
   total_descuentos: number
   total_sin_iva: number
-  total_con_iva: number
+  total_iva: number
+  total_ice: number
+  total_irbpnr: number
   habilitado: boolean
   id_empresa: number
 }

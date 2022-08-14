@@ -143,7 +143,7 @@ export class RutaFacturasComponent implements OnInit {
                 razon_social_comprador: cliente.nombres_razon_social,
                 identificacion_comprador: cliente.numero_identificacion,
                 fecha_emision: factura.fecha_emision,
-                valor_total: factura.total_con_iva,
+                valor_total: factura.importe_total,
                 habilitado: factura.habilitado
               }
               this.facturasTabla.push(facturaTabla)
@@ -364,6 +364,7 @@ export class RutaFacturasComponent implements OnInit {
         cantidad: detalleTabla.cantidad,
         descuento: detalleTabla.descuento,
         total_producto: detalleTabla.valor_total,
+        valor_iva: detalleTabla.valor_iva,
         valor_ice: detalleTabla.valor_ice,
         valor_irbpnr: detalleTabla.valor_irbpnr,
       } as FacturaDetalleCreateInterface
@@ -375,6 +376,7 @@ export class RutaFacturasComponent implements OnInit {
       cantidad: detalleTabla.cantidad,
       descuento: detalleTabla.descuento,
       total_producto: detalleTabla.valor_total,
+      valor_iva: detalleTabla.valor_iva,
       valor_ice: detalleTabla.valor_ice,
       valor_irbpnr: detalleTabla.valor_irbpnr,
     } as FacturaDetalleInterface
@@ -397,7 +399,7 @@ export class RutaFacturasComponent implements OnInit {
               },
               complete: () => {
                 index++
-                if(index === this.detallesTabla.length){
+                if(index === this.pagosTabla.length){
                   this.refresh()
                 }
               }
@@ -417,7 +419,7 @@ export class RutaFacturasComponent implements OnInit {
               },
               complete: () => {
                 index++
-                if(index === this.detallesTabla.length){
+                if(index === this.pagosTabla.length){
                   this.refresh()
                 }
               }
@@ -435,7 +437,7 @@ export class RutaFacturasComponent implements OnInit {
               },
               complete: () => {
                 index++
-                if(index === this.detallesTabla.length){
+                if(index === this.pagosTabla.length){
                   this.refresh()
                 }
               }

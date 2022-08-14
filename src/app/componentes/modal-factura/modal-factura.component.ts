@@ -95,10 +95,15 @@ export class ModalFacturaComponent implements OnInit {
   guiaRemision: string | undefined = ''
 
   busquedaCliente: string = ''
+  moneda = ''
+  propina = 0
   total_sin_iva = 0
-  total_con_iva = 0
+  total_iva = 0
+  total_ice = 0
+  total_irbpnr = 0
   total_descuento = 0
   total_sin_impuestos = 0
+  importe_total = 0
 
   constructor( @Inject(MAT_DIALOG_DATA) public data: any,
                public dialogRef: MatDialogRef<ModalFacturaComponent>,
@@ -122,6 +127,7 @@ export class ModalFacturaComponent implements OnInit {
     this.formGroupFactura =this.formBuilder.group(
       {
         numero_identificacion: ['', [Validators.required, Validators.maxLength(13)]],
+        propina: [0, []]
       }
     )
     this.buscarEmpresa()
@@ -262,9 +268,8 @@ export class ModalFacturaComponent implements OnInit {
     this.claveAcceso = this.facturaDB.clave_acceso
     this.numeroComprobante = this.facturaDB.numero_comprobante
     this.formGroupFactura.patchValue({
-      fecha_emision: this.fechaEmision,
-      guia_remision: this.guiaRemision,
       numero_identificacion: this.clienteDB.numero_identificacion,
+      propina: this.facturaDB.propina
     });
   }
 
@@ -301,6 +306,7 @@ export class ModalFacturaComponent implements OnInit {
                 precio_unitario: producto.valor_unitario,
                 cantidad: detalle.cantidad,
                 descuento: detalle.descuento,
+                valor_iva: detalle.valor_iva,
                 valor_ice: detalle.valor_ice,
                 valor_irbpnr: detalle.valor_irbpnr,
                 valor_total: detalle.total_producto,
@@ -313,7 +319,7 @@ export class ModalFacturaComponent implements OnInit {
             },
             complete: () => {
               this.actualizarTotales()
-              this.actualizarDescuento()
+              //this.actualizarDescuento()
             }
           }
         )
@@ -360,13 +366,15 @@ export class ModalFacturaComponent implements OnInit {
         fecha_emision: new Date(),
         clave_acceso: this.claveAcceso,
         guia_de_remision: this.guiaRemision,
-        propina: 0,
-        importe_total: 0,
+        propina: this.propina,
+        importe_total: this.importe_total,
         moneda: 'USD',
         total_sin_impuestos: this.total_sin_impuestos,
         total_descuento: this.total_descuento,
         total_sin_iva: this.total_sin_iva,
-        total_con_iva: this.total_con_iva,
+        total_iva: this.total_iva,
+        total_ice: this.total_ice,
+        total_irbpnr: this.total_irbpnr,
         habilitado: true
       } as FacturaCreateInterface
     }
@@ -380,13 +388,15 @@ export class ModalFacturaComponent implements OnInit {
         fecha_emision: this.facturaDB.fecha_emision,
         clave_acceso: this.claveAcceso,
         guia_de_remision: this.guiaRemision,
-        propina: 0,
-        importe_total: 0,
+        propina: this.propina,
+        importe_total: this.importe_total,
         moneda: 'USD',
         total_sin_impuestos: this.total_sin_impuestos,
         total_descuento: this.total_descuento,
         total_sin_iva: this.total_sin_iva,
-        total_con_iva: this.total_con_iva,
+        total_iva: this.total_iva,
+        total_ice: this.total_ice,
+        total_irbpnr: this.total_irbpnr,
         habilitado: true
       } as FacturaInterface
     }
@@ -447,7 +457,7 @@ export class ModalFacturaComponent implements OnInit {
             detalleTabla.id_factura = this.facturaActual
             this.detallesTabla.push(detalleTabla)
             this.actualizarTotales()
-            this.actualizarDescuento()
+            //this.actualizarDescuento()
           }
         }
       )
@@ -480,22 +490,19 @@ export class ModalFacturaComponent implements OnInit {
   actualizarTotales() {
     this.total_sin_iva = 0
     this.total_sin_impuestos = 0
+    this.total_iva = 0
+    this.total_descuento = 0
     for(let detalle of this.detallesTabla){
       if(detalle.estado != 'd'){
         this.total_sin_iva += (detalle.precio_unitario + detalle.valor_ice + detalle.valor_irbpnr) * detalle.cantidad
         this.total_sin_impuestos += detalle.precio_unitario * detalle.cantidad
-      }
-    }
-    this.total_con_iva = this.total_sin_iva * 1.12
-  }
-
-  actualizarDescuento() {
-    this.total_descuento = 0
-    for(let detalle of this.detallesTabla){
-      if(detalle.estado != 'd'){
+        this.total_iva += detalle.valor_iva * detalle.cantidad
+        this.total_ice += detalle.valor_ice * detalle.cantidad
+        this.total_irbpnr += detalle.valor_irbpnr * detalle.cantidad
         this.total_descuento += detalle.descuento
       }
     }
+    this.importe_total = this.total_sin_iva + this.total_iva + this.propina - this.total_descuento
   }
 
   // Eliminar un detalle de la lista
@@ -518,7 +525,7 @@ export class ModalFacturaComponent implements OnInit {
       //console.log('Despues: ', this.detallesTabla)
     }
     this.actualizarTotales()
-    this.actualizarDescuento()
+    //this.actualizarDescuento()
   }
 
   // Eliminar un pago de la lista

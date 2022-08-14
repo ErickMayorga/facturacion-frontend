@@ -20,6 +20,7 @@ export class RutaTransportistasComponent implements OnInit {
     'Razón Social',
     'Tipo de ID',
     'ID del transportista',
+    'Placa',
     'Acciones'
   ];
 

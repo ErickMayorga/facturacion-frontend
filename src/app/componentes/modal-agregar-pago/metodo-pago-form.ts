@@ -11,7 +11,7 @@ export const metodoPagoForm: InputGenericInterface[] = [
   {
     title: 'Valor del pago',
     nameField: 'valor_pago',
-    type: 'text',
+    type: 'float',
     helpText: 'Ingrese el valor del pago',
     requiredMessage: 'Este campo es requerido',
   },
