@@ -1,19 +1,12 @@
 import {InputGenericInterface} from "../../servicios/interfaces/input-generic.interface";
 
-export const facturaForm: InputGenericInterface[] = [
+export const guiaRemisionForm: InputGenericInterface[] = [
   {
     title: 'Fecha de emisión',
     nameField: 'fecha_emision',
     type: 'date',
     helpText: 'Ingrese la fecha de emisión',
     requiredMessage: 'Este campo es requerido',
-  },
-  {
-    title: 'Guía de remisión',
-    nameField: 'guia_remision',
-    type: 'text',
-    helpText: 'Ingrese el número de guía de remisión',
-    lengthMessage: 'Este campo puede tener máximo 45 caracteres'
   },
   {
     title: '*Número de identificación',

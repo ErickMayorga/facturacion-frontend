@@ -103,7 +103,7 @@
   <span style="font-size: 16px"><b>Detalle de la factura</b></span>
   <div class="d-flex flex-wrap section-form">
     <div class="d-flex col-md-3" style="margin-bottom: 10px">
-      <button type="button" class="btn btn-primary btn-lg" [disabled]="clienteDB === null"
+      <button type="button" class="btn btn-primary btn-lg" [disabled]="clienteDB === null || clienteDB.id_cliente === -1"
               (click)="abrirModalAgregarProducto()">Agregar Producto</button>
     </div>
     <!-- PROPINA -->
@@ -164,7 +164,7 @@
     <div class="d-flex flex-row">
       <div class="d-flex flex-column">
         <div class="d-flex col-md-5" style="margin-bottom: 10px">
-          <button type="button" class="btn btn-primary btn-lg" [disabled]="clienteDB === null"
+          <button type="button" class="btn btn-primary btn-lg" [disabled]="clienteDB === null || clienteDB.id_cliente === -1"
                   (click)="abrirModalAgregarPago()">Agregar Pago</button>
         </div>
         <!-- TABLA DE PAGOS -->

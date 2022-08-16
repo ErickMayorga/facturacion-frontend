@@ -1,0 +1,25 @@
+.overflow-auto {
+  height: 600px;
+}
+
+.section-form {
+  border: 1px solid black;
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+.span-calculated {
+  padding: 0 2%;
+}
+
+// TABLE
+table {
+  table-layout:fixed;
+}
+td,th{
+  text-align: center;
+}
+.action-icon {
+  cursor: pointer;
+}

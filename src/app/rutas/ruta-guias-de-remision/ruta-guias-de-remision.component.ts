@@ -18,6 +18,7 @@ import {ModalGuiaRemisionComponent} from "../../componentes/modal-guia-remision/
 import {DestinatarioCreateInterface} from "../../servicios/http/destinatario/destinatario-create.interface";
 import {DestinatarioInterface} from "../../servicios/http/destinatario/destinatario.interface";
 import {ConfirmacionDeAccionComponent} from "../../componentes/confirmacion-de-accion/confirmacion-de-accion.component";
+import {FacturaService} from "../../servicios/http/factura/factura.service";
 
 @Component({
   selector: 'app-ruta-guias-de-remision',
@@ -72,7 +73,8 @@ export class RutaGuiasDeRemisionComponent implements OnInit {
               private readonly activatedRoute: ActivatedRoute,
               private readonly  destinatarioService: DestinatarioService,
               private readonly transportistaService: TransportistaService,
-              private readonly empresaService: EmpresaService) {
+              private readonly empresaService: EmpresaService,
+              private readonly facturaService: FacturaService) {
 
   }
 
@@ -233,6 +235,7 @@ export class RutaGuiasDeRemisionComponent implements OnInit {
 
   // Crear Guia de remision
   registrarInformacion() {
+    let guiaRemision = ''
     this.guiaRemisionService.create(this.nuevaGuiaRemision)
       .subscribe(
         {
@@ -242,13 +245,14 @@ export class RutaGuiasDeRemisionComponent implements OnInit {
             });
             const guiaRemisionCreada = data as GuiaRemisionInterface
             this.idGuiaRemisionCreada = guiaRemisionCreada.id_guia_de_remision
+            guiaRemision = guiaRemisionCreada.numero_comprobante
             //console.log(facturaCreada)
           },
           error: (error) => {
             console.error(error)
           },
           complete: () => {
-            this.procesarDestinatarios()
+            this.procesarDestinatarios(guiaRemision)
             //this.snackBar.open('Se ha ingresado con éxito el nuevo producto!')
           }
         }
@@ -257,6 +261,7 @@ export class RutaGuiasDeRemisionComponent implements OnInit {
 
   // Actualizar Guia de remision
   actualizarInformacion(){
+    let guiaRemision = this.guiaRemisionSeleccionada.numero_comprobante
     const actualizarGuiaRemision$ = this.guiaRemisionService.update(this.guiaRemisionSeleccionada.id_guia_de_remision, this.guiaRemisionSeleccionada)
     actualizarGuiaRemision$
       .subscribe(
@@ -271,32 +276,46 @@ export class RutaGuiasDeRemisionComponent implements OnInit {
             console.error({error})
           },
           complete: () => {
-            this.procesarDestinatarios()
+            this.procesarDestinatarios(guiaRemision)
           }
         }
       )
   }
 
   // Procesamiento de destinatarios
-  procesarDestinatarios(){
+  procesarDestinatarios(guiaRemision: string){
     let index = 0
     for(let destinatario of this.destinatariosTabla){
       if(destinatario.estado === 'c'){
         const destinatarioCrear = this.crearDestinatario(destinatario, destinatario.estado) as DestinatarioCreateInterface
+        let destinatarioCreado: DestinatarioInterface = {} as DestinatarioInterface
         this.destinatarioService.create(destinatarioCrear)
           .subscribe(
             {
               next: (datos) => {
-                console.log(datos)
+                destinatarioCreado = datos as DestinatarioInterface
               },
               error: (err) => {
                 console.error(err)
               },
               complete: () => {
                 index++
-                if(index === this.destinatariosTabla.length){
-                  this.refresh()
-                }
+                this.facturaService.asignarGuiaRemision(destinatarioCrear.id_factura, guiaRemision)
+                  .subscribe(
+                    {
+                      next: (datos) => {
+                        console.log(datos)
+                      },
+                      error: (err) => {
+                        console.error(err)
+                      },
+                      complete: () => {
+                        if(index === this.destinatariosTabla.length){
+                          this.refresh()
+                        }
+                      }
+                    }
+                  )
               }
             }
           )
@@ -314,9 +333,22 @@ export class RutaGuiasDeRemisionComponent implements OnInit {
               },
               complete: () => {
                 index++
-                if(index === this.destinatariosTabla.length){
-                  this.refresh()
-                }
+                this.facturaService.asignarGuiaRemision(destinatario.id_factura, guiaRemision)
+                  .subscribe(
+                    {
+                      next: (datos) => {
+                        console.log(datos)
+                      },
+                      error: (err) => {
+                        console.error(err)
+                      },
+                      complete: () => {
+                        if(index === this.destinatariosTabla.length){
+                          this.refresh()
+                        }
+                      }
+                    }
+                  )
               }
             }
           )
@@ -332,9 +364,22 @@ export class RutaGuiasDeRemisionComponent implements OnInit {
               },
               complete: () => {
                 index++
-                if(index === this.destinatariosTabla.length){
-                  this.refresh()
-                }
+                this.facturaService.asignarGuiaRemision(destinatario.id_factura, '')
+                  .subscribe(
+                    {
+                      next: (datos) => {
+                        console.log(datos)
+                      },
+                      error: (err) => {
+                        console.error(err)
+                      },
+                      complete: () => {
+                        if(index === this.destinatariosTabla.length){
+                          this.refresh()
+                        }
+                      }
+                    }
+                  )
               }
             }
           )

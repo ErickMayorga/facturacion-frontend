@@ -6,6 +6,7 @@ export interface TablaDestinatarioInterface {
   razon_social: string
   tipo_identificacion: string
   numero_identificacion: string
-  numero_factura: number
+  numero_factura: string
+  fecha_emision: string | null
   estado: 'c' | 'u' | 'd'
 }

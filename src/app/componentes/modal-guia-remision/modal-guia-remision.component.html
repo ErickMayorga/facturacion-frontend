@@ -1,1 +1,141 @@
-<p>modal-guia-remision works!</p>
+<div class="overflow-auto">
+  <h1 mat-dialog-title class="d-flex justify-content-center">{{tituloModal}}</h1>
+  <!-- INFORMACION TRIBUTARIA -->
+  <span style="font-size: 16px"><b>Información del Emisor</b></span>
+  <div class="d-flex flex-wrap section-form">
+    <div class="col-md-12 span-calculated">
+      <span><b>RUC:</b> {{empresaActual.ruc}}</span>
+    </div>
+    <div class="col-md-6 span-calculated">
+      <span><b>Razón Social:</b> {{empresaActual.nombres_razon_social}}</span>
+    </div>
+    <div class="col-md-6 span-calculated">
+      <span><b>Nombre Comercial:</b> {{empresaActual.nombre_comercial}}</span>
+    </div>
+    <div class="col-md-6 span-calculated">
+      <span><b>Contribuyente Especial:</b> {{empresaActual.num_contribuyente_especial}}</span>
+    </div>
+    <div class="col-md-6 span-calculated">
+      <span *ngIf="empresaActual.obligado_contabilidad"><b>Obligado a contabilidad:</b> Sí</span>
+      <span *ngIf="!empresaActual.obligado_contabilidad"><b>Obligado a contabilidad:</b> No</span>
+    </div>
+    <div class="col-md-6 span-calculated">
+      <span><b>Direccion Matriz:</b> {{direccionMatriz}}</span>
+    </div>
+    <div class="col-md-6 span-calculated">
+      <span><b>Direccion Establecimiento:</b> {{direccionEstablecimiento}}</span>
+    </div>
+  </div>
+
+  <!-- INFORMACION DE LA FACTURA -->
+  <span style="font-size: 16px"><b>Información de la guía de remisión</b></span>
+  <div class="d-flex flex-wrap section-form">
+    <div class="col-md-6 span-calculated">
+      <span><b>Número de comprobante:</b> {{numeroComprobante}}</span>
+    </div>
+    <div class="col-md-6 span-calculated">
+      <span><b>Clave de acceso:</b> {{claveAcceso}}</span>
+    </div>
+    <div class="col-md-6 span-calculated">
+      <span><b>Fecha de emisión:</b> {{fechaEmision}}</span>
+    </div>
+  </div>
+
+  <!-- INFORMACION DEL COMPRADOR -->
+  <span style="font-size: 16px"><b>Información del transportista</b></span>
+  <div class="d-flex flex-wrap section-form">
+    <div class="d-flex flex-column justify-content-center form-outline flex-fill col-md-12">
+      <div [formGroup]="formGroupGuiaRemision" class="input-field">
+        <input id="numero_identificacion" type="text" class="validate"
+               formControlName="numero_identificacion" [(ngModel)]="busquedaTransportista" (change)="buscarTransportista()">
+        <label for="numero_identificacion" class="active">Número de identificación</label>
+
+        <div *ngIf="formGroupGuiaRemision.get('numero_identificacion')">
+          <span *ngIf="formGroupGuiaRemision.get('numero_identificacion')?.valid ||
+          !formGroupGuiaRemision.get('numero_identificacion')?.touched"
+                class="helper-text">
+            Ingrese el número de identificación del transportista
+          </span>
+          <span *ngIf="
+             (formGroupGuiaRemision.get('numero_identificacion')?.invalid &&
+             formGroupGuiaRemision.get('numero_identificacion')?.touched &&
+             formGroupGuiaRemision.get('numero_identificacion')?.dirty &&
+             !(formGroupGuiaRemision.get('numero_identificacion')?.hasError('minlength') ||
+            formGroupGuiaRemision.get('numero_identificacion')?.hasError('maxlength'))) ||
+
+            (formGroupGuiaRemision.get('numero_identificacion')?.invalid &&
+             formGroupGuiaRemision.get('numero_identificacion')?.touched &&
+             !(formGroupGuiaRemision.get('numero_identificacion')?.hasError('minlength') ||
+            formGroupGuiaRemision.get('numero_identificacion')?.hasError('maxlength')))"
+                class="helper-text" style="color: var(--error)">
+            Este campo es obligatorio
+          </span>
+          <span *ngIf="formGroupGuiaRemision.get('numero_identificacion')?.hasError('minlength') ||
+                formGroupGuiaRemision.get('numero_identificacion')?.hasError('maxlength')"
+                class="helper-text" style="color: var(--error)">
+            El número de identificación debe tener 10 o 13 caracteres
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 span-calculated" style="margin-top: 10px">
+      <span *ngIf="transportistaDB != null"><b>Razón Social:</b> {{transportistaDB.nombres_razon_social}}</span>
+      <span *ngIf="transportistaDB === null"><b>Razón Social:</b> </span>
+    </div>
+    <div class="col-md-6 span-calculated">
+      <span *ngIf="transportistaDB != null"><b>Correo:</b> {{transportistaDB.correo_electronico}}</span>
+      <span *ngIf="transportistaDB === null"><b>Correo:</b></span>
+    </div>
+    <div class="col-md-6 span-calculated">
+      <span *ngIf="transportistaDB != null"><b>Placa:</b> {{transportistaDB.placa}}</span>
+      <span *ngIf="transportistaDB === null"><b>Placa:</b></span>
+    </div>
+  </div>
+
+  <!-- DETALLE DE FACTURA -->
+  <span style="font-size: 16px"><b>Detalle de la guía de remisión</b></span>
+  <div class="d-flex flex-wrap section-form">
+    <div class="d-flex col-md-5" style="margin-bottom: 10px">
+      <button type="button" class="btn btn-primary btn-lg" [disabled]="transportistaDB === null || transportistaDB.id_transportista === -1"
+              (click)="abrirModalAgregarDestinatario()">Agregar Destinatario</button>
+    </div>
+    <!-- TABLA DE DESTINATARIOS -->
+    <div class="d-flex justify-content-center">
+      <div class="col-md-12">
+        <table class="table">
+          <thead class="table-primary">
+          <tr>
+            <th scope="col" *ngFor="let thead of theadsDestinatarios">
+              {{thead}}
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let destinatario of destinatariosTabla">
+            <td *ngIf="destinatario.estado != 'd'">{{destinatario.razon_social}}</td>
+            <td *ngIf="destinatario.estado != 'd'">{{destinatario.numero_identificacion}}</td>
+            <td *ngIf="destinatario.estado != 'd'">{{destinatario.numero_factura}}</td>
+            <td *ngIf="destinatario.estado != 'd'">{{destinatario.fecha_emision}}</td>
+            <td *ngIf="destinatario.estado != 'd'">
+              <div class="d-flex align-items-center justify-content-center">
+                <mat-icon class="col-md-4 action-icon"
+                          (click)="eliminarDestinatario(destinatario)" style="margin: 0 10px">
+                  delete
+                </mat-icon>
+              </div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div mat-dialog-actions class="d-flex justify-content-center">
+    <button class="btn btn-info" type="button" style="margin: 0px 20px"
+            [disabled]="formGroupGuiaRemision.invalid || destinatariosTabla.length === 0"
+            (click)="guardarGuiaRemision()">Aceptar</button>
+    <button class="btn btn-danger" type="button" style="margin: 0px 20px" (click)="cancelar()">Cancelar</button>
+  </div>
+</div>
+
+
