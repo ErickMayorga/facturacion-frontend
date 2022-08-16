@@ -1,1 +1,72 @@
-<p>ruta-notas-de-credito works!</p>
+<div *ngIf="empresaActual != null">
+  <!-- HEADER -->
+  <div class="d-flex justify-content-center">
+    <div class="crud-header col-md-11">
+      <div class="d-flex flex-row align-items-center">
+        <div class="col-md-5">
+          <span class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4 text-white">Notas de crédito</span>
+        </div>
+        <div class="col-md-5">
+          <div class="d-flex flex-column align-items-center">
+            <div class="d-flex justify-content-center search col-md-12">
+              <i class="small material-icons">search</i>
+              <input type="text" placeholder="Busca una nota de crédito" [(ngModel)]="busqueda" (change)="filtrarNotasCredito()">
+            </div>
+            <div class="input-field col-md-12">
+              <span class="helper-text text-white">Ingresa un número de comprobante</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-2 d-flex justify-content-end">
+          <a class="btn-floating btn-large waves-effect waves-light add-button" (click)="abrirModalNotaCredito('crear')">
+            <i class="material-icons">add</i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABLE -->
+  <div class="d-flex justify-content-center">
+    <div class="col-md-11">
+      <table class="table">
+        <thead class="table-primary">
+        <tr>
+          <th scope="col" *ngFor="let thead of theads">
+            {{thead}}
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let notaCredito of notasCreditoBuscadas">
+          <td *ngIf="notaCredito.habilitado">{{notaCredito.numero_comprobante}}</td>
+          <td *ngIf="notaCredito.habilitado">{{notaCredito.razon_social_comprador}}</td>
+          <td *ngIf="notaCredito.habilitado">{{notaCredito.identificacion_comprador}}</td>
+          <td *ngIf="notaCredito.habilitado">{{notaCredito.numero_factura}}</td>
+          <td *ngIf="notaCredito.habilitado">{{notaCredito.motivo}}</td>
+          <td *ngIf="notaCredito.habilitado">{{notaCredito.fecha_emision}}</td>
+          <td *ngIf="notaCredito.habilitado">{{notaCredito.valor_total}}</td>
+          <td *ngIf="notaCredito.habilitado">
+            <div class="d-flex align-items-center justify-content-center">
+              <mat-icon *ngFor="let action of actions" class="col-md-4 action-icon"
+                        (click)="realizarAccion(action.name, notaCredito.id_nota_credito)" style="margin: 0 10px">
+                {{action.icon}}
+              </mat-icon>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="empresaActual === null">
+  <app-pantalla-indicaciones
+    [idUsuario]="idUsuario"
+    mensaje="Parece que aún no has ingresado los datos de tu empresa"
+    indicaciones="Ingresa la información del emisor para ver y crear comprobantes">
+  </app-pantalla-indicaciones>
+</div>
+
+

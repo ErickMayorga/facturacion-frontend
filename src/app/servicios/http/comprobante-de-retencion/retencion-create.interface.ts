@@ -5,4 +5,5 @@ export interface RetencionCreateInterface {
   clave_acceso: string
   habilitado: boolean
   id_empresa: number
+  total_retenido: number
 }

@@ -30,8 +30,8 @@ export class RutaRetencionesComponent implements OnInit {
 
   theads = [
     'Número de comprobante',
-    'Razón Social del transportista',
-    'ID del transportista',
+    'Razón Social del cliente',
+    'ID del cliente',
     'Factura',
     'Fecha de emisión',
     'Total retenido',
@@ -160,7 +160,7 @@ export class RutaRetencionesComponent implements OnInit {
                         identificacion_comprador: cliente.numero_identificacion,
                         numero_factura: facturaActual.numero_comprobante,
                         fecha_emision: retencion.fecha_emision,
-                        total_retenido: -1, // TODO: Verificar total referido
+                        total_retenido: retencion.total_retenido,
                         habilitado: retencion.habilitado,
                       }
                       this.retencionesTabla.push(retencionTabla)

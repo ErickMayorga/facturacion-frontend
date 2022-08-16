@@ -13,4 +13,5 @@ export interface NotaCreditoInterface {
   total_irbpnr: number
   habilitado: boolean
   id_empresa: number
+  importe_total: number
 }

@@ -42,8 +42,8 @@ export class ModalFormatoFacturaComponent implements OnInit {
   // TABLA PAGOS
   theadsPagos = [
     'Descripción',
-    'Valor total',
-    'Valor Plazo',
+    'Valor del pago',
+    'Valor del plazo',
     'Unidad de tiempo',
   ];
 
@@ -184,6 +184,7 @@ export class ModalFormatoFacturaComponent implements OnInit {
           next: (datos) => {
             this.facturaDB = datos as FacturaInterface
             this.propina = this.facturaDB.propina
+            this.moneda = this.facturaDB.moneda
           },
           error: (err) => {
             console.error(err)

@@ -38,7 +38,7 @@ export class ModalFacturaComponent implements OnInit {
 
   // TABLA DETALLE
   theadsDetalle = [
-    'Código Producto',
+    'Código Principal',
     'Código Auxiliar',
     'Descripción',
     'Precio Unitario',
@@ -53,8 +53,8 @@ export class ModalFacturaComponent implements OnInit {
   // TABLA PAGOS
   theadsPagos = [
     'Descripción',
-    'Valor total',
-    'Valor Plazo',
+    'Valor del pago',
+    'Valor del plazo',
     'Unidad de tiempo',
     'Acciones'
   ];

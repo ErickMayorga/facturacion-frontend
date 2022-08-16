@@ -1,1 +1,73 @@
-<p>ruta-notas-de-debito works!</p>
+<div *ngIf="empresaActual != null">
+  <!-- HEADER -->
+  <div class="d-flex justify-content-center">
+    <div class="crud-header col-md-11">
+      <div class="d-flex flex-row align-items-center">
+        <div class="col-md-5">
+          <span class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4 text-white">Notas de débito</span>
+        </div>
+        <div class="col-md-5">
+          <div class="d-flex flex-column align-items-center">
+            <div class="d-flex justify-content-center search col-md-12">
+              <i class="small material-icons">search</i>
+              <input type="text" placeholder="Busca una nota de débito" [(ngModel)]="busqueda" (change)="filtrarNotasDebito()">
+            </div>
+            <div class="input-field col-md-12">
+              <span class="helper-text text-white">Ingresa un número de comprobante</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-2 d-flex justify-content-end">
+          <a class="btn-floating btn-large waves-effect waves-light add-button" (click)="abrirModalNotaDebito('crear')">
+            <i class="material-icons">add</i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABLE -->
+  <div class="d-flex justify-content-center">
+    <div class="col-md-11">
+      <table class="table">
+        <thead class="table-primary">
+        <tr>
+          <th scope="col" *ngFor="let thead of theads">
+            {{thead}}
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let notaDebito of notasDebitoBuscadas">
+          <td *ngIf="notaDebito.habilitado">{{notaDebito.numero_comprobante}}</td>
+          <td *ngIf="notaDebito.habilitado">{{notaDebito.razon_social_comprador}}</td>
+          <td *ngIf="notaDebito.habilitado">{{notaDebito.identificacion_comprador}}</td>
+          <td *ngIf="notaDebito.habilitado">{{notaDebito.numero_factura}}</td>
+          <td *ngIf="notaDebito.habilitado">{{notaDebito.fecha_emision}}</td>
+          <td *ngIf="notaDebito.habilitado">{{notaDebito.total_sin_modificar}}</td>
+          <td *ngIf="notaDebito.habilitado">{{notaDebito.total_modificado}}</td>
+          <td *ngIf="notaDebito.habilitado">
+            <div class="d-flex align-items-center justify-content-center">
+              <mat-icon *ngFor="let action of actions" class="col-md-4 action-icon"
+                        (click)="realizarAccion(action.name, notaDebito.id_nota_debito)" style="margin: 0 10px">
+                {{action.icon}}
+              </mat-icon>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="empresaActual === null">
+  <app-pantalla-indicaciones
+    [idUsuario]="idUsuario"
+    mensaje="Parece que aún no has ingresado los datos de tu empresa"
+    indicaciones="Ingresa la información del emisor para ver y crear comprobantes">
+  </app-pantalla-indicaciones>
+</div>
+
+
+

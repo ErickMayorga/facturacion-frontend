@@ -4,7 +4,7 @@ export interface TablaNotaDebitoInterface {
   numero_comprobante: string
   razon_social_comprador: string
   identificacion_comprador: string
-  numero_factura: number
+  numero_factura: string
   fecha_emision: Date
   total_sin_modificar: number
   total_modificado: number

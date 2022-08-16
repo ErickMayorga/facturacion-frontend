@@ -8,6 +8,7 @@ export interface TablaNotaCreditoDetalleInterface {
   precio_unitario: number
   cantidad: number
   descuento: number
+  valor_iva: number
   valor_ice: number
   valor_irbpnr: number
   valor_total: number

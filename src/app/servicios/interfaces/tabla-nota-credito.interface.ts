@@ -4,7 +4,8 @@ export interface TablaNotaCreditoInterface {
   numero_comprobante: string
   razon_social_comprador: string
   identificacion_comprador: string
-  numero_factura: number
+  numero_factura: string
+  motivo: string
   fecha_emision: Date
   valor_total: number
   habilitado: boolean
