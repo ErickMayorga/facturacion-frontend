@@ -20,6 +20,19 @@
       </span>
       </div>
     </div>
+
+    <div class="d-flex flex-column justify-content-center form-outline flex-fill col-md-6">
+      <app-input-generic
+                         [title]="fields[0].title"
+                         [nameField]="fields[0].nameField"
+                         [type]="fields[0].type"
+                         [helpText]="fields[0].helpText"
+                         [requiredMessage]="fields[0].requiredMessage"
+                         [lengthMessage]="fields[0].lengthMessage"
+                         [options]="fields[0].options"
+                         [formGroup]="formGroupDestinatario"
+      ></app-input-generic>
+    </div>
   </div>
 
   <!-- TABLE -->

@@ -44,8 +44,8 @@
   <!-- INFORMACION DEL COMPRADOR -->
   <span style="font-size: 16px"><b>Información del transportista</b></span>
   <div class="d-flex flex-wrap section-form">
-    <div class="d-flex flex-column justify-content-center form-outline flex-fill col-md-12">
-      <div [formGroup]="formGroupGuiaRemision" class="input-field">
+    <div class="d-flex flex-row justify-content-center form-outline flex-fill col-md-12">
+      <div [formGroup]="formGroupGuiaRemision" class="input-field col-md-6">
         <input id="numero_identificacion" type="text" class="validate"
                formControlName="numero_identificacion" [(ngModel)]="busquedaTransportista" (change)="buscarTransportista()">
         <label for="numero_identificacion" class="active">Número de identificación</label>
@@ -77,6 +77,24 @@
           </span>
         </div>
       </div>
+
+      <div class="d-flex flex-row align-items-center form-outline flex-fill col-md-6">
+        <app-input-generic class="col-md-9"
+                           [title]="fields[fields.length-1].title"
+                           [nameField]="fields[fields.length-1].nameField"
+                           [type]="fields[fields.length-1].type"
+                           [helpText]="fields[fields.length-1].helpText"
+                           [requiredMessage]="fields[fields.length-1].requiredMessage"
+                           [lengthMessage]="fields[fields.length-1].lengthMessage"
+                           [formGroup]="formGroupGuiaRemision"
+        ></app-input-generic>
+        <div class="col-md-3">
+          <button type="button" class="btn btn-primary" (click)="abrirModalDireccion()">
+            <i class="small material-icons">place</i>
+          </button>
+        </div>
+      </div>
+
     </div>
     <div class="col-md-6 span-calculated" style="margin-top: 10px">
       <span *ngIf="transportistaDB != null"><b>Razón Social:</b> {{transportistaDB.nombres_razon_social}}</span>
@@ -116,6 +134,7 @@
             <td *ngIf="destinatario.estado != 'd'">{{destinatario.numero_identificacion}}</td>
             <td *ngIf="destinatario.estado != 'd'">{{destinatario.numero_factura}}</td>
             <td *ngIf="destinatario.estado != 'd'">{{destinatario.fecha_emision}}</td>
+            <td *ngIf="destinatario.estado != 'd'">{{destinatario.motivo}}</td>
             <td *ngIf="destinatario.estado != 'd'">
               <div class="d-flex align-items-center justify-content-center">
                 <mat-icon class="col-md-4 action-icon"

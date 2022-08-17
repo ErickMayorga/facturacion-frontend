@@ -16,4 +16,11 @@ export const guiaRemisionForm: InputGenericInterface[] = [
     requiredMessage: 'Este campo es requerido',
     lengthMessage: 'Este campo debe tener 10 o 13 caracteres'
   },
+  {
+    title: '*Dirección de partida',
+    nameField: 'direccionPartida',
+    type: 'text',
+    helpText: 'Ingrese la dirección de partida',
+    requiredMessage: 'Este campo es requerido',
+  },
 ]

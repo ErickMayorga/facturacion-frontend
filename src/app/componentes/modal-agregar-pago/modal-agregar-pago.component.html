@@ -23,7 +23,7 @@
 
   <div class="d-flex flex-wrap">
     <div class="d-flex flex-column justify-content-center form-outline flex-fill col-md-12" *ngFor="let field of fields.slice(1,fields.length)">
-      <app-input-generic
+      <app-input-generic (change)="verificarUnidadTiempo()"
         [title]="field.title"
         [nameField]="field.nameField"
         [type]="field.type"

@@ -20,6 +20,7 @@ import {GuiaRemisionCreateInterface} from "../../servicios/http/guia-de-remision
 import {FacturaService} from "../../servicios/http/factura/factura.service";
 import {FacturaInterface} from "../../servicios/http/factura/factura.interface";
 import {ClienteInterface} from "../../servicios/http/cliente/cliente.interface";
+import {ModalDireccionComponent} from "../modal-direccion/modal-direccion.component";
 
 @Component({
   selector: 'app-modal-guia-remision',
@@ -38,6 +39,7 @@ export class ModalGuiaRemisionComponent implements OnInit {
     'ID del comprador',
     'Factura',
     'Fecha de emisión',
+    'Motivo',
     'Acciones'
   ];
 
@@ -50,7 +52,7 @@ export class ModalGuiaRemisionComponent implements OnInit {
   empresaActual: EmpresaInterface =  {} as EmpresaInterface
   direccionMatriz = ''
   direccionEstablecimiento = ''
-  //direccionCliente = ''
+  direccionPartida = ''
 
   transportistaDB: TransportistaInterface = {
     id_transportista: -1,
@@ -73,7 +75,8 @@ export class ModalGuiaRemisionComponent implements OnInit {
   fechaEmision: string | null  = ''
 
   busquedaTransportista: string = ''
-  idDireccionPartida: number = -1
+  direccionPartidaObject: DireccionInterface = {} as DireccionInterface
+  nextDireccion = -1
 
   constructor( @Inject(MAT_DIALOG_DATA) public data: any,
                public dialogRef: MatDialogRef<ModalGuiaRemisionComponent>,
@@ -96,8 +99,23 @@ export class ModalGuiaRemisionComponent implements OnInit {
     this.formGroupGuiaRemision =this.formBuilder.group(
       {
         numero_identificacion: ['', [Validators.required, Validators.maxLength(13)]],
+        direccionPartida: ['', [Validators.required]]
       }
     )
+
+    this.formGroupGuiaRemision.get('direccionPartida')?.disable()
+    this.direccionService.getNextIndex()
+      .subscribe(
+        {
+          next: (index) => {
+            this.nextDireccion = index
+          },
+          error: (error) => {
+            console.error(error)
+          }
+        }
+      )
+
     this.buscarEmpresa()
   }
 
@@ -175,6 +193,24 @@ export class ModalGuiaRemisionComponent implements OnInit {
           },
           complete: () => {
             this.cargarInformacion()
+            // Consultar direccion de partida
+            this.direccionService.get(this.guiaRemisionDB.id_direccion_partida)
+              .subscribe(
+                {
+                  next: (datos) => {
+                    this.direccionPartidaObject = datos as DireccionInterface
+                    this.formGroupGuiaRemision.patchValue(
+                      {
+                        direccionPartida: this.direccionService.getStringDireccion(this.direccionPartidaObject)
+                      }
+                    )
+                  },
+                  error: (err) => {
+                    console.error(err)
+                  }
+                }
+              )
+
             // Consultar transportista
             this.transportistaService.get(this.guiaRemisionDB.id_transportista)
               .subscribe(
@@ -234,7 +270,7 @@ export class ModalGuiaRemisionComponent implements OnInit {
           {
             next: (datos) => {
               facturaConsultada = datos as FacturaInterface
-              destinatarioTabla = { // TODO: Verificar información
+              destinatarioTabla = {
                 id_guia_remision: this.guiaRemisionActual,
                 id_destinatario: destinatario.id_destinatario,
                 id_cliente: destinatario.id_cliente,
@@ -243,6 +279,7 @@ export class ModalGuiaRemisionComponent implements OnInit {
                 tipo_identificacion: '',
                 numero_identificacion: '',
                 numero_factura: facturaConsultada.numero_comprobante,
+                motivo: destinatario.motivo,
                 fecha_emision: this.datePipe.transform(facturaConsultada.fecha_emision, 'dd-MM-yyyy'),
                 estado:'u',
               }
@@ -283,7 +320,7 @@ export class ModalGuiaRemisionComponent implements OnInit {
         numero_comprobante: this.numeroComprobante,
         fecha_emision: new Date(),
         clave_acceso: this.claveAcceso,
-        id_direccion_partida: this.idDireccionPartida, // TODO: Verificar dirección de partida
+        id_direccion_partida: this.nextDireccion, // TODO: Verificar dirección de partida
         habilitado: true,
         id_empresa: this.empresaActual.id_empresa,
       } as GuiaRemisionCreateInterface
@@ -296,13 +333,14 @@ export class ModalGuiaRemisionComponent implements OnInit {
         numero_comprobante: this.numeroComprobante,
         fecha_emision: this.guiaRemisionDB.fecha_emision,
         clave_acceso: this.claveAcceso,
-        id_direccion_partida: this.idDireccionPartida, // TODO: Verificar dirección de partida
+        id_direccion_partida: this.direccionPartidaObject.id_direccion, // TODO: Verificar dirección de partida
         habilitado: true,
         id_empresa: this.empresaActual.id_empresa,
       } as GuiaRemisionInterface
     }
 
-    this.dialogRef.close({guia_remision: guiaRemisionObject, destinatarios: this.destinatariosTabla})
+    this.dialogRef.close({guia_remision: guiaRemisionObject, destinatarios: this.destinatariosTabla, direccionPartida: this.direccionPartidaObject})
+
   }
 
   // Consulta de información del transportista
@@ -366,5 +404,30 @@ export class ModalGuiaRemisionComponent implements OnInit {
       }
       //console.log('Despues: ', this.detallesTabla)
     }
+  }
+
+  abrirModalDireccion() {
+    const referenciaDialogo = this.dialog.open(
+      ModalDireccionComponent,
+      {
+        disableClose: false,
+        data: {
+          direccionActual: this.direccionPartidaObject
+        }
+      }
+    )
+    const despuesCerrado$ = referenciaDialogo.afterClosed()
+    despuesCerrado$
+      .subscribe(
+        (datos) => {
+          if(datos!=undefined){
+            const direccion = datos['direccion']
+            this.direccionPartidaObject = direccion as DireccionInterface
+            this.formGroupGuiaRemision.patchValue({
+              direccionPartida: this.direccionService.getStringDireccion(direccion),
+            });
+          }
+        }
+      )
   }
 }

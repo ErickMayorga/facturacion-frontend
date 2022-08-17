@@ -8,5 +8,6 @@ export interface TablaDestinatarioInterface {
   numero_identificacion: string
   numero_factura: string
   fecha_emision: string | null
+  motivo: string
   estado: 'c' | 'u' | 'd'
 }

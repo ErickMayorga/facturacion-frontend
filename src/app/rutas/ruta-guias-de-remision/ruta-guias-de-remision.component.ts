@@ -19,6 +19,9 @@ import {DestinatarioCreateInterface} from "../../servicios/http/destinatario/des
 import {DestinatarioInterface} from "../../servicios/http/destinatario/destinatario.interface";
 import {ConfirmacionDeAccionComponent} from "../../componentes/confirmacion-de-accion/confirmacion-de-accion.component";
 import {FacturaService} from "../../servicios/http/factura/factura.service";
+import {DireccionCreateInterface} from "../../servicios/http/direccion/direccion-create.interface";
+import {DireccionInterface} from "../../servicios/http/direccion/direccion.interface";
+import {DireccionService} from "../../servicios/http/direccion/direccion.service";
 
 @Component({
   selector: 'app-ruta-guias-de-remision',
@@ -66,6 +69,8 @@ export class RutaGuiasDeRemisionComponent implements OnInit {
   guiasRemisionTabla: TablaGuiaRemisionInterface[] = []
 
   idGuiaRemisionCreada: number = -1;
+  direccionPartidaCrear: DireccionCreateInterface = {} as DireccionCreateInterface
+  direccionPartidaActualizar: DireccionInterface = {} as DireccionInterface
 
   constructor(private readonly guiaRemisionService: GuiaRemisionService,
               public dialog: MatDialog,
@@ -74,7 +79,8 @@ export class RutaGuiasDeRemisionComponent implements OnInit {
               private readonly  destinatarioService: DestinatarioService,
               private readonly transportistaService: TransportistaService,
               private readonly empresaService: EmpresaService,
-              private readonly facturaService: FacturaService) {
+              private readonly facturaService: FacturaService,
+              private readonly direccionService: DireccionService) {
 
   }
 
@@ -221,11 +227,13 @@ export class RutaGuiasDeRemisionComponent implements OnInit {
             if(operacion === 'crear'){
               this.nuevaGuiaRemision = guiaRemision as GuiaRemisionCreateInterface
               this.destinatariosTabla = destinatarios as TablaDestinatarioInterface[]
+              this.direccionPartidaCrear = datos['direccionPartida'] as DireccionCreateInterface
               this.registrarInformacion()
             }
             if(operacion === 'editar'){
               this.guiaRemisionSeleccionada = guiaRemision as GuiaRemisionInterface
               this.destinatariosTabla = destinatarios as TablaDestinatarioInterface[]
+              this.direccionPartidaActualizar = datos['direccionPartida'] as DireccionInterface
               this.actualizarInformacion()
             }
           }
@@ -236,24 +244,40 @@ export class RutaGuiasDeRemisionComponent implements OnInit {
   // Crear Guia de remision
   registrarInformacion() {
     let guiaRemision = ''
-    this.guiaRemisionService.create(this.nuevaGuiaRemision)
+
+    this.direccionService.create(this.direccionPartidaCrear)
       .subscribe(
         {
           next: (data) => {
-            this.snackBar.open('La guía de remisión ha sido registrada con éxito!', 'OK', {
-              duration: 3000
-            });
-            const guiaRemisionCreada = data as GuiaRemisionInterface
-            this.idGuiaRemisionCreada = guiaRemisionCreada.id_guia_de_remision
-            guiaRemision = guiaRemisionCreada.numero_comprobante
-            //console.log(facturaCreada)
+            const direccionCreada = data as DireccionInterface
+            this.nuevaGuiaRemision.id_direccion_partida = direccionCreada.id_direccion
+            //console.log(direccionCreada)
           },
           error: (error) => {
-            console.error(error)
+            console.log(error)
           },
           complete: () => {
-            this.procesarDestinatarios(guiaRemision)
-            //this.snackBar.open('Se ha ingresado con éxito el nuevo producto!')
+            this.guiaRemisionService.create(this.nuevaGuiaRemision)
+              .subscribe(
+                {
+                  next: (data) => {
+                    this.snackBar.open('La guía de remisión ha sido registrada con éxito!', 'OK', {
+                      duration: 3000
+                    });
+                    const guiaRemisionCreada = data as GuiaRemisionInterface
+                    this.idGuiaRemisionCreada = guiaRemisionCreada.id_guia_de_remision
+                    guiaRemision = guiaRemisionCreada.numero_comprobante
+                    //console.log(facturaCreada)
+                  },
+                  error: (error) => {
+                    console.error(error)
+                  },
+                  complete: () => {
+                    this.procesarDestinatarios(guiaRemision)
+                    //this.snackBar.open('Se ha ingresado con éxito el nuevo producto!')
+                  }
+                }
+              )
           }
         }
       )
@@ -276,7 +300,22 @@ export class RutaGuiasDeRemisionComponent implements OnInit {
             console.error({error})
           },
           complete: () => {
-            this.procesarDestinatarios(guiaRemision)
+            const actualizarDireccion$ = this.direccionService.update(this.direccionPartidaActualizar.id_direccion, this.direccionPartidaActualizar)
+            actualizarDireccion$
+              .subscribe(
+                {
+                  next: (datos) => {
+                    //console.log(datos)
+                    //this._snackBar.open('Se ha actualizado su información con éxito')
+                  },
+                  error: (error) => {
+                    console.error({error})
+                  },
+                  complete: () => {
+                    this.procesarDestinatarios(guiaRemision)
+                  }
+                }
+              )
           }
         }
       )

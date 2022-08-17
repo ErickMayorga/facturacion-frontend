@@ -1,12 +1,5 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {ProductoInterface} from "../../servicios/http/producto/producto.interface";
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
-import {ProductoService} from "../../servicios/http/producto/producto.service";
-import {ProductoImpuestoService} from "../../servicios/http/producto_impuesto/producto-impuesto.service";
-import {ImpuestoService} from "../../servicios/http/impuesto/impuesto.service";
-import {ProductoImpuestoInterface} from "../../servicios/http/producto_impuesto/producto-impuesto.interface";
-import {ImpuestoInterface} from "../../servicios/http/impuesto/impuesto.interface";
-import {TablaFacturaDetalleInterface} from "../../servicios/interfaces/tabla-factura-detalle.interface";
 import {MetodoPagoInterface} from "../../servicios/http/metodo-de-pago/metodo-pago.interface";
 import {MetodoPagoService} from "../../servicios/http/metodo-de-pago/metodo-pago.service";
 import {TablaFacturaPagoInterface} from "../../servicios/interfaces/tabla-factura-pago.interface";
@@ -42,6 +35,7 @@ export class ModalAgregarPagoComponent implements OnInit {
         plazo_tiempo: ['', ],
       }
     )
+    this.formGroupPago.get('plazo_tiempo')?.disable()
   }
 
   ngOnInit(): void {
@@ -105,4 +99,12 @@ export class ModalAgregarPagoComponent implements OnInit {
   }
 
 
+  verificarUnidadTiempo() {
+    const unidad_tiempo = this.formGroupPago.get('unidad_tiempo')?.value.trim()
+    if(unidad_tiempo === 'Ninguno'){
+      this.formGroupPago.get('plazo_tiempo')?.disable()
+    }else{
+      this.formGroupPago.get('plazo_tiempo')?.enable()
+    }
+  }
 }

@@ -6,6 +6,8 @@ import {FacturaInterface} from "../../servicios/http/factura/factura.interface";
 import {ClienteInterface} from "../../servicios/http/cliente/cliente.interface";
 import {TablaDestinatarioInterface} from "../../servicios/interfaces/tabla-destinatario.interface";
 import {DatePipe} from "@angular/common";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {destinatarioForm} from "./destinatario-form";
 
 @Component({
   selector: 'app-modal-agregar-destinatario',
@@ -13,6 +15,9 @@ import {DatePipe} from "@angular/common";
   styleUrls: ['./modal-agregar-destinatario.component.scss']
 })
 export class ModalAgregarDestinatarioComponent implements OnInit {
+
+  formGroupDestinatario = new FormGroup({});
+  fields = destinatarioForm
 
   busquedaCliente = ''
   busquedaFactura = '';
@@ -32,15 +37,23 @@ export class ModalAgregarDestinatarioComponent implements OnInit {
   guiaRemisionActual: number = -1;
   idEmpresa: number = -1
 
+  motivo = ''
+
   constructor(@Inject(MAT_DIALOG_DATA) public data: any,
               public dialogRef: MatDialogRef<ModalAgregarDestinatarioComponent>,
               private readonly facturaService: FacturaService,
               private readonly clienteService: ClienteService,
+              private readonly formBuilder: FormBuilder,
               public dialog: MatDialog,
               private datePipe: DatePipe) {
     this.usuarioActual = this.data.usuario
     this.guiaRemisionActual = this.data.factura
     this.idEmpresa = this.data.empresa
+    this.formGroupDestinatario =this.formBuilder.group(
+      {
+        motivo: ['', [Validators.maxLength(45)]],
+      }
+    )
     this.buscarFacturas()
   }
 
@@ -112,6 +125,8 @@ export class ModalAgregarDestinatarioComponent implements OnInit {
 
 
   agregarFactura(factura: FacturaInterface) {
+    const motivo =  this.formGroupDestinatario.get('motivo')?.value.trim()
+
     let clienteSeleccionado: ClienteInterface = {} as ClienteInterface
     this.clienteService.get(factura.id_cliente)
       .subscribe(
@@ -134,6 +149,7 @@ export class ModalAgregarDestinatarioComponent implements OnInit {
                 numero_identificacion: clienteSeleccionado.numero_identificacion,
                 numero_factura: factura.numero_comprobante,
                 fecha_emision: this.datePipe.transform(factura.fecha_emision, 'dd-MM-yyyy'),
+                motivo: motivo,
                 estado: 'c',
               }
               this.dialogRef.close({destinatario: destinatario})
