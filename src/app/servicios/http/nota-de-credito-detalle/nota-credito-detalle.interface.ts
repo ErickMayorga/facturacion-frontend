@@ -7,4 +7,5 @@ export interface NotaCreditoDetalleInterface {
   valor_iva: number
   valor_ice: number
   valor_irbpnr: number
+  id_producto: number
 }

@@ -1,1 +1,92 @@
-<p>modal-agregar-impuesto works!</p>
+<div class="overflow-auto">
+  <h1 mat-dialog-title class="d-flex justify-content-center">Selección de impuesto</h1>
+
+  <div class="d-flex flex-wrap">
+    <!-- CATEGORIA DE IMPUESTO -->
+    <div class="d-flex flex-column justify-content-center form-outline flex-fill col-md-6" style="padding-right: 20px">
+      <div [formGroup]="formGroupImpuesto" class="input-field">
+        <label>Categoría de impuesto</label><br><br>
+        <select class="form-select" formControlName="impuesto" (change)="buscarImpuestos()">
+          <option value="iva_retencion">IVA</option>
+          <option value="impuesto_renta">Impuesto a la renta</option>
+        </select>
+        <div *ngIf="formGroupImpuesto.get('impuesto')">
+          <span *ngIf="formGroupImpuesto.get('impuesto')?.valid" class="helper-text">Seleccione una categoria</span>
+          <span *ngIf="
+             (formGroupImpuesto.get('impuesto')?.invalid &&
+             formGroupImpuesto.get('impuesto')?.touched &&
+             formGroupImpuesto.get('impuesto')?.dirty &&
+             !(formGroupImpuesto.get('impuesto')?.hasError('minlength') ||
+            formGroupImpuesto.get('impuesto')?.hasError('maxlength'))) ||
+
+            (formGroupImpuesto.get('impuesto')?.invalid &&
+             formGroupImpuesto.get('impuesto')?.touched &&
+             !(formGroupImpuesto.get('impuesto')?.hasError('minlength') ||
+            formGroupImpuesto.get('impuesto')?.hasError('maxlength')))"
+                class="helper-text" style="color: var(--error)">
+      Este campo es requerido
+      </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- IMPUESTO -->
+    <div class="d-flex flex-column justify-content-center form-outline flex-fill col-md-6" style="padding-right: 20px">
+      <div [formGroup]="formGroupImpuesto" class="input-field">
+        <label>Número de factura</label><br><br>
+        <select class="form-select" formControlName="impuesto_retencion" (change)="calcularTotal()">
+          <option *ngFor="let impuesto of impuestosRetencionDB" value="{{impuesto.id_impuesto}}">{{impuesto.nombre_impuesto}}</option>
+        </select>
+        <div *ngIf="formGroupImpuesto.get('impuesto_retencion')">
+          <span *ngIf="formGroupImpuesto.get('impuesto_retencion')?.valid" class="helper-text">Seleccione un impuesto para retención</span>
+          <span *ngIf="
+             (formGroupImpuesto.get('impuesto_retencion')?.invalid &&
+             formGroupImpuesto.get('impuesto_retencion')?.touched &&
+             formGroupImpuesto.get('impuesto_retencion')?.dirty &&
+             !(formGroupImpuesto.get('impuesto_retencion')?.hasError('minlength') ||
+            formGroupImpuesto.get('impuesto_retencion')?.hasError('maxlength'))) ||
+
+            (formGroupImpuesto.get('impuesto_retencion')?.invalid &&
+             formGroupImpuesto.get('impuesto_retencion')?.touched &&
+             !(formGroupImpuesto.get('impuesto_retencion')?.hasError('minlength') ||
+            formGroupImpuesto.get('impuesto_retencion')?.hasError('maxlength')))"
+                class="helper-text" style="color: var(--error)">
+      Este campo es requerido
+      </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- BASE IMPONIBLE -->
+    <div class="d-flex flex-column justify-content-center form-outline flex-fill col-md-6">
+      <app-input-generic (change)="calcularTotal()"
+        [title]="fields[fields.length-1].title"
+        [nameField]="fields[fields.length-1].nameField"
+        [type]="fields[fields.length-1].type"
+        [helpText]="fields[fields.length-1].helpText"
+        [requiredMessage]="fields[fields.length-1].requiredMessage"
+        [lengthMessage]="fields[fields.length-1].lengthMessage"
+        [options]="fields[fields.length-1].options"
+        [formGroup]="formGroupImpuesto"
+      ></app-input-generic>
+    </div>
+
+    <!-- TOTALES -->
+    <div class="col-md-12">
+      <div class="section-form col-md-4">
+        <div class="col-md-12 span-calculated">
+          <span><b>Tarifa:</b> {{tarifa.toFixed(2)}}</span>
+        </div>
+        <div class="col-md-12 span-calculated">
+          <span><b>Total:</b> {{(tarifa * baseImponible).toFixed(2)}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div mat-dialog-actions class="d-flex justify-content-center">
+    <button class="btn btn-info" type="button" style="margin: 0px 20px" [disabled]="formGroupImpuesto.invalid" (click)="agregarImpuesto()">Agregar</button>
+    <button class="btn btn-danger" type="button" style="margin: 0px 20px" (click)="cancelar()">Cancelar</button>
+  </div>
+</div>
+

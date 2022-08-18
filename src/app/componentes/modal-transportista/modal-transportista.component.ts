@@ -36,7 +36,7 @@ export class ModalTransportistaComponent implements OnInit {
         tipo_identificacion: ['', Validators.required],
         numero_identificacion: ['', [Validators.required, Validators.maxLength(13)]],
         correo: ['', [Validators.required, Validators.maxLength(45)]],
-        placa: ['', [Validators.required, Validators.maxLength(9)]],
+        placa: ['', [Validators.required, Validators.maxLength(8)]],
       }
     )
   }

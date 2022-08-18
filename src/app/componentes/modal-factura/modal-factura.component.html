@@ -146,7 +146,7 @@
             </td>
             <td *ngIf="detalle.estado != 'd'">{{(detalle.valor_ice * detalle.cantidad).toFixed(2)}}</td>
             <td *ngIf="detalle.estado != 'd'">{{(detalle.valor_irbpnr * detalle.cantidad).toFixed(2)}}</td>
-            <td *ngIf="detalle.estado != 'd'">{{((detalle.precio_unitario + detalle.valor_ice + detalle.valor_irbpnr) * detalle.cantidad).toFixed(2)}}</td>
+            <td *ngIf="detalle.estado != 'd'">{{((detalle.precio_unitario + detalle.valor_ice + detalle.valor_irbpnr + detalle.valor_iva - detalle.descuento) * detalle.cantidad).toFixed(2)}}</td>
             <td *ngIf="detalle.estado != 'd'">
               <div class="d-flex align-items-center justify-content-center">
                 <mat-icon class="col-md-4 action-icon"

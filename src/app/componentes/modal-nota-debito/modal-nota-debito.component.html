@@ -1,1 +1,244 @@
-<p>modal-nota-debito works!</p>
+<div class="overflow-auto">
+  <h1 mat-dialog-title class="d-flex justify-content-center">{{tituloModal}}</h1>
+  <!-- INFORMACION TRIBUTARIA -->
+  <span style="font-size: 16px"><b>Información del Emisor</b></span>
+  <div class="d-flex flex-wrap section-form">
+    <div class="col-md-12 span-calculated">
+      <span><b>RUC:</b> {{empresaActual.ruc}}</span>
+    </div>
+    <div class="col-md-6 span-calculated">
+      <span><b>Razón Social:</b> {{empresaActual.nombres_razon_social}}</span>
+    </div>
+    <div class="col-md-6 span-calculated">
+      <span><b>Nombre Comercial:</b> {{empresaActual.nombre_comercial}}</span>
+    </div>
+    <div class="col-md-6 span-calculated">
+      <span><b>Contribuyente Especial:</b> {{empresaActual.num_contribuyente_especial}}</span>
+    </div>
+    <div class="col-md-6 span-calculated">
+      <span *ngIf="empresaActual.obligado_contabilidad"><b>Obligado a contabilidad:</b> Sí</span>
+      <span *ngIf="!empresaActual.obligado_contabilidad"><b>Obligado a contabilidad:</b> No</span>
+    </div>
+    <div class="col-md-6 span-calculated">
+      <span><b>Direccion Matriz:</b> {{direccionMatriz}}</span>
+    </div>
+    <div class="col-md-6 span-calculated">
+      <span><b>Direccion Establecimiento:</b> {{direccionEstablecimiento}}</span>
+    </div>
+  </div>
+
+  <!-- INFORMACION DE LA FACTURA -->
+  <span style="font-size: 16px"><b>Información del comprobante de retención</b></span>
+  <div class="d-flex flex-wrap section-form">
+    <div class="col-md-6 span-calculated">
+      <span><b>Número de comprobante:</b> {{numeroComprobante}}</span>
+    </div>
+    <div class="col-md-6 span-calculated">
+      <span><b>Clave de acceso:</b> {{claveAcceso}}</span>
+    </div>
+    <div class="col-md-6 span-calculated">
+      <span><b>Fecha de emisión:</b> {{fechaEmisionNotaDebito}}</span>
+    </div>
+  </div>
+
+  <!-- INFORMACION DEL COMPRADOR -->
+  <span style="font-size: 16px"><b>Información del sujeto retenido</b></span>
+  <div class="d-flex flex-wrap section-form">
+    <!-- NUMERO DE IDENTIFICACION -->
+    <div class="d-flex flex-column justify-content-center form-outline flex-fill col-md-6" style="padding-right: 20px">
+      <div [formGroup]="formGroupNotaDebito" class="input-field">
+        <input id="numero_identificacion" type="text" class="validate"
+               formControlName="numero_identificacion" [(ngModel)]="busquedaCliente" (change)="buscarCliente()">
+        <label for="numero_identificacion" class="active">Número de identificación</label>
+
+        <div *ngIf="formGroupNotaDebito.get('numero_identificacion')">
+          <span *ngIf="formGroupNotaDebito.get('numero_identificacion')?.valid ||
+          !formGroupNotaDebito.get('numero_identificacion')?.touched"
+                class="helper-text">
+            Ingrese el número de identificación del cliente
+          </span>
+          <span *ngIf="
+             (formGroupNotaDebito.get('numero_identificacion')?.invalid &&
+             formGroupNotaDebito.get('numero_identificacion')?.touched &&
+             formGroupNotaDebito.get('numero_identificacion')?.dirty &&
+             !(formGroupNotaDebito.get('numero_identificacion')?.hasError('minlength') ||
+            formGroupNotaDebito.get('numero_identificacion')?.hasError('maxlength'))) ||
+
+            (formGroupNotaDebito.get('numero_identificacion')?.invalid &&
+             formGroupNotaDebito.get('numero_identificacion')?.touched &&
+             !(formGroupNotaDebito.get('numero_identificacion')?.hasError('minlength') ||
+            formGroupNotaDebito.get('numero_identificacion')?.hasError('maxlength')))"
+                class="helper-text" style="color: var(--error)">
+            Este campo es obligatorio
+          </span>
+          <span *ngIf="formGroupNotaDebito.get('numero_identificacion')?.hasError('minlength') ||
+                formGroupNotaDebito.get('numero_identificacion')?.hasError('maxlength')"
+                class="helper-text" style="color: var(--error)">
+            El número de identificación debe tener 10 o 13 caracteres
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- NUMERO DE FACTURA -->
+    <div class="d-flex flex-column justify-content-center form-outline flex-fill col-md-6">
+      <div [formGroup]="formGroupNotaDebito" class="input-field">
+        <label>Número de factura</label><br><br>
+        <select class="form-select" formControlName="numero_factura" (change)="buscarFactura()">
+          <option *ngFor="let factura of facturasBuscadas" value="{{factura.id_factura}}">{{factura.numero_comprobante}}</option>
+        </select>
+        <div *ngIf="formGroupNotaDebito.get('numero_factura')">
+          <span *ngIf="formGroupNotaDebito.get('numero_factura')?.valid" class="helper-text">Seleccione una factura del cliente</span>
+          <span *ngIf="
+             (formGroupNotaDebito.get('numero_factura')?.invalid &&
+             formGroupNotaDebito.get('numero_factura')?.touched &&
+             formGroupNotaDebito.get('numero_factura')?.dirty &&
+             !(formGroupNotaDebito.get('numero_factura')?.hasError('minlength') ||
+            formGroupNotaDebito.get('numero_factura')?.hasError('maxlength'))) ||
+
+            (formGroupNotaDebito.get('numero_factura')?.invalid &&
+             formGroupNotaDebito.get('numero_factura')?.touched &&
+             !(formGroupNotaDebito.get('numero_factura')?.hasError('minlength') ||
+            formGroupNotaDebito.get('numero_factura')?.hasError('maxlength')))"
+                class="helper-text" style="color: var(--error)">
+      Este campo es requerido
+      </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- INFORMACION DEL COMPRADOR -->
+    <div class="col-md-6">
+      <div class="col-md-12 span-calculated" style="margin-top: 10px">
+        <span *ngIf="clienteDB != null"><b>Razón Social:</b> {{clienteDB.nombres_razon_social}}</span>
+        <span *ngIf="clienteDB === null"><b>Razón Social:</b> </span>
+      </div>
+      <div class="col-md-12 span-calculated" style="margin-top: 10px">
+        <span *ngIf="clienteDB != null"><b>Dirección:</b> {{direccionCliente}}</span>
+        <span *ngIf="clienteDB === null"><b>Dirección:</b> </span>
+      </div>
+      <div class="col-md-12 span-calculated">
+        <span *ngIf="clienteDB != null"><b>Teléfono:</b> {{clienteDB.telefono}}</span>
+        <span *ngIf="clienteDB === null"><b>Teléfono:</b></span>
+      </div>
+      <div class="col-md-12 span-calculated">
+        <span *ngIf="clienteDB != null"><b>Correo:</b> {{clienteDB.correo_electronico}}</span>
+        <span *ngIf="clienteDB === null"><b>Correo:</b></span>
+      </div>
+    </div>
+
+    <!-- INFORMACION DE LA FACTURA -->
+    <div class="col-md-6">
+      <div class="col-md-12 span-calculated" style="margin-top: 10px">
+        <span *ngIf="facturaDB != null"><b>Fecha de emisión:</b> {{fechaEmisionFactura}}</span>
+        <span *ngIf="facturaDB === null"><b>Fecha de emisión:</b> </span>
+      </div>
+      <div class="col-md-12 span-calculated" style="margin-top: 10px">
+        <span *ngIf="facturaDB != null"><b>Importe total:</b> {{this.facturaDB.importe_total}}</span>
+        <span *ngIf="facturaDB === null"><b>Importe total:</b> </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- DETALLE DE NOTA DE DÉBITO -->
+  <span style="font-size: 16px"><b>Detalle del Nota de débito</b></span>
+  <div class="d-flex flex-wrap section-form">
+    <div class="d-flex col-md-3" style="margin-bottom: 10px">
+      <button type="button" class="btn btn-primary btn-lg" [disabled]="clienteDB === null || clienteDB.id_cliente === -1 || busquedaFactura === ''"
+              (click)="abrirModalAgregarModificacion()">Agregar Modificación</button>
+    </div>
+
+    <!-- TABLA DE MODIFICACIONES -->
+    <div class="d-flex justify-content-center">
+      <div class="col-md-12">
+        <table class="table">
+          <thead class="table-primary">
+          <tr>
+            <th scope="col" *ngFor="let thead of theadsDetalle">
+              {{thead}}
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let detalle of detallesTabla">
+            <td *ngIf="detalle.estado != 'd'">{{detalle.razon_modificacion}}</td>
+            <td *ngIf="detalle.estado != 'd'">{{detalle.valor_modificacion}}</td>
+            <td *ngIf="detalle.estado != 'd'">
+              <div class="d-flex align-items-center justify-content-center">
+                <mat-icon class="col-md-4 action-icon"
+                          (click)="eliminarDetalle(detalle)" style="margin: 0 10px">
+                  delete
+                </mat-icon>
+              </div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="d-flex flex-row">
+      <div class="d-flex flex-column">
+        <div class="d-flex col-md-5" style="margin-bottom: 10px">
+          <button type="button" class="btn btn-primary btn-lg" [disabled]="clienteDB === null || clienteDB.id_cliente === -1 || busquedaFactura === ''"
+                  (click)="abrirModalAgregarPago()">Agregar Pago</button>
+        </div>
+        <!-- TABLA DE PAGOS -->
+        <div class="d-flex justify-content-center col-md-12">
+          <div class="col-md-12">
+            <table class="table">
+              <thead class="table-primary">
+              <tr>
+                <th scope="col" *ngFor="let thead of theadsPagos">
+                  {{thead}}
+                </th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let pago of pagosTabla">
+                <td *ngIf="pago.estado != 'd'">{{pago.nombre_metodo}}</td>
+                <td *ngIf="pago.estado != 'd'">{{pago.valor}}</td>
+                <td *ngIf="pago.plazo != 0 && pago.estado != 'd'">{{pago.plazo}}</td>
+                <td *ngIf="pago.plazo === 0 && pago.estado != 'd'"></td>
+                <td *ngIf="pago.estado != 'd'">{{pago.unidad_tiempo}}</td>
+                <td *ngIf="pago.estado != 'd'">
+                  <div class="d-flex align-items-center justify-content-center">
+                    <mat-icon class="col-md-4 action-icon"
+                              (click)="eliminarPago(pago)" style="margin: 0 10px">
+                      delete
+                    </mat-icon>
+                  </div>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TOTALES -->
+      <div class="col-md-5 d-flex justify-content-end">
+        <div class="section-form col-md-10">
+          <div class="col-md-12 span-calculated">
+            <span><b>Total sin modificaciones:</b> {{total_sin_modificacion.toFixed(2)}}</span>
+          </div>
+          <div class="col-md-12 span-calculated">
+            <span><b>Total modificaciones:</b> {{total_modificaciones.toFixed(2)}}</span>
+          </div>
+          <div class="col-md-12 span-calculated">
+            <span><b>Total con modificaciones:</b> {{(total_sin_modificacion + total_modificaciones).toFixed(2)}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div mat-dialog-actions class="d-flex justify-content-center">
+    <button class="btn btn-info" type="button" style="margin: 0px 20px"
+            [disabled]="formGroupNotaDebito.invalid || detallesTabla.length === 0 || pagosTabla.length === 0"
+            (click)="guardarNotaDebito()">Aceptar</button>
+    <button class="btn btn-danger" type="button" style="margin: 0px 20px" (click)="cancelar()">Cancelar</button>
+  </div>
+</div>
+
+
+

@@ -37,7 +37,7 @@ export const signUpForm: InputGenericInterface[] = [
     title: '*Contraseña',
     nameField: 'passwordUsuario',
     type: 'password',
-    helpText: 'Ingrese una contraseña entre 8 y 16 caracteres alfanuméricos',
+    helpText: 'Ingrese una contraseña',
     requiredMessage: 'La contraseña es requerida',
     lengthMessage: 'La contraseña debe tener entre 8 y 16 caracteres alfanuméricos'
   },

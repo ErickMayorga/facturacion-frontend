@@ -1,1 +1,22 @@
-<p>modal-agregar-modificacion works!</p>
+<div class="overflow-auto">
+  <h1 mat-dialog-title class="d-flex justify-content-center">Selección de modificación</h1>
+  <div class="d-flex flex-wrap">
+    <div class="d-flex flex-column justify-content-center form-outline flex-fill col-md-12" *ngFor="let field of fields">
+      <app-input-generic
+                         [title]="field.title"
+                         [nameField]="field.nameField"
+                         [type]="field.type"
+                         [helpText]="field.helpText"
+                         [requiredMessage]="field.requiredMessage"
+                         [lengthMessage]="field.lengthMessage"
+                         [options]="field.options"
+                         [formGroup]="formGroupModificacion"
+      ></app-input-generic>
+    </div>
+  </div>
+  <div mat-dialog-actions class="d-flex justify-content-center">
+    <button class="btn btn-info" type="button" style="margin: 0px 20px" [disabled]="formGroupModificacion.invalid" (click)="agregarModificacion()">Agregar</button>
+    <button class="btn btn-danger" type="button" style="margin: 0px 20px" (click)="cancelar()">Cancelar</button>
+  </div>
+</div>
+

@@ -20,6 +20,7 @@ import {ModalFormatoNotaCreditoComponent} from "../../componentes/modal-formato-
 import {ModalNotaCreditoComponent} from "../../componentes/modal-nota-credito/modal-nota-credito.component";
 import {NotaCreditoDetalleCreateInterface} from "../../servicios/http/nota-de-credito-detalle/nota-credito-detalle-create.interface";
 import {NotaCreditoDetalleInterface} from "../../servicios/http/nota-de-credito-detalle/nota-credito-detalle.interface";
+import {TablaFacturaDetalleInterface} from "../../servicios/interfaces/tabla-factura-detalle.interface";
 
 @Component({
   selector: 'app-ruta-notas-de-credito',
@@ -60,7 +61,7 @@ export class RutaNotasDeCreditoComponent implements OnInit {
   idUsuario: number = -1;
   empresaActual: EmpresaInterface = {} as EmpresaInterface
 
-  detallesTabla: TablaNotaCreditoDetalleInterface[] = []
+  detallesTabla: TablaFacturaDetalleInterface[] = []
 
   nuevaNotaCredito: NotaCreditoCreateInterface = {} as NotaCreditoCreateInterface
   notaCreditoSeleccionada: NotaCreditoInterface = {} as NotaCreditoInterface
@@ -243,16 +244,17 @@ export class RutaNotasDeCreditoComponent implements OnInit {
         (datos) => {
           if(datos!=undefined){
             const notaCredito = datos['nota_credito']
-            const detalles = datos['detalles'] as TablaNotaCreditoDetalleInterface[]
+            const detalles = datos['detalles'] as TablaFacturaDetalleInterface[]
 
             if(operacion === 'crear'){
               this.nuevaNotaCredito = notaCredito as NotaCreditoCreateInterface
-              this.detallesTabla = detalles as TablaNotaCreditoDetalleInterface[]
+              //console.log(this.nuevaNotaCredito)
+              this.detallesTabla = detalles as TablaFacturaDetalleInterface[]
               this.registrarInformacion()
             }
             if(operacion === 'editar'){
               this.notaCreditoSeleccionada = notaCredito as NotaCreditoInterface
-              this.detallesTabla = detalles as TablaNotaCreditoDetalleInterface[]
+              this.detallesTabla = detalles as TablaFacturaDetalleInterface[]
               this.actualizarInformacion()
             }
           }
@@ -312,6 +314,7 @@ export class RutaNotasDeCreditoComponent implements OnInit {
     for(let notaCreditoDetalle of this.detallesTabla){
       if(notaCreditoDetalle.estado === 'c'){
         const detalleNotaCreditoCrear = this.crearDetalleNotaCredito(notaCreditoDetalle, notaCreditoDetalle.estado) as NotaCreditoDetalleCreateInterface
+        console.log(detalleNotaCreditoCrear)
         this.notaCreditoDetalleService.create(detalleNotaCreditoCrear)
           .subscribe(
             {
@@ -371,8 +374,7 @@ export class RutaNotasDeCreditoComponent implements OnInit {
     }
   }
 
-  // TODO: Logica de campos de codigo
-  crearDetalleNotaCredito(detalleNotaCreditoTabla: TablaNotaCreditoDetalleInterface, operacion: string){
+  crearDetalleNotaCredito(detalleNotaCreditoTabla: TablaFacturaDetalleInterface, operacion: string){
     if(operacion === 'c'){
       let idNotaCredito = -1
       if(this.idNotaCreditoCreada === -1){
@@ -388,17 +390,19 @@ export class RutaNotasDeCreditoComponent implements OnInit {
         valor_iva: detalleNotaCreditoTabla.valor_iva,
         valor_ice: detalleNotaCreditoTabla.valor_ice,
         valor_irbpnr: detalleNotaCreditoTabla.valor_irbpnr,
+        id_producto: detalleNotaCreditoTabla.id_producto
       } as NotaCreditoDetalleCreateInterface
     }
     return {
       id_nota_de_credito_detalle: detalleNotaCreditoTabla.id_detalle,
-      id_nota_de_credito: detalleNotaCreditoTabla.id_nota_credito,
+      id_nota_de_credito: detalleNotaCreditoTabla.id_factura,
       cantidad: detalleNotaCreditoTabla.cantidad,
       descuento: detalleNotaCreditoTabla.descuento,
       total_producto: detalleNotaCreditoTabla.valor_total,
       valor_iva: detalleNotaCreditoTabla.valor_iva,
       valor_ice: detalleNotaCreditoTabla.valor_ice,
       valor_irbpnr: detalleNotaCreditoTabla.valor_irbpnr,
+      id_producto: detalleNotaCreditoTabla.id_producto
     } as NotaCreditoDetalleInterface
   }
 

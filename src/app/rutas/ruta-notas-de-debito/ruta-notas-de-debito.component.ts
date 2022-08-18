@@ -24,6 +24,7 @@ import {NotaDebitoDetalleInterface} from "../../servicios/http/nota-de-debito-de
 import {NotaDebitoPagoCreateInterface} from "../../servicios/http/nota-de-debito-pago/nota-debito-pago-create.interface";
 import {NotaDebitoPagoInterface} from "../../servicios/http/nota-de-debito-pago/nota-debito-pago.interface";
 import {NotaDebitoDetalleService} from "../../servicios/http/nota-de-debito-detalle/nota-debito-detalle.service";
+import {TablaFacturaPagoInterface} from "../../servicios/interfaces/tabla-factura-pago.interface";
 
 @Component({
   selector: 'app-ruta-notas-de-debito',
@@ -65,7 +66,7 @@ export class RutaNotasDeDebitoComponent implements OnInit {
   empresaActual: EmpresaInterface = {} as EmpresaInterface
 
   detallesTabla: TablaNotaDebitoDetalleInterface[] = []
-  pagosTabla: TablaNotaDebitoPagoInterface[] = []
+  pagosTabla: TablaFacturaPagoInterface[] = []
 
   nuevaNotaDebito: NotaDebitoCreateInterface = {} as NotaDebitoCreateInterface
   notaDebitoSeleccionada: NotaDebitoInterface = {} as NotaDebitoInterface
@@ -250,18 +251,19 @@ export class RutaNotasDeDebitoComponent implements OnInit {
           if(datos!=undefined){
             const notaDebito = datos['nota_debito']
             const detalles = datos['detalles'] as TablaNotaDebitoDetalleInterface[]
-            const pagos = datos['pagos'] as TablaNotaDebitoPagoInterface[]
+            const pagos = datos['pagos'] as TablaFacturaPagoInterface[]
 
             if(operacion === 'crear'){
               this.nuevaNotaDebito = notaDebito as NotaDebitoCreateInterface
               this.detallesTabla = detalles as TablaNotaDebitoDetalleInterface[]
-              this.pagosTabla = pagos as TablaNotaDebitoPagoInterface[]
+              this.pagosTabla = pagos as TablaFacturaPagoInterface[]
+
               this.registrarInformacion()
             }
             if(operacion === 'editar'){
               this.notaDebitoSeleccionada = notaDebito as NotaDebitoInterface
               this.detallesTabla = detalles as TablaNotaDebitoDetalleInterface[]
-              this.pagosTabla = pagos as TablaNotaDebitoPagoInterface[]
+              this.pagosTabla = pagos as TablaFacturaPagoInterface[]
               this.actualizarInformacion()
             }
           }
@@ -380,7 +382,6 @@ export class RutaNotasDeDebitoComponent implements OnInit {
     }
   }
 
-  // TODO: Logica de campos de codigo
   crearDetalleNotaDebito(detalleNotaDebitoTabla: TablaNotaDebitoDetalleInterface, operacion: string){
     if(operacion === 'c'){
       let idNotaDebito = -1
@@ -468,11 +469,11 @@ export class RutaNotasDeDebitoComponent implements OnInit {
     }
   }
 
-  crearPagoNotaDebito(pagoTabla: TablaNotaDebitoPagoInterface, operacion: string){
+  crearPagoNotaDebito(pagoTabla: TablaFacturaPagoInterface, operacion: string){
     if(operacion === 'c'){
       let idNotaDebito = -1
       if(this.idNotaDebitoCreada === -1){
-        idNotaDebito = this.notaDebitoSeleccionada.id_factura
+        idNotaDebito = this.notaDebitoSeleccionada.id_nota_de_debito
       }else{
         idNotaDebito = this.idNotaDebitoCreada
       }
@@ -486,7 +487,7 @@ export class RutaNotasDeDebitoComponent implements OnInit {
     }
     return {
       id_nota_de_debito_pago: pagoTabla.id_pago,
-      id_nota_de_debito: pagoTabla.id_nota_debito,
+      id_nota_de_debito: pagoTabla.id_factura,
       id_metodo_de_pago: pagoTabla.id_metodo_pago,
       valor_pago: pagoTabla.valor,
       medida_tiempo: pagoTabla.unidad_tiempo,

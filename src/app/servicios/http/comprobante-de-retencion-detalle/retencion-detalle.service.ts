@@ -9,7 +9,7 @@ import {RetencionDetalleInterface} from "./retencion-detalle.interface";
   providedIn: 'root'
 })
 export class RetencionDetalleService {
-  url = environment.urlAPI + '/retencion-detalle'
+  url = environment.urlAPI + '/comprobante-de-retencion-detalle'
 
   constructor(private readonly httpClient: HttpClient) {
 

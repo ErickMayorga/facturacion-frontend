@@ -68,6 +68,7 @@ export class RutaRetencionesComponent implements OnInit {
   retencionesTabla: TablaRetencionInterface[] = []
 
   idRetencionCreada: number = -1;
+  fechaEmision: string | null = ''
 
   constructor(private readonly retencionService: RetencionService,
               public dialog: MatDialog,
@@ -76,7 +77,7 @@ export class RutaRetencionesComponent implements OnInit {
               private readonly  retencionDetalleService: RetencionDetalleService,
               private readonly clienteService: ClienteService,
               private readonly facturaService: FacturaService,
-              private readonly empresaService: EmpresaService) {
+              private readonly empresaService: EmpresaService,) {
 
   }
 
@@ -379,13 +380,7 @@ export class RutaRetencionesComponent implements OnInit {
       return {
         id_comprobante_de_retencion: idRetencion,
         id_impuesto: detalleRetencionTabla.id_impuesto,
-        codigo_retencion: '', // TODO: Revisar campos de codigo
-        codigo: detalleRetencionTabla.codigo_impuesto,
-        descripcion: detalleRetencionTabla.nombre_impuesto,
         base_imponible: detalleRetencionTabla.base_imponible,
-        fecha: new Date(),
-        id_factura: detalleRetencionTabla.id_factura,
-        porcentaje: detalleRetencionTabla.tarifa,
         total: detalleRetencionTabla.valor_total,
       } as RetencionDetalleCreateInterface
     }
@@ -393,13 +388,7 @@ export class RutaRetencionesComponent implements OnInit {
       id_comprobante_de_retencion_detalle: detalleRetencionTabla.id_detalle,
       id_comprobante_de_retencion: detalleRetencionTabla.id_retencion,
       id_impuesto: detalleRetencionTabla.id_impuesto,
-      codigo_retencion: '', // TODO: Revisar campos de codigo
-      codigo: detalleRetencionTabla.codigo_impuesto,
-      descripcion: detalleRetencionTabla.nombre_impuesto,
       base_imponible: detalleRetencionTabla.base_imponible,
-      fecha: new Date(),
-      id_factura: detalleRetencionTabla.id_factura,
-      porcentaje: detalleRetencionTabla.tarifa,
       total: detalleRetencionTabla.valor_total,
     } as RetencionDetalleInterface
   }
