@@ -2,7 +2,7 @@ import {InputGenericInterface} from "../../servicios/interfaces/input-generic.in
 
 export const destinatarioForm: InputGenericInterface[] = [
   {
-    title: 'Motivo',
+    title: 'Motivo (Opcional)',
     nameField: 'motivo',
     type: 'text',
     helpText: 'Ingrese un motivo para la factura',

@@ -18,7 +18,16 @@ import {FacturaPagoService} from "../../servicios/http/factura-pago/factura-pago
 import {MetodoPagoService} from "../../servicios/http/metodo-de-pago/metodo-pago.service";
 import {MetodoPagoInterface} from "../../servicios/http/metodo-de-pago/metodo-pago.interface";
 import {TablaFacturaPagoInterface} from "../../servicios/interfaces/tabla-factura-pago.interface";
-import {ActionButtonInterface} from "../../servicios/interfaces/actionButton.interface";
+import {ImpuestoInterface} from "../../servicios/http/impuesto/impuesto.interface";
+import {RetencionInterface} from "../../servicios/http/comprobante-de-retencion/retencion.interface";
+import {ImpuestoService} from "../../servicios/http/impuesto/impuesto.service";
+import {ProductoImpuestoService} from "../../servicios/http/producto_impuesto/producto-impuesto.service";
+import {RetencionService} from "../../servicios/http/comprobante-de-retencion/retencion.service";
+import {RetencionDetalleService} from "../../servicios/http/comprobante-de-retencion-detalle/retencion-detalle.service";
+import {ProductoImpuestoInterface} from "../../servicios/http/producto_impuesto/producto-impuesto.interface";
+import {ImpuestoFacturaInterface} from "../../servicios/interfaces/impuesto-factura.interface";
+import {RetencionDetalleInterface} from "../../servicios/http/comprobante-de-retencion-detalle/retencion-detalle.interface";
+import {RetencionFacturaInterface} from "../../servicios/interfaces/retencion-factura.interface";
 
 @Component({
   selector: 'app-modal-formato-factura',
@@ -49,36 +58,25 @@ export class ModalFormatoFacturaComponent implements OnInit {
 
   // TABLA IMPUESTOS
   theadsImpuestos = [
-    'Código',
-    'Descripción',
+    'Producto',
+    'Impuesto',
     'Base imponible',
     'Tarifa',
     'Valor total'
   ];
 
-  impuestosTabla: [] = []
+  impuestosTabla: ImpuestoFacturaInterface[] = []
 
   // TABLA RETENCIONES
   theadsRetenciones = [
-    'Código',
+    'Comprobante de retención',
     'Nombre impuesto',
     'Base imponible',
     'Tarifa',
     'Valor retenido'
   ];
 
-  retencionesTabla: [] = []
-
-  actions: ActionButtonInterface[] = [
-    {
-      name: 'impuestos',
-      icon: 'paid'
-    },
-    {
-      name: 'info',
-      icon: 'info'
-    },
-  ]
+  retencionesTabla: RetencionFacturaInterface[] = []
 
   // Cargar informacion
   usuarioActual: number = -1
@@ -117,6 +115,10 @@ export class ModalFormatoFacturaComponent implements OnInit {
               private readonly clienteService: ClienteService,
               private readonly productoService: ProductoService,
               private readonly direccionService: DireccionService,
+              private readonly impuestoService: ImpuestoService,
+              private readonly productoImpuestoService: ProductoImpuestoService,
+              private readonly retencionService: RetencionService,
+              private readonly detalleRetencionService: RetencionDetalleService,
               public dialog: MatDialog,) {
     this.usuarioActual = this.data.usuario
     this.empresaActual = this.data.empresa
@@ -190,6 +192,7 @@ export class ModalFormatoFacturaComponent implements OnInit {
             console.error(err)
           },
           complete: () => {
+            this.cargarRetenciones()
             // Consultar cliente
             this.clienteService.get(this.facturaDB.id_cliente)
               .subscribe(
@@ -291,6 +294,7 @@ export class ModalFormatoFacturaComponent implements OnInit {
               console.error(err)
             },
             complete: () => {
+              this.cargarImpuestos()
               this.actualizarTotales()
             }
           }
@@ -343,16 +347,103 @@ export class ModalFormatoFacturaComponent implements OnInit {
     this.importe_total = this.total_sin_iva + this.total_iva + this.propina - this.total_descuento
   }
 
-
-  realizarAccion(name: string, id_factura_detalle: number) {
-
-  }
-
   cargarImpuestos() {
+    for(let producto of this.detallesTabla){
+      this.productoImpuestoService.getImpuestosPorProducto(producto.id_producto)
+        .subscribe(
+          {
+            next: (datos) => {
+              const productoImpuestos = datos as ProductoImpuestoInterface[]
+              for(let productoImpuesto of productoImpuestos){
+                let impuestoFactura: ImpuestoFacturaInterface = {} as ImpuestoFacturaInterface
+                // Consultar impuesto
+                this.impuestoService.get(productoImpuesto.id_impuesto)
+                  .subscribe(
+                    {
+                      next: (datos) => {
+                        const impuesto = datos as ImpuestoInterface
+                        impuestoFactura = {
+                          id_producto: producto.id_producto,
+                          id_impuesto: productoImpuesto.id_impuesto,
+                          nombre_producto: producto.nombre_producto,
+                          nombre_impuesto: impuesto.nombre_impuesto,
+                          base_imponible: producto.precio_unitario,
+                          tarifa: impuesto.valor_impuesto,
+                          tipo_tarifa: impuesto.tipo_tarifa,
+                          total: 0,
+                        }
 
+                        if(impuestoFactura.tipo_tarifa === 'específica'){
+                          impuestoFactura.total = impuestoFactura.base_imponible + impuestoFactura.tarifa
+                        }else{
+                          impuestoFactura.total = impuestoFactura.base_imponible * impuestoFactura.tarifa
+                        }
+
+                        this.impuestosTabla.push(impuestoFactura)
+                      },
+                      error: (err) => {
+                        console.error(err)
+                      }
+                    }
+                  )
+              }
+            },
+            error: err => {
+              console.error(err)
+            }
+          }
+        )
+    }
   }
 
   cargarRetenciones() {
-
+    this.retencionService.getComprobantesPorFactura(this.idFactura)
+      .subscribe(
+        {
+          next: (datos) => {
+            const retenciones = datos as RetencionInterface[]
+            for(let retencion of retenciones){
+              this.detalleRetencionService.getDetalles(retencion.id_comprobante_de_retencion)
+                .subscribe(
+                  {
+                    next: (datos) => {
+                      const detallesRetencion =  datos as RetencionDetalleInterface[]
+                      for(let detalleRetencion of detallesRetencion){
+                        this.impuestoService.get(detalleRetencion.id_impuesto)
+                          .subscribe(
+                            {
+                              next: (datos) => {
+                                const impuesto = datos as ImpuestoInterface
+                                const retencionFactura: RetencionFacturaInterface = {
+                                  id_retencion: retencion.id_comprobante_de_retencion,
+                                  id_detalle: detalleRetencion.id_comprobante_de_retencion_detalle,
+                                  numero_retencion: retencion.numero_comprobante,
+                                  nombre_impuesto: impuesto.nombre_impuesto,
+                                  base_imponible: detalleRetencion.base_imponible,
+                                  tarifa: impuesto.valor_impuesto,
+                                  valor_retenido: detalleRetencion.base_imponible * impuesto.valor_impuesto,
+                                  habilitado: retencion.habilitado
+                                } as RetencionFacturaInterface
+                                this.retencionesTabla.push(retencionFactura)
+                              },
+                              error: (err) => {
+                                console.error(err)
+                              }
+                            }
+                          )
+                      }
+                    },
+                    error: (err) => {
+                      console.error(err)
+                    }
+                  }
+                )
+            }
+          },
+          error: (err) => {
+            console.error(err)
+          }
+        }
+      )
   }
 }

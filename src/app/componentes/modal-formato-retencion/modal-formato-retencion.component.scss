@@ -1,0 +1,73 @@
+.overflow-auto {
+  height: 600px;
+  padding: 0 20px;
+}
+
+.section-form {
+  border: 1px solid black;
+  border-radius: 10px;
+  padding: 10px;
+  height: 100px;
+}
+
+.span-calculated {
+  padding: 0 2%;
+}
+
+// TABLE
+table {
+  table-layout:fixed;
+}
+
+.totales {
+  border: 2px solid black;
+}
+
+.totales th {
+  background-color: #d0e4fc;
+  border-right: 2px solid black;
+}
+
+td,th{
+  text-align: center;
+}
+.action-icon {
+  cursor: pointer;
+}
+
+// INFO TRIBUTARIA
+.info-tributario {
+  margin-bottom: 20px;
+}
+
+.info-empresa {
+  padding-right: 20px;
+}
+
+.cuadro-tributario {
+  border: 1px solid black;
+}
+
+.nombre-empresa {
+  margin: 30px 0 20px 0;
+}
+
+#razon_social {
+  font-size: 24px;
+}
+
+
+.direcciones-empresa, .info-comprador {
+  border-top: 1px solid black;
+  padding-top: 10px;
+}
+
+label {
+  margin-right: 10px;
+  font-size: 16px;
+  color: black;
+}
+
+.tabla-productos, .section-tab{
+  margin-top: 20px;
+}

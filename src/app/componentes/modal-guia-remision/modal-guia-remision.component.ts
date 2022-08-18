@@ -390,7 +390,7 @@ export class ModalGuiaRemisionComponent implements OnInit {
     //console.log('Antes: ', this.detallesTabla)
     if(this.operacion === 'crear'){
       this.destinatariosTabla = this.destinatariosTabla.filter(
-        (item) => item.id_destinatario !== destinatario.id_destinatario
+        (item) => item.id_cliente !== destinatario.id_cliente
       )
       //console.log('Despues: ', this.detallesTabla)
     }
@@ -399,7 +399,7 @@ export class ModalGuiaRemisionComponent implements OnInit {
         destinatario.estado = 'd'
       }else{
         this.destinatariosTabla = this.destinatariosTabla.filter(
-          (item) => item.id_destinatario !== destinatario.id_destinatario
+          (item) => item.id_cliente !== destinatario.id_cliente
         )
       }
       //console.log('Despues: ', this.detallesTabla)

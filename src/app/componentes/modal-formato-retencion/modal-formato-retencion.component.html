@@ -1,1 +1,117 @@
-<p>modal-formato-retencion works!</p>
+<div class="overflow-auto">
+  <!-- INFORMACIÓN TRIBUTARIA -->
+  <div class="info-tributario d-flex flex-wrap">
+    <div class="col-md-8 d-flex flex-column info-empresa">
+      <div class="col-md-12 d-flex flex-column justify-content-center align-items-center nombre-empresa">
+        <span id="razon_social"><b>{{empresaActual.nombres_razon_social}}</b></span>
+        <span id="nombre_comercial">{{empresaActual.nombre_comercial}}</span>
+      </div>
+      <div class="col-md-12 d-flex flex-column direcciones-empresa">
+        <div class="d-flex flex-row">
+          <label>Dirección Matriz: </label>
+          <span>{{direccionMatriz}}</span>
+        </div>
+        <div class="d-flex flex-row">
+          <label>Dirección Establecimiento: </label>
+          <span>{{direccionEstablecimiento}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 cuadro-tributario">
+      <div class="d-flex flex-wrap cuadro-tributario">
+        <div class="col-md-3 cuadro-tributario">
+          <b>RUC</b>
+        </div>
+        <div class="col-md-9 cuadro-tributario">
+          {{empresaActual.ruc}}
+        </div>
+        <div class="col-md-12 numero-clave-comprobante cuadro-tributario d-flex flex-column justify-content-center align-items-center">
+          <span><b>COMPROBANTE DE RETENCIÓN</b></span>
+          <span>No. {{retencionDB.numero_comprobante}}</span>
+          <span>Fecha de emisión: {{retencionDB.fecha_emision}}</span><br>
+          <span>Clave de acceso</span>
+          <span>{{retencionDB.clave_acceso}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-12 d-flex flex-wrap info-comprador">
+    <div class="col-md-6">
+      <div class="d-flex flex-row">
+        <label>Comprador: </label>
+        <span>{{clienteDB.nombres_razon_social}}</span>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="d-flex flex-row">
+        <label>Tipo de ID: </label>
+        <span>{{clienteDB.tipo_identificacion}}</span>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="d-flex flex-row">
+        <label>Dirección: </label>
+        <span>{{direccionCliente}}</span>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="d-flex flex-row">
+        <label>ID del comprador: </label>
+        <span>{{clienteDB.numero_identificacion}}</span>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="d-flex flex-row">
+        <label>Factura: </label>
+        <span>{{facturaDB.numero_comprobante}}</span>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="d-flex flex-row">
+        <label>Fecha de emisión de factura: </label>
+        <span>{{fechaEmisionFactura}}</span>
+      </div>
+    </div>
+  </div>
+  <!-- TABLA DE RETENCIONES -->
+  <div class="d-flex justify-content-center tabla-productos">
+    <div class="col-md-12">
+      <table class="table">
+        <thead class="table-primary">
+        <tr>
+          <th scope="col" *ngFor="let thead of theadsDetalle">
+            {{thead}}
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let detalle of detallesTabla">
+          <td *ngIf="detalle.estado != 'd'">{{detalle.codigo_impuesto}}</td>
+          <td *ngIf="detalle.estado != 'd'">{{detalle.nombre_impuesto}}</td>
+          <td *ngIf="detalle.estado != 'd'">{{detalle.base_imponible.toFixed(2)}}</td>
+          <td *ngIf="detalle.estado != 'd'">{{detalle.tarifa.toFixed(2)}}</td>
+          <td *ngIf="detalle.estado != 'd'">{{detalle.valor_total.toFixed(2)}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TOTALES -->
+  <div class="col-md-12 d-flex justify-content-end">
+    <div class="col-md-4">
+      <table class="table totales">
+        <tr>
+          <th>Total retenido</th>
+          <td>{{total_retenido.toFixed(2)}}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <div mat-dialog-actions class="d-flex justify-content-center">
+    <button class="btn btn-danger" type="button" style="margin: 0px 20px" (click)="cancelar()">
+      Cerrar
+    </button>
+  </div>
+</div>
