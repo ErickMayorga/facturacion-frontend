@@ -45,7 +45,7 @@
           <td *ngIf="notaCredito.habilitado">{{notaCredito.numero_factura}}</td>
           <td *ngIf="notaCredito.habilitado">{{notaCredito.motivo}}</td>
           <td *ngIf="notaCredito.habilitado">{{notaCredito.fecha_emision}}</td>
-          <td *ngIf="notaCredito.habilitado">{{notaCredito.valor_total}}</td>
+          <td *ngIf="notaCredito.habilitado">{{notaCredito.valor_total.toFixed(2)}}</td>
           <td *ngIf="notaCredito.habilitado">
             <div class="d-flex align-items-center justify-content-center">
               <mat-icon *ngFor="let action of actions" class="col-md-4 action-icon"

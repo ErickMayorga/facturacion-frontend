@@ -383,6 +383,13 @@ export class ModalNotaCreditoComponent implements OnInit {
 
   // Consulta de información del cliente
   buscarCliente(){
+    this.formGroupNotaCredito.patchValue(
+      {
+        numero_factura: ''
+      }
+    )
+    this.facturaDB = {} as FacturaInterface
+    this.facturasBuscadas = []
     this.clienteService.getCliente(this.usuarioActual,this.busquedaCliente)
       .subscribe(
         {
@@ -453,8 +460,14 @@ export class ModalNotaCreditoComponent implements OnInit {
           if(datos!=undefined){
             const detalleTabla = datos['detalle'] as TablaFacturaDetalleInterface
             detalleTabla.id_factura = this.notaCreditoActual
-            this.detallesTabla.push(detalleTabla)
-            this.actualizarTotales()
+
+            const detallesRepetidos = this.detallesTabla.filter(
+              (item) => item.id_producto === detalleTabla.id_producto
+            )
+            if(detallesRepetidos.length === 0){
+              this.detallesTabla.push(detalleTabla)
+              this.actualizarTotales()
+            }
             //this.actualizarDescuento()
           }
         }
@@ -465,6 +478,8 @@ export class ModalNotaCreditoComponent implements OnInit {
     this.total_sin_iva = 0
     this.total_sin_impuestos = 0
     this.total_iva = 0
+    this.total_ice = 0
+    this.total_irbpnr = 0
     this.total_descuento = 0
     for(let detalle of this.detallesTabla){
       if(detalle.estado != 'd'){

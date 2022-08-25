@@ -397,6 +397,13 @@ export class ModalNotaDebitoComponent implements OnInit {
 
   // Consulta de información del cliente y factura
   buscarCliente(){
+    this.formGroupNotaDebito.patchValue(
+      {
+        numero_factura: ''
+      }
+    )
+    this.facturaDB = {} as FacturaInterface
+    this.facturasBuscadas = []
     this.clienteService.getCliente(this.usuarioActual,this.busquedaCliente)
       .subscribe(
         {
@@ -468,8 +475,15 @@ export class ModalNotaDebitoComponent implements OnInit {
           if(datos!=undefined){
             const detalleTabla = datos['detalle'] as TablaNotaDebitoDetalleInterface
             detalleTabla.id_nota_debito = this.notaDebitoActual
-            this.detallesTabla.push(detalleTabla)
-            this.actualizarTotalModificado()
+
+            const detallesRepetidos = this.detallesTabla.filter(
+              (item) => item.razon_modificacion === detalleTabla.razon_modificacion
+            )
+            if(detallesRepetidos.length === 0){
+              this.detallesTabla.push(detalleTabla)
+              this.actualizarTotalModificado()
+            }
+
             //this.actualizarDescuento()
           }
         }
@@ -493,7 +507,13 @@ export class ModalNotaDebitoComponent implements OnInit {
           if(datos!=undefined){
             const pago = datos['pago'] as TablaFacturaPagoInterface
             pago.id_factura = this.notaDebitoActual
-            this.pagosTabla.push(pago)
+
+            const pagosRepetidos = this.pagosTabla.filter(
+              (item) => item.id_metodo_pago === pago.id_metodo_pago
+            )
+            if(pagosRepetidos.length === 0){
+              this.pagosTabla.push(pago)
+            }
           }
         }
       )

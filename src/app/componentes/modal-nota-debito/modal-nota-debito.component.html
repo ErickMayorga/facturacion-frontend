@@ -130,12 +130,12 @@
     <!-- INFORMACION DE LA FACTURA -->
     <div class="col-md-6">
       <div class="col-md-12 span-calculated" style="margin-top: 10px">
-        <span *ngIf="facturaDB != null"><b>Fecha de emisión:</b> {{fechaEmisionFactura}}</span>
-        <span *ngIf="facturaDB === null"><b>Fecha de emisión:</b> </span>
+        <span *ngIf="facturaDB.id_factura != undefined"><b>Fecha de emisión:</b> {{fechaEmisionFactura}}</span>
+        <span *ngIf="facturaDB.id_factura === undefined"><b>Fecha de emisión:</b> </span>
       </div>
       <div class="col-md-12 span-calculated" style="margin-top: 10px">
-        <span *ngIf="facturaDB != null"><b>Importe total:</b> {{this.facturaDB.importe_total}}</span>
-        <span *ngIf="facturaDB === null"><b>Importe total:</b> </span>
+        <span *ngIf="facturaDB.id_factura != undefined"><b>Importe total:</b> {{this.facturaDB.importe_total.toFixed(2)}}</span>
+        <span *ngIf="facturaDB.id_factura === undefined"><b>Importe total:</b> </span>
       </div>
     </div>
   </div>
@@ -162,7 +162,7 @@
           <tbody>
           <tr *ngFor="let detalle of detallesTabla">
             <td *ngIf="detalle.estado != 'd'">{{detalle.razon_modificacion}}</td>
-            <td *ngIf="detalle.estado != 'd'">{{detalle.valor_modificacion}}</td>
+            <td *ngIf="detalle.estado != 'd'">{{detalle.valor_modificacion.toFixed(2)}}</td>
             <td *ngIf="detalle.estado != 'd'">
               <div class="d-flex align-items-center justify-content-center">
                 <mat-icon class="col-md-4 action-icon"

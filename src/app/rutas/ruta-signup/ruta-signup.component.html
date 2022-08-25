@@ -44,6 +44,7 @@
                 </div>
               </div>
               <p *ngIf="!passwordCheck" style="color: var(--error)">Las contraseñas no coinciden</p>
+              <p *ngIf="usuarioRepetido" style="color: var(--error)">El correo electrónico ingresado ya se encuentra registrado</p>
               <div class="form-check d-flex justify-content-center mb-5">
                 <input class="form-check-input me-2" type="checkbox" value="" id="form2Example3c" />
                 <label class="form-check-label">

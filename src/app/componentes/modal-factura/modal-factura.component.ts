@@ -455,8 +455,15 @@ export class ModalFacturaComponent implements OnInit {
           if(datos!=undefined){
             const detalleTabla = datos['detalle'] as TablaFacturaDetalleInterface
             detalleTabla.id_factura = this.facturaActual
-            this.detallesTabla.push(detalleTabla)
-            this.actualizarTotales()
+
+            const detallesRepetidos = this.detallesTabla.filter(
+              (item) => item.id_producto === detalleTabla.id_producto
+            )
+            if(detallesRepetidos.length === 0){
+              this.detallesTabla.push(detalleTabla)
+              this.actualizarTotales()
+            }
+
             //this.actualizarDescuento()
           }
         }
@@ -481,7 +488,13 @@ export class ModalFacturaComponent implements OnInit {
           if(datos!=undefined){
             const pago = datos['pago'] as TablaFacturaPagoInterface
             pago.id_factura = this.facturaActual
-            this.pagosTabla.push(pago)
+
+            const pagosRepetidos = this.pagosTabla.filter(
+              (item) => item.id_metodo_pago === pago.id_metodo_pago
+            )
+            if(pagosRepetidos.length === 0){
+              this.pagosTabla.push(pago)
+            }
           }
         }
       )
@@ -491,6 +504,8 @@ export class ModalFacturaComponent implements OnInit {
     this.total_sin_iva = 0
     this.total_sin_impuestos = 0
     this.total_iva = 0
+    this.total_ice = 0
+    this.total_irbpnr = 0
     this.total_descuento = 0
     for(let detalle of this.detallesTabla){
       if(detalle.estado != 'd'){

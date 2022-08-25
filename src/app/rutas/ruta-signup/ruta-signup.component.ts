@@ -25,6 +25,8 @@ export class RutaSignupComponent implements OnInit {
   passwordCheck = true
   direccionTemp: DireccionCreateInterface = {} as DireccionCreateInterface;
   idDireccionRegistrada = -1
+  usuariosDB: UsuarioInterface[] = []
+  usuarioRepetido = false
 
   constructor(private readonly router: Router,
               private readonly formBuilder: FormBuilder,
@@ -44,10 +46,25 @@ export class RutaSignupComponent implements OnInit {
       }
     )
     this.formGroupUsuario.get('direccion')?.disable()
+    this.buscarUsuarios()
   }
 
   ngOnInit(): void {
 
+  }
+
+  buscarUsuarios(){
+    this.usuarioService.getAll({})
+      .subscribe(
+        {
+          next: (datos) => {
+            this.usuariosDB = datos as UsuarioInterface[]
+          },
+          error: (err) => {
+            console.error(err)
+          }
+        }
+      )
   }
 
   registrarUsuario() {
@@ -59,7 +76,12 @@ export class RutaSignupComponent implements OnInit {
 
     this.verificarPassword(password, confirmacion)
 
-    if(this.passwordCheck){
+    const usuariosRepetidos = this.usuariosDB.filter(
+      (item) => item.correo_electronico.trim() === correo
+    )
+    this.usuarioRepetido = usuariosRepetidos.length != 0
+
+    if(this.passwordCheck && !this.usuarioRepetido){
       let direccionCreada: DireccionInterface = {} as DireccionInterface
       this.direccionService.create(this.direccionTemp)
         .subscribe(
@@ -137,6 +159,10 @@ export class RutaSignupComponent implements OnInit {
     }else{
       this.passwordCheck = false
     }
+  }
+
+  verificarCorreo() {
+
   }
 
 }

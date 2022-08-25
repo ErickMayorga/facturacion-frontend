@@ -44,7 +44,7 @@
           <td *ngIf="retencion.habilitado">{{retencion.identificacion_comprador}}</td>
           <td *ngIf="retencion.habilitado">{{retencion.numero_factura}}</td>
           <td *ngIf="retencion.habilitado">{{retencion.fecha_emision}}</td>
-          <td *ngIf="retencion.habilitado">{{retencion.total_retenido}}</td>
+          <td *ngIf="retencion.habilitado">{{retencion.total_retenido.toFixed(2)}}</td>
           <td *ngIf="retencion.habilitado">
             <div class="d-flex align-items-center justify-content-center">
               <mat-icon *ngFor="let action of actions" class="col-md-4 action-icon"

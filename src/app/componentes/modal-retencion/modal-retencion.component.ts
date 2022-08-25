@@ -353,6 +353,13 @@ export class ModalRetencionComponent implements OnInit {
 
   // Consulta de información del cliente y factura
   buscarCliente(){
+    this.formGroupRetencion.patchValue(
+      {
+        numero_factura: ''
+      }
+    )
+    this.facturaDB = {} as FacturaInterface
+    this.facturasBuscadas = []
     this.clienteService.getCliente(this.usuarioActual,this.busquedaCliente)
       .subscribe(
         {
@@ -424,8 +431,15 @@ export class ModalRetencionComponent implements OnInit {
           if(datos!=undefined){
             const detalleTabla = datos['detalle'] as TablaRetencionDetalleInterface
             detalleTabla.id_retencion = this.retencionActual
-            this.detallesTabla.push(detalleTabla)
-            this.actualizarTotalRetenido()
+
+            const detallesRepetidos = this.detallesTabla.filter(
+              (item) => item.id_impuesto === detalleTabla.id_impuesto
+            )
+            if(detallesRepetidos.length === 0){
+              this.detallesTabla.push(detalleTabla)
+              this.actualizarTotalRetenido()
+            }
+
             //this.actualizarDescuento()
           }
         }

@@ -12,7 +12,6 @@ import {ClienteInterface} from "../../servicios/http/cliente/cliente.interface";
 import {ConfirmacionDeAccionComponent} from "../../componentes/confirmacion-de-accion/confirmacion-de-accion.component";
 import {NotaCreditoInterface} from "../../servicios/http/nota-de-credito/nota-credito.interface";
 import {TablaNotaCreditoInterface} from "../../servicios/interfaces/tabla-nota-credito.interface";
-import {TablaNotaCreditoDetalleInterface} from "../../servicios/interfaces/tabla-nota-credito-detalle.interface";
 import {NotaCreditoCreateInterface} from "../../servicios/http/nota-de-credito/nota-credito-create.interface";
 import {NotaCreditoService} from "../../servicios/http/nota-de-credito/nota-credito.service";
 import {NotaCreditoDetalleService} from "../../servicios/http/nota-de-credito-detalle/nota-credito-detalle.service";

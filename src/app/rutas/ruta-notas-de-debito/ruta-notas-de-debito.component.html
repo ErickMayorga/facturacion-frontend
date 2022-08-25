@@ -44,8 +44,8 @@
           <td *ngIf="notaDebito.habilitado">{{notaDebito.identificacion_comprador}}</td>
           <td *ngIf="notaDebito.habilitado">{{notaDebito.numero_factura}}</td>
           <td *ngIf="notaDebito.habilitado">{{notaDebito.fecha_emision}}</td>
-          <td *ngIf="notaDebito.habilitado">{{notaDebito.total_sin_modificar}}</td>
-          <td *ngIf="notaDebito.habilitado">{{notaDebito.total_modificado}}</td>
+          <td *ngIf="notaDebito.habilitado">{{notaDebito.total_sin_modificar.toFixed(2)}}</td>
+          <td *ngIf="notaDebito.habilitado">{{notaDebito.total_modificado.toFixed(2)}}</td>
           <td *ngIf="notaDebito.habilitado">
             <div class="d-flex align-items-center justify-content-center">
               <mat-icon *ngFor="let action of actions" class="col-md-4 action-icon"

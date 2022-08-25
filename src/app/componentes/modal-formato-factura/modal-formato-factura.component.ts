@@ -374,7 +374,7 @@ export class ModalFormatoFacturaComponent implements OnInit {
                         }
 
                         if(impuestoFactura.tipo_tarifa === 'específica'){
-                          impuestoFactura.total = impuestoFactura.base_imponible + impuestoFactura.tarifa
+                          impuestoFactura.total = impuestoFactura.tarifa
                         }else{
                           impuestoFactura.total = impuestoFactura.base_imponible * impuestoFactura.tarifa
                         }

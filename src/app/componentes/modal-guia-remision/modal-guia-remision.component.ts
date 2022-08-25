@@ -78,6 +78,7 @@ export class ModalGuiaRemisionComponent implements OnInit {
   direccionPartidaObject: DireccionInterface = {} as DireccionInterface
   nextDireccion = -1
 
+
   constructor( @Inject(MAT_DIALOG_DATA) public data: any,
                public dialogRef: MatDialogRef<ModalGuiaRemisionComponent>,
                private readonly formBuilder: FormBuilder,
@@ -378,7 +379,15 @@ export class ModalGuiaRemisionComponent implements OnInit {
           if(datos!=undefined){
             const destinatarioTabla = datos['destinatario'] as TablaDestinatarioInterface
             destinatarioTabla.id_guia_remision = this.guiaRemisionActual
-            this.destinatariosTabla.push(destinatarioTabla)
+
+            const detallesRepetidos = this.destinatariosTabla.filter(
+              (item) => item.id_factura === destinatarioTabla.id_factura
+            )
+            if(detallesRepetidos.length === 0){
+              this.destinatariosTabla.push(destinatarioTabla)
+            }
+
+
             //this.actualizarDescuento()
           }
         }
