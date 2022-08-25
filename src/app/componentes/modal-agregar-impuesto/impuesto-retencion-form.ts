@@ -7,7 +7,7 @@ export const impuestoRetencionForm: InputGenericInterface[] = [
     type: 'select',
     helpText: 'Seleccione un impuesto para retención',
     requiredMessage: 'Este campo es requerido',
-    options: ['IVA', 'Impuesto a la renta']
+    options: ['IVA']
   },
   {
     title: '*Base imponible',
