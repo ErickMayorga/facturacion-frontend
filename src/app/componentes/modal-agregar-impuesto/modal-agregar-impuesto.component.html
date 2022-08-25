@@ -33,7 +33,7 @@
     <!-- IMPUESTO -->
     <div class="d-flex flex-column justify-content-center form-outline flex-fill col-md-6" style="padding-right: 20px">
       <div [formGroup]="formGroupImpuesto" class="input-field">
-        <label>Número de factura</label><br><br>
+        <label>Tarifa de impuesto</label><br><br>
         <select class="form-select" formControlName="impuesto_retencion" (change)="calcularTotal()">
           <option *ngFor="let impuesto of impuestosRetencionDB" value="{{impuesto.id_impuesto}}">{{impuesto.nombre_impuesto}}</option>
         </select>
